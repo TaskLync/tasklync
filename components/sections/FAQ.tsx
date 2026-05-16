@@ -128,7 +128,7 @@ function FAQRow({ item, index, isOpen, onToggle }: {
           {item.q}
         </span>
         <span
-          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
+          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
           style={{
             background: isOpen ? "#1F6F5F" : "rgba(31,111,95,0.08)",
             border: `1px solid ${isOpen ? "#1F6F5F" : "rgba(31,111,95,0.15)"}`,
@@ -199,7 +199,7 @@ export default function FAQ() {
 
         <div
           ref={ref}
-          className="relative z-10 mx-auto max-w-[1100px] px-6 sm:px-10 lg:px-16"
+          className="relative z-10 mx-auto max-w-275 px-6 sm:px-10 lg:px-16"
         >
           {/* ── Header ──────────────────────────────────── */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-14">
@@ -293,7 +293,7 @@ export default function FAQ() {
 
           {/* ── FAQ list ─────────────────────────────────── */}
           <div
-            className="rounded-[24px] overflow-hidden border border-[rgba(31,111,95,0.1)]"
+            className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.1)]"
             style={{
               background: "#fff",
               boxShadow: "0 4px 32px rgba(13,31,28,0.06)",

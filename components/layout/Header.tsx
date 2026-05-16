@@ -102,7 +102,7 @@ export function Header() {
               : [
                   "mt-0",
                   // subtle frosted tint so the bar is distinguishable on the light hero
-                  "bg-white/40 backdrop-blur-[12px]",
+                  "bg-white/40 backdrop-blur-md",
                   "border-b border-[#1F6F5F]/8",
                 ].join(" "),
           ].join(" ")}
@@ -234,7 +234,7 @@ export function Header() {
                     "font-['DM_Sans'] text-[13px] font-semibold tracking-[0.01em]",
                     "transition-all duration-300",
                     // Always solid green — matches hero's primary CTA exactly
-                    "bg-gradient-to-br from-[#1F6F5F] to-[#2FA084] text-white",
+                    "bg-linear-to-br from-[#1F6F5F] to-[#2FA084] text-white",
                     "shadow-[0_4px_20px_rgba(31,111,95,0.30)]",
                     "hover:shadow-[0_6px_28px_rgba(31,111,95,0.42)] hover:brightness-110",
                   ].join(" ")}

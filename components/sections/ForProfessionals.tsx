@@ -32,7 +32,7 @@ function EarningsCalc() {
 
   return (
     <div
-      className="rounded-[24px] overflow-hidden border border-[rgba(31,111,95,0.14)]"
+      className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.14)]"
       style={{ background: "#fff", boxShadow: "0 8px 48px rgba(13,31,28,0.10), 0 1px 0 rgba(31,111,95,0.08)" }}
     >
       {/* header */}

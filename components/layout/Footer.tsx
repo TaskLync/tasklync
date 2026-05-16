@@ -153,7 +153,7 @@ export function Footer() {
           <div className="flex flex-col gap-12 md:flex-row md:gap-8 lg:gap-16">
 
             {/* ── Brand column ── */}
-            <div className="flex flex-col gap-5 md:max-w-[240px]">
+            <div className="flex flex-col gap-5 md:max-w-60">
 
               {/* Logo wordmark */}
               <Link href="/" aria-label="TaskLync Home" className="flex items-center gap-2 w-fit">

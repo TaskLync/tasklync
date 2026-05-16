@@ -69,7 +69,7 @@ export default function WaitlistCTA() {
 
         <div
           ref={ref}
-          className="relative z-10 mx-auto max-w-[1100px] px-6 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+          className="relative z-10 mx-auto max-w-275 px-6 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
         >
           {/* ── LEFT ───────────────────────────────────── */}
           <div>
@@ -115,7 +115,7 @@ export default function WaitlistCTA() {
 
             {/* subtitle */}
             <p
-              className="leading-[1.72] mb-10 max-w-[380px]"
+              className="leading-[1.72] mb-10 max-w-95"
               style={{
                 fontFamily: "'Instrument Serif', serif",
                 fontStyle: "italic",
@@ -143,7 +143,7 @@ export default function WaitlistCTA() {
                   }}
                 >
                   <span
-                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    className="w-2 h-2 rounded-full shrink-0"
                     style={{ background: "#2FA084" }}
                   />
                   <span
@@ -180,7 +180,7 @@ export default function WaitlistCTA() {
 
               {/* glow */}
               <div
-                className="absolute w-[280px] h-[280px] rounded-full pointer-events-none"
+                className="absolute w-70 h-70 rounded-full pointer-events-none"
                 style={{
                   background: "radial-gradient(circle, rgba(47,160,132,0.2) 0%, transparent 70%)",
                   top: -60, right: -60,
@@ -190,7 +190,7 @@ export default function WaitlistCTA() {
               <div className="relative z-10">
                 {/* pill */}
                 <div
-                  className="inline-flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full border border-[rgba(111,207,151,0.2)] text-[#6FCF97] text-[10px] font-bold tracking-[0.1em] uppercase"
+                  className="inline-flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full border border-[rgba(111,207,151,0.2)] text-[#6FCF97] text-[10px] font-bold tracking-widest uppercase"
                   style={{
                     background: "rgba(111,207,151,0.1)",
                     fontFamily: "'Cabinet Grotesk', sans-serif",
