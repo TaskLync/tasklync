@@ -122,6 +122,14 @@ export const scaleIn: Variants = {
       delay,
     },
   }),
+  exit: {
+    opacity: 0,
+    scale: 0.96,
+    transition: {
+      duration: DUR.fast,
+      ease: "easeIn",
+    },
+  },
 };
 
 export const slideRight: Variants = {
@@ -144,6 +152,32 @@ export const staggerContainer: Variants = {
       staggerChildren: 0.12,
       delayChildren: 0.1,
     },
+  },
+};
+
+// ─── Modal / overlay variants ──────────────────────────────────────────────────
+
+export const backdropVariants: Variants = {
+  hidden:  { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: DUR.fast, ease: "easeOut" },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: DUR.instant, ease: "easeIn", delay: 0.05 },
+  },
+};
+
+export const panelVariants: Variants = {
+  hidden:  { opacity: 0, y: 28, scale: 0.97 },
+  visible: {
+    opacity: 1, y: 0, scale: 1,
+    transition: { duration: DUR.slow, ease: [...EASE_EXPO_OUT] },
+  },
+  exit: {
+    opacity: 0, y: 18, scale: 0.97,
+    transition: { duration: DUR.fast, ease: [0.7, 0, 0.84, 0] },
   },
 };
 

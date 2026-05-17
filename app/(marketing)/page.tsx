@@ -1,3 +1,4 @@
+// app/(marketing)/page.tsx
 import FAQ from "@/components/sections/FAQ";
 import Features from "@/components/sections/Features";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -7,20 +8,17 @@ import HowItWorks from "@/components/sections/HowItWorks";
 import SocialProof from "@/components/sections/SocialProof";
 import WaitlistCTA from "@/components/sections/WaitListCTA";
 
-
-
-
 export default function HomePage() {
-  return(
+  return (
     <div>
-      <Hero/>
-      <SocialProof/>
-      <HowItWorks/>
-      <Features/>
-      <ForProfessionalsPage/>
-      <WaitlistCTA/>
-      <FAQ/>
-      <FinalCTA/>
+      <Hero />
+      <SocialProof />
+      <HowItWorks />
+      <Features />
+      <ForProfessionalsPage />
+      <WaitlistCTA />
+      <FAQ />
+      <FinalCTA />
     </div>
   );
 }

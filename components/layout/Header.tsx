@@ -9,11 +9,13 @@ import { NAV_LINKS } from "@/config/nav";
 import { navbarVariants, navLinkVariants } from "@/lib/motion/variants";
 import { LogoMark } from "./LogoMark";
 import { MobileMenu } from "./MobileMenu";
+import { useWaitlist } from "@/components/waitlist/WaitlistContext";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { openModal } = useWaitlist();
 
   const pathname = usePathname();
 
@@ -58,13 +60,6 @@ export function Header() {
     my.set(0);
   };
 
-  // ─── Color tokens ────────────────────────────────────────────────────────────
-  // Unscrolled = sitting on light green hero → use dark/green colours
-  // Scrolled   = frosted glass bar → same dark/green colours (already correct)
-  //
-  // Both states now share the same palette since the hero is light.
-  // The only visual difference between states is the backdrop & shadow.
-
   const navLinkColor = scrolled
     ? "text-[#4a5250] hover:text-[#111210]"
     : "text-[#1F6F5F]/80 hover:text-[#0D1F1C]";
@@ -101,7 +96,6 @@ export function Header() {
                 ].join(" ")
               : [
                   "mt-0",
-                  // subtle frosted tint so the bar is distinguishable on the light hero
                   "bg-white/40 backdrop-blur-md",
                   "border-b border-[#1F6F5F]/8",
                 ].join(" "),
@@ -123,7 +117,6 @@ export function Header() {
               className="group flex shrink-0 items-center gap-2.5"
             >
               <LogoMark size={42} />
-
               <span
                 className={[
                   "font-['Playfair_Display'] text-[2.2rem] font-medium tracking-tight transition-colors duration-300",
@@ -202,7 +195,6 @@ export function Header() {
                     "inline-flex items-center gap-1.5 rounded-full px-5 py-2.5",
                     "border text-[13px] font-medium transition-all duration-300",
                     "font-['DM_Sans']",
-                    // Light-theme–friendly: always green outline
                     "border-[#1F6F5F]/25 text-[#1F6F5F]",
                     "hover:border-[#1F6F5F]/55 hover:bg-[#1F6F5F]/6",
                   ].join(" ")}
@@ -223,17 +215,16 @@ export function Header() {
                 animate="visible"
               >
                 <motion.a
+                  onClick={openModal}
                   ref={ctaRef}
-                  href="/waitlist"
                   style={{ x: springX, y: springY }}
                   onMouseMove={handleCtaMouseMove}
                   onMouseLeave={handleCtaMouseLeave}
                   whileTap={{ scale: 0.96 }}
                   className={[
-                    "inline-flex items-center gap-2 rounded-full px-5 py-2.5",
+                    "inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5",
                     "font-['DM_Sans'] text-[13px] font-semibold tracking-[0.01em]",
                     "transition-all duration-300",
-                    // Always solid green — matches hero's primary CTA exactly
                     "bg-linear-to-br from-[#1F6F5F] to-[#2FA084] text-white",
                     "shadow-[0_4px_20px_rgba(31,111,95,0.30)]",
                     "hover:shadow-[0_6px_28px_rgba(31,111,95,0.42)] hover:brightness-110",
@@ -261,7 +252,6 @@ export function Header() {
               className={[
                 "flex h-10 w-10 flex-col items-center justify-center gap-1.25 rounded-full",
                 "transition-all duration-300 lg:hidden",
-                // Mobile: always uses the same tint (mobile was already correct)
                 scrolled
                   ? "border border-[#1F6F5F]/15 bg-white/70 text-[#1F6F5F] backdrop-blur-xl"
                   : "border border-[#1F6F5F]/20 bg-white/50 text-[#1F6F5F] backdrop-blur-xl",
@@ -273,7 +263,7 @@ export function Header() {
         </div>
       </motion.header>
 
-      {/* ───────────────── Mobile Menu (untouched) ───────────────── */}
+      {/* ───────────────── Mobile Menu ───────────────── */}
       <MobileMenu
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
