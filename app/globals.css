@@ -1,20 +1,24 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap');
+
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────
    Design tokens — consumed across the app
 ───────────────────────────────────────── */
 :root {
-  --primary: #1F6F5F;
-  --secondary: #2FA084;
-  --accent: #6FCF97;
+  --primary:    #1F6F5F;
+  --secondary:  #2FA084;
+  --accent:     #6FCF97;
   --background: #EEEEEE;
 
   /* Typography */
-  --font-display: var(--font-display, 'Playfair Display', Georgia, serif);
-  --font-body: var(--font-sans, 'DM Sans', system-ui, sans-serif);
+  --font-display:      var(--font-display, 'Playfair Display', Georgia, serif);
+  --font-body:         var(--font-sans, 'DM Sans', system-ui, sans-serif);
+  --font-clash:        'Clash Display', sans-serif;
+  --font-serif-italic: var(--font-italic, 'Instrument Serif', serif);
 
   /* Nav */
-  --nav-height: 72px;
+  --nav-height:          72px;
   --nav-height-scrolled: 56px;
 }
 
@@ -35,19 +39,12 @@ body {
 /* ─────────────────────────────────────────
    Custom scrollbar — subtle, brand-tinted
 ───────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(31, 111, 95, 0.25);
   border-radius: 99px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(31, 111, 95, 0.45);
 }

@@ -2,14 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Plus, Minus } from "lucide-react";
+import { motion } from "framer-motion";
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { fadeUp } from "@/lib/motion/variants";
+import { EASE_EXPO_OUT, DUR } from "@/lib/motion/transitions";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Types & content
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface FAQItem {
   q: string;
   a: string;
 }
 
-// ─── Content ───────────────────────────────────────────────────────────────
 const homeownerFAQs: FAQItem[] = [
   {
     q: "How quickly can I get a professional to my home?",
@@ -72,24 +79,10 @@ const professionalFAQs: FAQItem[] = [
   },
 ];
 
-// ─── InView hook ───────────────────────────────────────────────────────────
-function useInView(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, inView };
-}
+// ─────────────────────────────────────────────────────────────────────────────
+// FAQRow
+// ─────────────────────────────────────────────────────────────────────────────
 
-// ─── Single FAQ item ───────────────────────────────────────────────────────
 function FAQRow({ item, index, isOpen, onToggle }: {
   item: FAQItem;
   index: number;
@@ -106,27 +99,22 @@ function FAQRow({ item, index, isOpen, onToggle }: {
   }, [isOpen]);
 
   return (
-    <div
-      className="border-b border-[rgba(31,111,95,0.1)] last:border-0"
-      style={{
-        opacity: 1,
-        transition: `opacity 0.4s ease ${index * 0.05}s`,
-      }}
-    >
+    <div className="border-b border-[rgba(31,111,95,0.1)] last:border-0">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-6 py-5 text-left group"
+        className="w-full flex items-center justify-between gap-6 py-5 text-left"
         style={{ background: "none", border: "none", cursor: "pointer" }}
       >
         <span
           className="text-[15px] font-semibold leading-snug tracking-[-0.01em] transition-colors duration-200"
           style={{
-            fontFamily: "'Clash Display', sans-serif",
+            fontFamily: "var(--font-clash)",
             color: isOpen ? "#1F6F5F" : "#0D1F1C",
           }}
         >
           {item.q}
         </span>
+
         <span
           className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300"
           style={{
@@ -136,25 +124,22 @@ function FAQRow({ item, index, isOpen, onToggle }: {
         >
           {isOpen
             ? <Minus size={14} strokeWidth={2.5} color="#fff" />
-            : <Plus size={14} strokeWidth={2.5} color="#1F6F5F" />
+            : <Plus  size={14} strokeWidth={2.5} color="#1F6F5F" />
           }
         </span>
       </button>
 
       <div
         style={{
-          height: height,
+          height,
           overflow: "hidden",
-          transition: "height 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: `height 0.35s cubic-bezier(${EASE_EXPO_OUT.join(",")})`,
         }}
       >
         <div ref={answerRef} className="pb-5 pr-14">
           <p
-            className="text-[14px] leading-[1.75]"
-            style={{
-              fontFamily: "'Cabinet Grotesk', sans-serif",
-              color: "rgba(13,31,28,0.55)",
-            }}
+            className="text-[14px] leading-[1.75] text-[rgba(13,31,28,0.55)]"
+            style={{ fontFamily: "var(--font-body)" }}
           >
             {item.a}
           </p>
@@ -164,9 +149,12 @@ function FAQRow({ item, index, isOpen, onToggle }: {
   );
 }
 
-// ─── Main component ────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function FAQ() {
-  const { ref, inView } = useInView();
+  const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
   const [tab, setTab] = useState<"homeowner" | "professional">("homeowner");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -178,182 +166,168 @@ export default function FAQ() {
   };
 
   return (
-    <>
-      <style>{`
-        @import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=cabinet-grotesk@400,500,700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&display=swap');
-      `}</style>
+    <section
+      id="faq"
+      className="relative bg-[#F7F7F2] py-12 lg:py-18 overflow-hidden"
+    >
+      {/* Dot texture */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(rgba(13,31,28,0.05) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-      <section
-        id="faq"
-        className="relative bg-[#F7F7F2] py-12 lg:py-18 overflow-hidden"
+      <div
+        ref={ref}
+        className="relative z-10 mx-auto max-w-275 px-6 sm:px-10 lg:px-16"
       >
-        {/* dot texture */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage: "radial-gradient(rgba(13,31,28,0.05) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
 
-        <div
-          ref={ref}
-          className="relative z-10 mx-auto max-w-275 px-6 sm:px-10 lg:px-16"
-        >
-          {/* ── Header ──────────────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-14">
-            <div>
-              {/* label */}
-              <div
-                className="inline-flex items-center gap-2 mb-5"
-                style={{
-                  fontFamily: "'Cabinet Grotesk', sans-serif",
-                  fontSize: 11, fontWeight: 700,
-                  letterSpacing: "0.12em", textTransform: "uppercase",
-                  color: "#1F6F5F",
-                  opacity: inView ? 1 : 0,
-                  transform: inView ? "translateY(0)" : "translateY(16px)",
-                  transition: "opacity 0.6s ease, transform 0.6s ease",
-                }}
-              >
-                <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
-                FAQ
-              </div>
+        {/* ── Header ────────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-14">
 
-              {/* title */}
-              <h2
-                className="leading-[1.05] tracking-[-0.03em] text-[#0D1F1C]"
+          <div>
+            {/* Label */}
+            <motion.div
+              className="inline-flex items-center gap-2 mb-5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#1F6F5F]"
+              style={{ fontFamily: "var(--font-body)" }}
+              variants={fadeUp}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              custom={0}
+            >
+              <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
+              FAQ
+            </motion.div>
+
+            {/* Title */}
+            <motion.h2
+              className="leading-[1.05] tracking-[-0.03em] text-[#0D1F1C] font-bold"
+              style={{
+                fontFamily: "var(--font-clash)",
+                fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
+              }}
+              variants={fadeUp}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              custom={0.1}
+            >
+              Everything you<br />
+              <span
                 style={{
-                  fontFamily: "'Clash Display', sans-serif",
-                  fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
-                  fontWeight: 700,
-                  opacity: inView ? 1 : 0,
-                  transform: inView ? "translateY(0)" : "translateY(16px)",
-                  transition: "opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s",
-                }}
-              >
-                Everything you<br />
-                <span style={{
                   backgroundImage: "linear-gradient(100deg,#1F6F5F 0%,#2FA084 60%,#6FCF97 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                }}>
-                  need to know.
-                </span>
-              </h2>
-            </div>
-
-            <div
-              style={{
-                opacity: inView ? 1 : 0,
-                transform: inView ? "translateY(0)" : "translateY(16px)",
-                transition: "opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s",
-              }}
-            >
-              <p
-                className="leading-[1.72] mb-8"
-                style={{
-                  fontFamily: "'Instrument Serif', serif",
-                  fontStyle: "italic",
-                  fontSize: "1rem",
-                  color: "rgba(13,31,28,0.48)",
                 }}
               >
-                Got questions? We've got straight answers. If you don't find what
-                you're looking for, our team is one message away.
-              </p>
-
-              {/* tab switcher */}
-              <div
-                className="inline-flex p-1 rounded-full"
-                style={{ background: "rgba(31,111,95,0.08)", border: "1px solid rgba(31,111,95,0.12)" }}
-              >
-                {(["homeowner", "professional"] as const).map(t => (
-                  <button
-                    key={t}
-                    onClick={() => handleTabChange(t)}
-                    className="px-5 py-2 rounded-full text-[13px] font-semibold transition-all duration-25 cursor-pointer border-none"
-                    style={{
-                      fontFamily: "'Cabinet Grotesk', sans-serif",
-                      background: tab === t
-                        ? "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)"
-                        : "transparent",
-                      color: tab === t ? "#fff" : "rgba(13,31,28,0.5)",
-                      boxShadow: tab === t ? "0 2px 12px rgba(47,160,132,0.25)" : "none",
-                    }}
-                  >
-                    {t === "homeowner" ? "For Homeowners" : "For Professionals"}
-                  </button>
-                ))}
-              </div>
-            </div>
+                need to know.
+              </span>
+            </motion.h2>
           </div>
 
-          {/* ── FAQ list ─────────────────────────────────── */}
-          <div
-            className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.1)]"
-            style={{
-              background: "#fff",
-              boxShadow: "0 4px 32px rgba(13,31,28,0.06)",
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(20px)",
-              transition: "opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s",
-            }}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            custom={0.2}
           >
-            <div className="px-8 py-2">
-              {faqs.map((item, i) => (
-                <FAQRow
-                  key={`${tab}-${i}`}
-                  item={item}
-                  index={i}
-                  isOpen={openIndex === i}
-                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-                />
+            {/* Subtitle */}
+            <p
+              className="leading-[1.72] mb-8 italic text-[rgba(13,31,28,0.48)]"
+              style={{
+                fontFamily: "var(--font-serif-italic)",
+                fontSize: "1rem",
+              }}
+            >
+              Got questions? We've got straight answers. If you don't find what
+              you're looking for, our team is one message away.
+            </p>
+
+            {/* Tab switcher */}
+            <div
+              className="inline-flex p-1 rounded-full"
+              style={{
+                background: "rgba(31,111,95,0.08)",
+                border: "1px solid rgba(31,111,95,0.12)",
+              }}
+            >
+              {(["homeowner", "professional"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => handleTabChange(t)}
+                  className="px-5 py-2 rounded-full text-[13px] font-semibold transition-all duration-200 cursor-pointer border-none"
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    background: tab === t
+                      ? "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)"
+                      : "transparent",
+                    color: tab === t ? "#fff" : "rgba(13,31,28,0.5)",
+                    boxShadow: tab === t ? "0 2px 12px rgba(47,160,132,0.25)" : "none",
+                  }}
+                >
+                  {t === "homeowner" ? "For Homeowners" : "For Professionals"}
+                </button>
               ))}
             </div>
-          </div>
+          </motion.div>
+        </div>
 
-          {/* ── Bottom CTA ───────────────────────────────── */}
-          <div
-            className="mt-10 text-center"
+        {/* ── FAQ list ──────────────────────────────────────────────────── */}
+        <motion.div
+          className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.1)]"
+          style={{
+            background: "#fff",
+            boxShadow: "0 4px 32px rgba(13,31,28,0.06)",
+          }}
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          custom={0.3}
+        >
+          <div className="px-8 py-2">
+            {faqs.map((item, i) => (
+              <FAQRow
+                key={`${tab}-${i}`}
+                item={item}
+                index={i}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Bottom CTA ────────────────────────────────────────────────── */}
+        <motion.div
+          className="mt-10 text-center"
+          variants={fadeUp}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          custom={0.5}
+        >
+          <p
+            className="text-[14px] mb-3 text-[rgba(13,31,28,0.4)]"
+            style={{ fontFamily: "var(--font-body)" }}
+          >
+            Still have questions?
+          </p>
+
+          <button
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold border cursor-pointer transition-all duration-200 hover:bg-[rgba(31,111,95,0.06)] hover:border-[#1F6F5F]"
             style={{
-              opacity: inView ? 1 : 0,
-              transition: "opacity 0.6s ease 0.5s",
+              fontFamily: "var(--font-body)",
+              background: "transparent",
+              borderColor: "rgba(31,111,95,0.25)",
+              color: "#1F6F5F",
             }}
           >
-            <p
-              className="text-[14px] mb-3"
-              style={{
-                fontFamily: "'Cabinet Grotesk', sans-serif",
-                color: "rgba(13,31,28,0.4)",
-              }}
-            >
-              Still have questions?
-            </p>
-            <button
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold transition-all duration-200 border cursor-pointer"
-              style={{
-                fontFamily: "'Cabinet Grotesk', sans-serif",
-                background: "transparent",
-                borderColor: "rgba(31,111,95,0.25)",
-                color: "#1F6F5F",
-              }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = "rgba(31,111,95,0.06)";
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "#1F6F5F";
-              }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(31,111,95,0.25)";
-              }}
-            >
-              Contact our team →
-            </button>
-          </div>
-        </div>
-      </section>
-    </>
+            Contact our team →
+          </button>
+        </motion.div>
+
+      </div>
+    </section>
   );
 }

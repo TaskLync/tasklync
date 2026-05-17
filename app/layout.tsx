@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, Syne } from "next/font/google";
+import { Playfair_Display, DM_Sans, Syne, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -18,8 +18,16 @@ const dmSans = DM_Sans({
 
 const syne = Syne({
   subsets: ["latin"],
-  weight: ["700", "800" ,],
+  weight: ["700", "800"],
   variable: "--font-syne",
+  display: "swap",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["italic"],
+  variable: "--font-italic",
   display: "swap",
 });
 
@@ -38,7 +46,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${syne.variable}`}>
+    <html
+      lang="en"
+      className={`${playfair.variable} ${dmSans.variable} ${syne.variable} ${instrumentSerif.variable}`}
+    >
       <body className="bg-surface antialiased">
         {children}
       </body>

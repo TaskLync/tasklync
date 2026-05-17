@@ -1,4 +1,15 @@
+// ─── variants.ts ──────────────────────────────────────────────────────────────
+// Framer Motion variant definitions.
+// All easing and duration values come from transitions.ts — never hardcoded here.
+
 import type { Variants } from "framer-motion";
+import {
+  EASE_EXPO_OUT,
+  DUR,
+  transitionFloat,
+} from "@/lib/motion/transitions";
+
+// ─── Navbar variants ───────────────────────────────────────────────────────────
 
 export const navbarVariants: Variants = {
   hidden: { y: -80, opacity: 0 },
@@ -6,8 +17,8 @@ export const navbarVariants: Variants = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.7,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.slow,
+      ease: [...EASE_EXPO_OUT],
     },
   },
 };
@@ -19,11 +30,13 @@ export const navLinkVariants: Variants = {
     opacity: 1,
     transition: {
       delay: 0.3 + i * 0.07,
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.base,
+      ease: [...EASE_EXPO_OUT],
     },
   }),
 };
+
+// ─── Mobile menu variants ──────────────────────────────────────────────────────
 
 export const mobileMenuVariants: Variants = {
   closed: {
@@ -31,15 +44,15 @@ export const mobileMenuVariants: Variants = {
     clipPath: "inset(0 0 100% 0)",
     transition: {
       duration: 0.45,
-      ease: [0.76, 0, 0.24, 1] as const,
+      ease: [0.76, 0, 0.24, 1], // intentional: specific menu close curve
     },
   },
   open: {
     opacity: 1,
     clipPath: "inset(0 0 0% 0)",
     transition: {
-      duration: 0.55,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.base + 0.05,
+      ease: [...EASE_EXPO_OUT],
     },
   },
 };
@@ -51,8 +64,8 @@ export const mobileLinkVariants: Variants = {
     opacity: 1,
     transition: {
       delay: 0.15 + i * 0.06,
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.base,
+      ease: [...EASE_EXPO_OUT],
     },
   }),
 };
@@ -64,22 +77,23 @@ export const mobileCtaVariants: Variants = {
     opacity: 1,
     transition: {
       delay: 0.45,
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.base,
+      ease: [...EASE_EXPO_OUT],
     },
   },
 };
 
-// ─── Reveal variants ───────────────────────────────────────────────────────────
+// ─── Generic reveal variants ───────────────────────────────────────────────────
+// Use `custom` prop to pass per-element delay: <motion.div custom={0.2} />
 
 export const fadeUp: Variants = {
   hidden: { opacity: 0, y: 24 },
-  visible: (delay = 0) => ({
+  visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.slow,
+      ease: [...EASE_EXPO_OUT],
       delay,
     },
   }),
@@ -87,10 +101,10 @@ export const fadeUp: Variants = {
 
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  visible: (delay = 0) => ({
+  visible: (delay: number = 0) => ({
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: DUR.base + 0.1,
       ease: "easeOut",
       delay,
     },
@@ -99,12 +113,25 @@ export const fadeIn: Variants = {
 
 export const scaleIn: Variants = {
   hidden: { opacity: 0, scale: 0.88 },
-  visible: (delay = 0) => ({
+  visible: (delay: number = 0) => ({
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1] as const,
+      duration: DUR.base + 0.1,
+      ease: [...EASE_EXPO_OUT],
+      delay,
+    },
+  }),
+};
+
+export const slideRight: Variants = {
+  hidden: { opacity: 0, x: -24 },
+  visible: (delay: number = 0) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: DUR.slow,
+      ease: [...EASE_EXPO_OUT],
       delay,
     },
   }),
@@ -120,63 +147,54 @@ export const staggerContainer: Variants = {
   },
 };
 
-export const slideRight: Variants = {
-  hidden: { opacity: 0, x: -24 },
-  visible: (delay = 0) => ({
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.7,
-      ease: [0.16, 1, 0.3, 1] as const,
-      delay,
-    },
-  }),
-};
+// ─── Phone variants ────────────────────────────────────────────────────────────
 
-// ─── Phone-specific variants ───────────────────────────────────────────────────
-
+/**
+ * Float loop for the hero phone post-sequence.
+ * Uses transitionFloat from transitions.ts — change it there to update globally.
+ */
 export const phoneFloat: Variants = {
   float: {
     y: [0, -12, 0],
     transition: {
-      duration: 3.5,
-      repeat: Infinity,
-      ease: "easeInOut",
+      ...transitionFloat,
     },
   },
 };
 
+/**
+ * Ambient glow pulse — applied to the inner glow div (not the GSAP-controlled outer).
+ * GSAP handles the entry burst; this variant handles the steady-state loop.
+ */
 export const glowPulse: Variants = {
   pulse: {
     opacity: [0.4, 0.8, 0.4],
     scale: [0.95, 1.05, 0.95],
     transition: {
-      duration: 2.5,
+      duration: DUR.cinematic * 2 + 0.1, // ~2.5s
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
 };
 
-// ─── Screen transition variants ────────────────────────────────────────────────
+// ─── Screen transition variants (HeroPhone internal screens) ───────────────────
 
 export const screenTransition: Variants = {
   hidden: { opacity: 0, y: 12 },
-
   visible: {
     opacity: 1,
     y: 0,
     transition: {
       duration: 0.45,
-      ease: [0.16, 1, 0.3, 1] as const,
+      ease: [...EASE_EXPO_OUT],
     },
   },
-
   exit: {
     opacity: 0,
     y: -8,
     transition: {
-      duration: 0.3,
+      duration: DUR.fast,
       ease: "easeIn",
     },
   },
