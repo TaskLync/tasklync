@@ -17,17 +17,17 @@ const steps = [
   {
     num: "01",
     title: "Search & Select a Service",
-    body: "Browse services or tap what you need. Our smart matching engine shows available, nearby verified professionals with transparent pricing — no hidden fees.",
+    body: "Browse services or tap what you need. Our smart matching engine shows available, nearby verified professionals with transparent pricing.",
   },
   {
     num: "02",
     title: "Book in Under 60 Seconds",
-    body: "Pick a time slot, confirm your location, and book instantly. See the professional's profile, ratings, and estimated arrival — before you confirm.",
+    body: "Pick a time slot, confirm your location, and book instantly. See the professional's profile, ratings, and estimated arrival, before you confirm.",
   },
   {
     num: "03",
     title: "Job Done. Pay Securely.",
-    body: "The professional arrives, completes the job, and you pay securely in-app. Rate the experience. Dispute anything within 24 hours with full payment protection.",
+    body: "The professional arrives, completes the job, and you pay securely in app or cash. Rate the experience. Dispute anything within 24 hours with full payment protection.",
   },
 ] as const;
 
@@ -35,21 +35,21 @@ const cards = [
   {
     label: "Step 01",
     title: "Find what you need",
-    body: "Browse 20+ service categories with real-time professional availability in your area. Instant quotes, no phone calls required.",
+    body: "Explore a wide range of trusted local services with real time availability, transparent pricing, and verified professionals near you.",
     tag: "Smart Matching",
     icon: Search,
   },
   {
     label: "Step 02",
     title: "Instant confirmation",
-    body: "See professional profiles, ratings, and arrival times before you book. Confirm your slot in under 60 seconds — zero friction.",
+    body: "See professional profiles, ratings, and arrival times before you book. Confirm your slot in under 60 seconds.",
     tag: "60-sec Booking",
     icon: CalendarCheck,
   },
   {
     label: "Step 03",
     title: "Secure & done",
-    body: "Pay in-app after completion. Rate the service. Dispute anything within 24 hours with full payment protection guaranteed.",
+    body: "Pay in app after completion. Rate the service. Dispute anything within 24 hours with full payment protection guaranteed.",
     tag: "Escrow Protected",
     icon: ShieldCheck,
   },
@@ -134,8 +134,7 @@ export default function HowItWorks() {
             animate={inView ? "visible" : "hidden"}
             custom={0.2}
           >
-            No calls, no haggling, no surprises. Book a verified professional
-            in the time it takes to make coffee.
+            TaskLync makes it easy to find, book, and manage trusted local services from one seamless platform.
           </motion.p>
 
           {/* Steps */}

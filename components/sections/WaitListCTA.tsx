@@ -90,7 +90,7 @@ export default function WaitlistCTA() {
             className="leading-[1.72] mb-10 max-w-sm italic"
             style={{
               fontFamily: "var(--font-serif-italic)",
-              fontSize: "1rem",
+              fontSize: "1.15rem",
               color: "rgba(13,31,28,0.48)",
             }}
             variants={fadeUp}
@@ -99,7 +99,7 @@ export default function WaitlistCTA() {
             custom={0.2}
           >
             We're launching city by city. Join the waitlist now and be the
-            first to book — or earn — when TaskLync goes live near you.
+            first to book or earn,  when TaskLync goes live near you.
           </motion.p>
 
           {/* Perks */}
@@ -166,7 +166,7 @@ export default function WaitlistCTA() {
                 }}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-[#6FCF97] animate-pulse" />
-                Limited spots
+                Rolling Out Soon
               </div>
 
               {/* Card title */}
@@ -177,7 +177,7 @@ export default function WaitlistCTA() {
                   fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
                 }}
               >
-                Join the waitlist.<br />Pick your side.
+                Join the waitlist.
               </div>
 
               {/* Card body */}
@@ -202,19 +202,7 @@ export default function WaitlistCTA() {
                     boxShadow: "0 0 28px rgba(47,160,132,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
                   }}
                 >
-                  I need a service done <ArrowRight size={14} strokeWidth={2} />
-                </button>
-
-                <button
-                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full text-[14px] font-medium cursor-pointer transition-all duration-200 hover:border-[rgba(255,255,255,0.25)] hover:text-white"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "rgba(255,255,255,0.6)",
-                  }}
-                >
-                  I&apos;m a professional <ArrowRight size={14} strokeWidth={2} />
+                  Get Early Access <ArrowRight size={14} strokeWidth={2} />
                 </button>
               </div>
 
@@ -223,7 +211,7 @@ export default function WaitlistCTA() {
                 className="mt-5 text-center text-[11px] text-[rgba(255,255,255,0.22)]"
                 style={{ fontFamily: "var(--font-body)" }}
               >
-                Free to join · No spam · Cancel anytime
+                Join before public release and get priority access in your city.
               </p>
             </div>
           </div>

@@ -12,20 +12,20 @@ import { EASE_EXPO_OUT, DUR } from "@/lib/motion/transitions";
 // Content
 // ─────────────────────────────────────────────────────────────────────────────
 
-const trustBadges = ["No joining fee", "First payout in 24h", "Cancel anytime"];
+const trustBadges = ["No joining fees", "Fast and secure payouts", "Flexible scheduling"];
 
 const benefitCards = [
   {
     icon: Users,
     title: "Steady Demand",
-    body: "Verified local jobs land in your queue automatically — no chasing leads.",
+    body: "Get matched with customers actively booking services in your area.",
     accent: "rgba(47,160,132,0.12)",
     border: "rgba(47,160,132,0.18)",
   },
   {
     icon: Zap,
     title: "Fast Payouts",
-    body: "Complete a job, get paid within 24 hours. No invoicing, no waiting.",
+    body: "Receive secure payouts with fast payment processing.",
     accent: "rgba(111,207,151,0.10)",
     border: "rgba(111,207,151,0.20)",
   },
@@ -39,7 +39,7 @@ const benefitCards = [
   {
     icon: Star,
     title: "Build Reputation",
-    body: "Verified reviews compound over time — more stars means more bookings.",
+    body: "Verified reviews help increase visibility and future bookings.",
     accent: "rgba(47,160,132,0.12)",
     border: "rgba(47,160,132,0.18)",
   },
@@ -53,7 +53,7 @@ const benefitCards = [
   {
     icon: BadgeDollarSign,
     title: "Zero Hidden Fees",
-    body: "Transparent commission. No surprises. Keep more of what you earn.",
+    body: "Transparent and clear pricing with no hidden charges.",
     accent: "rgba(31,111,95,0.08)",
     border: "rgba(31,111,95,0.15)",
   },
@@ -205,8 +205,7 @@ export function ForProfessionals() {
               color: "rgba(13,31,28,0.5)",
             }}
           >
-            Join thousands of tradespeople earning more — on their own terms.
-            No cold calls. No slow seasons. Just verified jobs, every week.
+            Join a growing network of trusted professionals using TaskLync to manage bookings, reach more customers, and grow with confidence.
           </motion.p>
 
           {/* CTAs */}

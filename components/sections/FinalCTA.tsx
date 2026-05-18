@@ -236,7 +236,7 @@ export function FinalCTA() {
               custom={0.26}
             >
               Download the TaskLync app and connect with verified professionals
-              in minutes — wherever you are.
+              in minutes, wherever you are.
             </motion.p>
 
             {/* App store buttons */}
@@ -300,7 +300,7 @@ export function FinalCTA() {
               animate={inView ? "visible" : "hidden"}
               custom={0.42}
             >
-              No commitments. No hidden fees. Cancel anytime.
+              Find and book trusted professionals near you.
             </motion.p>
           </div>
 

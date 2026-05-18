@@ -182,13 +182,13 @@ export function Footer() {
                   color: "rgba(232,245,240,0.42)",
                 }}
               >
-                Connecting you instantly with verified local professionals — on demand, every time.
+                Connecting you instantly with verified local professionals on demand, every time.
               </p>
 
               {/* contact info */}
               <ul style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                 {[
-                  { Icon: MapPin, text: "Berlin, Germany" },
+                  { Icon: MapPin, text: "Faislabad, Pakistan" },
                   { Icon: Mail,   text: "hello@tasklync.com" },
                   { Icon: Phone,  text: "+49 30 000 0000" },
                 ].map(({ Icon, text }) => (
@@ -320,7 +320,7 @@ export function Footer() {
                 letterSpacing: "0.01em",
               }}
             >
-              © {new Date().getFullYear()} TaskLync GmbH. All rights reserved.
+              © {new Date().getFullYear()} TaskLync. All rights reserved.
             </p>
 
             <p
@@ -331,7 +331,7 @@ export function Footer() {
                 letterSpacing: "0.01em",
               }}
             >
-              Made with care in Berlin
+              Made with care in Faisalabad.
             </p>
           </div>
 

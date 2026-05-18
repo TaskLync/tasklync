@@ -363,7 +363,7 @@ export default function Hero() {
           }}
         >
           TaskLync connects you instantly with verified electricians, plumbers,
-          mechanics, and more — available right now, in your city.
+          mechanics, and more, available right now, in your city.
         </motion.p>
 
         <motion.div
@@ -425,7 +425,7 @@ export default function Hero() {
             }}
           >
             TaskLync connects you instantly with verified electricians, plumbers,
-            mechanics, and more — available right now, in your city.
+            mechanics, and more, available right now, in your city.
           </p>
 
           <div

@@ -20,62 +20,62 @@ interface FAQItem {
 const homeownerFAQs: FAQItem[] = [
   {
     q: "How quickly can I get a professional to my home?",
-    a: "Most bookings are matched within 8 minutes. Depending on availability in your city, a professional can arrive the same day or at a scheduled time that works for you. You'll see real-time availability before you confirm.",
+    a: "Most requests are matched within minutes. Based on availability in your area, a professional can arrive the same day or at a scheduled time that suits you. You will see real-time availability before confirming.",
   },
   {
     q: "How do I know the professionals are trustworthy?",
-    a: "Every professional on TaskLync passes a 7-step verification process — government ID check, background screening, trade license verification, proof of insurance, address confirmation, skills assessment, and an in-person review. They cannot go live on the platform without clearing all seven.",
+    a: "Every professional completes a strict verification process that includes identity checks, background screening, license validation where required, and skills review before joining the platform.",
   },
   {
     q: "What happens if something goes wrong with the job?",
-    a: "Every booking is covered by the TaskLync Guarantee. If the work isn't completed to standard, raise a dispute within 24 hours and our support team resolves it — with full payment protection throughout. You never pay for work that wasn't done right.",
+    a: "All bookings are covered by the TaskLync Guarantee. If something is not completed as expected, you can raise a dispute within 24 hours. Our team reviews and resolves it fairly with payment protection in place.",
   },
   {
     q: "How does payment work? Do I pay in cash?",
-    a: "No cash, ever. All payments happen securely in-app after you confirm the job is complete. Your payment is held in escrow until you mark the task done. Bank-grade encryption protects every transaction.",
+    a: "You can pay securely in-app or in cash after the job is completed, depending on the professional. In-app payments are held securely until you confirm completion.",
   },
   {
     q: "Can I request the same professional again?",
-    a: "Yes. Found someone you trust? Re-book them directly from your booking history in one tap. You can build a personal roster of go-to professionals for different services.",
+    a: "Yes. You can rebook previously hired professionals directly from your booking history and build a preferred list over time.",
   },
   {
     q: "Is there a minimum job value or booking fee?",
-    a: "No minimum job value and no hidden booking fees. You see the full cost before you confirm — what you see is exactly what you pay. No surprise 'inspection fees' or weekend surcharges.",
+    a: "No. There is no minimum job value or hidden booking fee. You only pay for the service you book.",
   },
   {
     q: "Which cities is TaskLync available in?",
-    a: "We're launching city by city. Join the waitlist and we'll notify you the moment we go live in your area. Early waitlist members get priority access and founder pricing when their city launches.",
+    a: "TaskLync is launching city by city. Join the waitlist to get notified when it becomes available in your area.",
   },
 ];
 
 const professionalFAQs: FAQItem[] = [
   {
     q: "How much does it cost to join as a professional?",
-    a: "Joining TaskLync is completely free. There are no upfront fees, no monthly subscriptions, and no joining charges. We take a small platform commission on completed jobs — so we only make money when you do.",
+    a: "Joining TaskLync is free. There are no upfront fees or subscriptions. We only charge a small commission on completed jobs.",
   },
   {
     q: "How and when do I get paid?",
-    a: "Payments are released directly to your registered account within 24 hours of job completion. No chasing invoices, no cash handling disputes. You can track all earnings and payouts in your pro dashboard.",
+    a: "Payments are released within 24 hours after job completion. You can track all earnings and payouts from your dashboard.",
   },
   {
     q: "Can I choose which jobs I accept?",
-    a: "Absolutely. You set your availability, your service radius, and the types of jobs you want. Our matching engine shows you relevant jobs — you accept or decline. No pressure, no penalties for passing on a job.",
+    a: "Yes. You control your availability, service area, and job preferences. You can accept or decline any request.",
   },
   {
     q: "What does the verification process involve?",
-    a: "We verify your government ID, trade certifications, business license (where applicable), proof of insurance, and conduct an in-person skills review for your primary service category. The process typically takes 3–5 business days. We re-verify insurance quarterly.",
+    a: "We verify your identity, relevant licenses, and skills depending on your service category. Some categories may include additional checks before approval.",
   },
   {
     q: "How does TaskLync help me grow my income?",
-    a: "You get a consistent pipeline of verified, pre-screened job requests without spending on advertising or chasing leads. High-rated professionals unlock premium badge status and priority placement in search results — meaning more visibility, better jobs, higher earnings.",
+    a: "You receive consistent local job requests without spending on advertising. Higher-rated professionals get better visibility and more booking opportunities.",
   },
   {
     q: "What if a customer raises a dispute?",
-    a: "Our support team reviews all disputes fairly using job photos, chat logs, and completion records. We protect professionals from unfair claims. If a customer is found to be acting in bad faith, we take action on their account, not yours.",
+    a: "All disputes are reviewed using job records and communication history. We ensure fair outcomes based on evidence and protect professionals from misuse.",
   },
   {
     q: "Can I work in multiple service categories?",
-    a: "Yes. You can list multiple trade skills on your profile. Each category requires separate verification, but once verified you can accept jobs across all your listed services. Many pros on TaskLync offer 3–5 categories.",
+    a: "Yes. You can add multiple service categories to your profile. Some categories may require separate verification before activation.",
   },
 ];
 
@@ -238,7 +238,7 @@ export default function FAQ() {
               className="leading-[1.72] mb-8 italic text-[rgba(13,31,28,0.48)]"
               style={{
                 fontFamily: "var(--font-serif-italic)",
-                fontSize: "1rem",
+                fontSize: "1.15rem",
               }}
             >
               Got questions? We've got straight answers. If you don't find what

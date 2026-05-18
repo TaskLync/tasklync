@@ -32,19 +32,59 @@ interface FeatureItem {
 }
 
 const customerFeatures: FeatureItem[] = [
-  { Icon: SearchCheck,       title: "Zero sourcing stress",           description: "Find trusted professionals in minutes, not hours" },
-  { Icon: BadgeDollarSign,   title: "Fixed, transparent prices",      description: "No surprise bills, ever" },
-  { Icon: MapPin,            title: "Real-time professional tracking", description: "Know exactly when they arrive" },
-  { Icon: ShieldCheck,       title: "Guaranteed quality",             description: "Not satisfied? We make it right" },
-  { Icon: MessageSquareLock, title: "All communication in-app",       description: "No personal info shared" },
+  {
+    Icon: SearchCheck,
+    title: "Trusted professionals",
+    description: "Find verified local professionals quickly through a seamless booking experience",
+  },
+  {
+    Icon: BadgeDollarSign,
+    title: "Transparent pricing",
+    description: "Review clear pricing and service details before confirming a booking",
+  },
+  {
+    Icon: MapPin,
+    title: "Live service tracking",
+    description: "Stay updated with real time arrival and service status information",
+  },
+  {
+    Icon: ShieldCheck,
+    title: "Reliable service experience",
+    description: "Dedicated support and quality standards built into every booking",
+  },
+  {
+    Icon: MessageSquareLock,
+    title: "Secure communication",
+    description: "Manage conversations safely within the platform without sharing personal details",
+  },
 ];
 
 const proFeatures: FeatureItem[] = [
-  { Icon: Users,         title: "Steady local demand",        description: "Customers come to you automatically" },
-  { Icon: Zap,           title: "Instant payment processing", description: "Get paid within 24 hours" },
-  { Icon: Star,          title: "Build your reputation",      description: "Verified reviews drive more bookings" },
-  { Icon: CalendarClock, title: "Full schedule control",      description: "You set your hours and service area" },
-  { Icon: BarChart3,     title: "Business growth tools",      description: "Analytics, insights, and repeat clients" },
+  {
+    Icon: Users,
+    title: "Consistent customer reach",
+    description: "Connect with local customers actively searching for trusted services",
+  },
+  {
+    Icon: Zap,
+    title: "Secure payouts",
+    description: "Receive payments through a streamlined and reliable payment system",
+  },
+  {
+    Icon: Star,
+    title: "Verified reputation",
+    description: "Build trust and grow through authentic customer ratings and reviews",
+  },
+  {
+    Icon: CalendarClock,
+    title: "Flexible scheduling",
+    description: "Manage your availability, bookings, and service areas with full control",
+  },
+  {
+    Icon: BarChart3,
+    title: "Business insights",
+    description: "Access tools and analytics designed to support long term business growth",
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
