@@ -82,7 +82,7 @@ export function WaitlistForm({
           color: "rgba(13,31,28,0.5)",
         }}
       >
-        Be first in line when we launch in your city. No spam, ever.
+        Be first in line when we launch in your city.
       </motion.p>
 
       {/* Divider */}
@@ -235,7 +235,7 @@ export function WaitlistForm({
         className="mt-4 text-center text-[11.5px]"
         style={{ fontFamily: "var(--font-body)", color: "rgba(13,31,28,0.35)" }}
       >
-        No credit card. No spam. Unsubscribe anytime.
+        Join before public release and get priority access in your city.
       </motion.p>
     </motion.div>
   );
