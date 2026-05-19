@@ -1,44 +1,35 @@
 // lib/email/send.ts
-// Server-only — never import in 'use client' files
+import { siteConfig }    from "@/config/site";
+import { welcomeSubject, welcomeText, welcomeHTML } from "./templates";
 
-import { Brevo, BrevoClient, BrevoEnvironment } from '@getbrevo/brevo'
-import { siteConfig } from '@/config/site'
-import type { UserType } from '@/types/waitlist'
-import {
-  homeownerSubject, homeownerText, homeownerHTML,
-  professionalSubject, professionalText, professionalHTML,
-  type EmailTemplateParams,
-} from './templates'
-
-// Initialise once — module-level singleton
-const client = new BrevoClient({
-  apiKey: process.env.BREVO_API_KEY!,
-  environment: BrevoEnvironment.Default,
-})
-
-export interface SendWelcomeEmailArgs {
-  email:        string
-  name?:        string
-  position:     number
-  referralCode: string
-  userType:     UserType
+interface SendWelcomeEmailParams {
+  email: string;
+  position: number;
 }
 
-export async function sendWelcomeEmail(args: SendWelcomeEmailArgs): Promise<void> {
-  const { email, name, position, referralCode, userType } = args
-  const firstName   = name?.trim().split(' ')[0] ?? 'there'
-  const referralUrl = `${siteConfig.url}/ref/${referralCode}`
-  const isHomeowner = userType === 'homeowner'
+export async function sendWelcomeEmail({ email, position }: SendWelcomeEmailParams) {
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": process.env.BREVO_API_KEY!,
+    },
+    body: JSON.stringify({
+      sender: {
+        email: siteConfig.email.sender,
+        name:  siteConfig.email.senderName,
+      },
+      to: [{ email }],
+      subject: welcomeSubject(position),
+      textContent: welcomeText({ position }),
+      htmlContent: welcomeHTML({ position }),
+    }),
+  });
 
-  const params: EmailTemplateParams = { firstName, position, referralUrl }
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(`Brevo API error: ${JSON.stringify(error)}`);
+  }
 
-  await client.transactionalEmails.sendTransacEmail({
-    to:          [{ email, name: name ?? firstName }],
-    sender:      { name: siteConfig.email.senderName, email: siteConfig.email.sender },
-    replyTo:     { email: siteConfig.email.sender },
-    subject:     isHomeowner ? homeownerSubject(position) : professionalSubject(position),
-    htmlContent: isHomeowner ? homeownerHTML(params)      : professionalHTML(params),
-    textContent: isHomeowner ? homeownerText(params)      : professionalText(params),
-    tags:        [userType, 'waitlist-welcome', `pos-${position}`],
-  })
+  return res.json();
 }

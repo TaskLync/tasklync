@@ -5,36 +5,29 @@ import { useState, useCallback, useRef } from 'react'
 import { submitWaitlist }                 from '@/lib/waitlist/submit'
 import { useAnalytics }                   from '@/hooks/useAnalytics'
 import { ANALYTICS_EVENTS }               from '@/lib/analytics/events'
-import type { WaitlistStep as FormState, UserType, WaitlistAPIResponse } from '@/types/waitlist'
+import type { WaitlistStep as FormState, WaitlistAPIResponse } from '@/types/waitlist'
 
 interface UseWaitlistFormOptions {
-  userType?: UserType
   onSuccess?: (result: WaitlistAPIResponse) => void
 }
 
 interface UseWaitlistFormReturn {
-  // State
-  formState:   FormState
-  email:       string
-  name:        string
-  result:      WaitlistAPIResponse | null
+  formState:    FormState
+  email:        string
+  result:       WaitlistAPIResponse | null
   errorMessage: string | null
-
-  // Handlers
   setEmail:         (v: string) => void
-  setName:          (v: string) => void
   handleFirstFocus: () => void
   handleSubmit:     (e: React.FormEvent) => Promise<void>
   reset:            () => void
 }
 
 export function useWaitlistForm(options: UseWaitlistFormOptions = {}): UseWaitlistFormReturn {
-  const { userType = 'homeowner', onSuccess } = options
+  const { onSuccess } = options
   const { track } = useAnalytics()
 
   const [formState, setFormState]       = useState<FormState>('idle')
   const [email, setEmail]               = useState('')
-  const [name, setName]                 = useState('')
   const [result, setResult]             = useState<WaitlistAPIResponse | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const hasStarted                      = useRef(false)
@@ -55,11 +48,7 @@ export function useWaitlistForm(options: UseWaitlistFormOptions = {}): UseWaitli
     track(ANALYTICS_EVENTS.WAITLIST_FORM_SUBMITTED)
 
     try {
-      const data = await submitWaitlist({
-        email,
-        name:      name.trim() || undefined,
-        user_type: userType,
-      })
+      const data = await submitWaitlist({ email })
 
       setResult(data)
       setFormState('success')
@@ -78,12 +67,11 @@ export function useWaitlistForm(options: UseWaitlistFormOptions = {}): UseWaitli
       setFormState('error')
       track(ANALYTICS_EVENTS.WAITLIST_SIGNUP_ERROR, { error_message: message })
     }
-  }, [email, name, userType, formState, track, onSuccess])
+  }, [email, formState, track, onSuccess])
 
   const reset = useCallback(() => {
     setFormState('idle')
     setEmail('')
-    setName('')
     setResult(null)
     setErrorMessage(null)
     hasStarted.current = false
@@ -92,11 +80,9 @@ export function useWaitlistForm(options: UseWaitlistFormOptions = {}): UseWaitli
   return {
     formState,
     email,
-    name,
     result,
     errorMessage,
     setEmail,
-    setName,
     handleFirstFocus,
     handleSubmit,
     reset,

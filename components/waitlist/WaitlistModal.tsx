@@ -13,12 +13,10 @@ import type { WaitlistModalProps, WaitlistStep } from "@/types/waitlist";
 
 export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) {
   const [email, setEmail] = useState("");
-  const [name, setName]   = useState("");
   const [step, setStep]   = useState<WaitlistStep>("idle");
   const [error, setError] = useState("");
   const emailRef          = useRef<HTMLInputElement | null>(null);
 
-  // Focus email on open
   useEffect(() => {
     if (open) {
       const t = setTimeout(() => emailRef.current?.focus(), 350);
@@ -26,7 +24,6 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
     }
   }, [open]);
 
-  // Close on Escape
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape" && open) onClose(); };
     window.addEventListener("keydown", handler);
@@ -36,7 +33,7 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
   const handleSubmit = async () => {
     setError("");
 
-    const parsed = waitlistSchema.safeParse({ email: email.trim(), name: name.trim() || undefined });
+    const parsed = waitlistSchema.safeParse({ email: email.trim() });
     if (!parsed.success) {
       setError(parsed.error.issues[0].message);
       return;
@@ -64,43 +61,29 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-[9998]"
+            className="fixed inset-0 z-9998"
             style={{ background: "rgba(13,31,28,0.45)", backdropFilter: "blur(6px)" }}
-            variants={backdropVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            variants={backdropVariants} initial="hidden" animate="visible" exit="exit"
             onClick={resetAndClose}
             aria-hidden="true"
           />
 
-          {/* Panel wrapper */}
           <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Join the TaskLync waitlist"
-            className="fixed inset-0 z-[9999] flex items-center justify-center px-4"
-            variants={panelVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            role="dialog" aria-modal="true" aria-label="Join the TaskLync waitlist"
+            className="fixed inset-0 z-9999 flex items-center justify-center px-4"
+            variants={panelVariants} initial="hidden" animate="visible" exit="exit"
           >
             <div
-              className="relative w-full max-w-[460px] rounded-[28px] overflow-hidden"
+              className="relative w-full max-w-115 rounded-[28px] overflow-hidden"
               style={{
                 background: "#FAFAF6",
-                boxShadow:
-                  "0 0 0 1px rgba(13,31,28,0.07), 0 8px 40px rgba(13,31,28,0.14), 0 2px 8px rgba(13,31,28,0.06)",
+                boxShadow: "0 0 0 1px rgba(13,31,28,0.07), 0 8px 40px rgba(13,31,28,0.14), 0 2px 8px rgba(13,31,28,0.06)",
               }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top accent bar */}
-              <div
-                className="h-[3px] w-full"
-                style={{ background: "linear-gradient(90deg,#1F6F5F 0%,#2FA084 55%,#6FCF97 100%)" }}
-              />
+              <div className="h-0.75 w-full" style={{ background: "linear-gradient(90deg,#1F6F5F 0%,#2FA084 55%,#6FCF97 100%)" }} />
 
               {/* Noise texture */}
               <div
@@ -142,8 +125,6 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
                       error={error}
                       email={email}
                       setEmail={(v) => { setEmail(v); setError(""); setStep("idle"); }}
-                      name={name}
-                      setName={setName}
                       emailRef={emailRef}
                     />
                   )}
