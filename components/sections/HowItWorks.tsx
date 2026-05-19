@@ -8,6 +8,8 @@ import { Search, CalendarCheck, ShieldCheck } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { fadeUp, slideRight } from "@/lib/motion/variants";
 import { EASE_EXPO_OUT, DUR } from "@/lib/motion/transitions";
+import { useRef } from "react";
+import { useSectionTracker } from "@/hooks/useAnalytics";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Content
@@ -88,7 +90,7 @@ export default function HowItWorks() {
   const Icon = card.icon;
 
   return (
-    <section id="how-it-works" className="bg-[#F7F7F5] py-20 lg:py-32">
+    <section id="how-it-works" className="bg-[#F7F7F5] py-20 lg:py-32" ref={ref as React.RefObject<HTMLDivElement>}>
       <div
         ref={ref}
         className="max-w-290 mx-auto px-6 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start"

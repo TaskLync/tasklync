@@ -1,7 +1,6 @@
 // components/waitlist/WaitlistProvider.tsx
 "use client";
-
-import { useWaitlistModal } from "@/hooks/useWaitlistForm";
+import { useWaitlistModal } from "@/hooks/useWaitlistModal";
 import { WaitlistContext } from "./WaitlistContext";
 import { WaitlistModal } from "./WaitlistModal";
 

@@ -10,12 +10,15 @@ import { navbarVariants, navLinkVariants } from "@/lib/motion/variants";
 import { LogoMark } from "./LogoMark";
 import { MobileMenu } from "./MobileMenu";
 import { useWaitlist } from "@/components/waitlist/WaitlistContext";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { openModal } = useWaitlist();
+  const { track } = useAnalytics(); 
 
   const pathname = usePathname();
 
@@ -215,7 +218,10 @@ export function Header() {
                 animate="visible"
               >
                 <motion.a
-                  onClick={openModal}
+                  onClick={()=>{
+                    openModal();
+                    track(ANALYTICS_EVENTS.NAV_CTA_CLICKED)
+                  }}
                   ref={ctaRef}
                   style={{ x: springX, y: springY }}
                   onMouseMove={handleCtaMouseMove}
