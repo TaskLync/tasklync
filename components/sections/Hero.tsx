@@ -34,6 +34,9 @@ import {
 } from "@/lib/motion/transitions";
 
 import { fadeUp, phoneFloat, glowPulse } from "@/lib/motion/variants";
+import { useWaitlist } from "../waitlist/WaitlistContext";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 const STYLES = {
   sectionBg:
@@ -53,8 +56,6 @@ const STYLES = {
 type Phase = "idle" | "onboarding" | "search" | "map" | "booking" | "confirmed";
 
 // ─── AmbientParticles — desktop only ─────────────────────────────────────────
-// [M1] On mobile we render static CSS dots instead (see MobileParticles below)
-
 function AmbientParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -118,9 +119,6 @@ function AmbientParticles() {
 }
 
 // ─── MobileParticles — static CSS dots, zero JS after mount ──────────────────
-// [M1] 6 hand-placed dots using CSS animation (compositor-only opacity pulse).
-// No canvas, no RAF, no JS running per frame. Browser handles on GPU thread.
-
 const MOBILE_DOTS = [
   { top: "18%", left: "8%",  size: 3, delay: "0s",    opacity: 0.18 },
   { top: "35%", left: "88%", size: 2, delay: "0.6s",  opacity: 0.14 },
@@ -143,7 +141,6 @@ function MobileParticles() {
             width: d.size,
             height: d.size,
             opacity: d.opacity,
-            // CSS animation — compositor-only, zero JS
             animation: `heroDotPulse 3.5s ease-in-out ${d.delay} infinite`,
           }}
         />
@@ -162,8 +159,17 @@ export default function Hero() {
   const subRef      = useRef<HTMLParagraphElement>(null);
   const ctaRef      = useRef<HTMLDivElement>(null);
 
+  const { openModal } = useWaitlist();
+  const { track } = useAnalytics();
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [done,  setDone]  = useState(false);
+
+  // Shared CTA handler — used by both mobile and desktop buttons
+  const handleCtaClick = () => {
+    openModal();
+    track(ANALYTICS_EVENTS.HERO_CTA_CLICKED);
+  };
 
   // Parallax tilt — desktop only
   const mx = useMotionValue(0);
@@ -194,7 +200,7 @@ export default function Hero() {
     };
   }, [done, handleMouseMove]);
 
-  // ── GSAP master timeline — desktop only, unchanged ───────────────────────────
+  // ── GSAP master timeline — desktop only ──────────────────────────────────────
   useEffect(() => {
     if (window.innerWidth < 1024) return;
 
@@ -253,12 +259,6 @@ export default function Hero() {
 
   return (
     <>
-      {/*
-        [M2] CSS keyframes injected once — no runtime cost.
-        heroDotPulse: for static mobile particles
-        heroFadeUp:   replaces Framer fadeUp on mobile text elements
-        heroLineGrow: replaces Framer scaleY loop on scroll cue
-      */}
       <style>{`
         @keyframes heroDotPulse {
           0%, 100% { opacity: var(--dot-opacity, 0.14); }
@@ -279,7 +279,7 @@ export default function Hero() {
         className="relative w-full overflow-hidden"
         style={{ minHeight: "100svh", background: STYLES.sectionBg }}
       >
-        {/* noise — static, zero animation cost */}
+        {/* noise */}
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.025]"
           style={{
@@ -288,7 +288,7 @@ export default function Hero() {
           }}
         />
 
-        {/* grid — static */}
+        {/* grid */}
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]"
           style={{
@@ -297,10 +297,7 @@ export default function Hero() {
           }}
         />
 
-        {/*
-          [M4] Blobs — desktop only. On mobile they're invisible behind content
-          and force extra compositing layers. Hidden via lg: class.
-        */}
+        {/* [M4] Blobs — desktop only */}
         <div
           className="pointer-events-none absolute left-[20%] top-[30%] hidden h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.18] lg:block"
           style={{ background: `radial-gradient(circle,${STYLES.brand400} 0%,transparent 70%)` }}
@@ -315,12 +312,12 @@ export default function Hero() {
           <AmbientParticles />
         </div>
 
-        {/* [M1] Static CSS dots — mobile only, zero JS */}
+        {/* [M1] Static CSS dots — mobile only */}
         <div className="lg:hidden">
           <MobileParticles />
         </div>
 
-        {/* ── PHONE — desktop only, unchanged ───────────────────────────────── */}
+        {/* ── PHONE — desktop only ───────────────────────────────────────────── */}
         <div
           className="pointer-events-none absolute inset-0 hidden items-center justify-center lg:flex"
           style={{ zIndex: 20, paddingTop: "80px" }}
@@ -361,13 +358,7 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* ── MOBILE layout ─────────────────────────────────────────────────── */}
-        {/*
-          [M2] All Framer motion.h1 / motion.p / motion.div replaced with
-          plain elements + CSS animation (heroFadeUp keyframe).
-          animation-fill-mode: both keeps opacity:0 before animation starts
-          so there's no flash. animation-play-state ensures it only runs once.
-        */}
+        {/* ── MOBILE layout ──────────────────────────────────────────────────── */}
         <div
           className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 text-center lg:hidden"
           style={{ paddingTop: "88px", paddingBottom: "2rem" }}
@@ -380,7 +371,6 @@ export default function Hero() {
               lineHeight: 1.05,
               letterSpacing: "-0.02em",
               color: STYLES.ink,
-              // CSS fadeUp — starts immediately, no JS parse needed
               animation: "heroFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.05s both",
             }}
           >
@@ -415,14 +405,12 @@ export default function Hero() {
               animation: "heroFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.3s both",
             }}
           >
-            <PrimaryButton>Join the Waitlist</PrimaryButton>
+            <PrimaryButton onClick={handleCtaClick}>Join the Waitlist</PrimaryButton>
             <SecondaryButton>See how it works</SecondaryButton>
           </div>
-
-
         </div>
 
-        {/* ── DESKTOP text column — revealed by GSAP, unchanged ─────────────── */}
+        {/* ── DESKTOP text column — revealed by GSAP ────────────────────────── */}
         <div
           ref={textColRef}
           className="relative z-10 hidden min-h-screen w-full items-center lg:flex"
@@ -476,7 +464,7 @@ export default function Hero() {
                 opacity: 0,
               }}
             >
-              <PrimaryButton>Join the Waitlist</PrimaryButton>
+              <PrimaryButton onClick={handleCtaClick}>Join the Waitlist</PrimaryButton>
               <SecondaryButton>See how it works</SecondaryButton>
             </div>
           </div>
@@ -490,11 +478,7 @@ export default function Hero() {
           }}
         />
 
-        {/*
-          [M5] Scroll cue — desktop only (already was), but the inner
-          Framer infinite loop replaced with CSS animation.
-          Same visual, zero JS running after mount.
-        */}
+        {/* [M5] Scroll cue — desktop only */}
         {done && (
           <div className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
             <span
@@ -508,7 +492,6 @@ export default function Hero() {
             >
               Scroll
             </span>
-            {/* [M5] CSS animation replaces Framer animate={{ scaleY:[0,1,0] }} */}
             <div
               style={{
                 width: 1,
@@ -542,9 +525,16 @@ function GradientSpan({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PrimaryButton({ children }: { children: React.ReactNode }) {
+function PrimaryButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
   return (
     <button
+      onClick={onClick}
       style={{
         fontFamily: STYLES.fontSans,
         background: "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",
@@ -560,7 +550,6 @@ function PrimaryButton({ children }: { children: React.ReactNode }) {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        // Only transition opacity — cheapest possible hover
         transition: "opacity 0.15s",
       }}
       onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
@@ -593,8 +582,6 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
-        // [M3] backdropFilter removed on mobile — forces compositing layer
-        // Add it back only on desktop via CSS media query if needed
         transition: "border-color 0.2s, color 0.2s",
       }}
       onMouseEnter={(e) => {

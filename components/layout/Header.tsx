@@ -320,10 +320,6 @@ function NavInner({
                     "hover:border-[#1F6F5F]/55 hover:bg-[#1F6F5F]/6",
                   ].join(" ")}
                 >
-                  <span
-                    aria-hidden="true"
-                    className="inline-block h-1.5 w-1.5 rounded-full bg-[#2FA084]"
-                  />
                   For Professionals
                 </Link>
               </motion.div>

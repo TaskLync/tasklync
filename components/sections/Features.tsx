@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useWaitlist } from "../waitlist/WaitlistContext";
 
 // ─── Types & content ─────────────────────────────────────────────────────────
 
@@ -153,17 +154,18 @@ function FeatureRow({
         >
           {title}
         </strong>
-        <span style={{ color: "rgba(13,31,28,0.30)", fontSize: "13px" }}> — </span>
-        <span
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "13px",
-            color: "rgba(13,31,28,0.52)",
-            lineHeight: 1.65,
-          }}
-        >
-          {description}
-        </span>
+        <span className="hidden sm:inline" style={{ color: "rgba(13,31,28,0.30)", fontSize: "13px" }}> — </span>
+<span
+  className="hidden sm:inline"
+  style={{
+    fontFamily: "var(--font-body)",
+    fontSize: "13px",
+    color: "rgba(13,31,28,0.52)",
+    lineHeight: 1.65,
+  }}
+>
+  {description}
+</span>
       </p>
     </li>
   );
@@ -174,6 +176,7 @@ function FeatureRow({
 export function Features() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
   const reduced = prefersReducedMotion();
+  const { openModal } = useWaitlist();
 
   // Shared animation helper
   const fadeIn = (delay: number) => ({
@@ -338,7 +341,8 @@ export function Features() {
 
             <div className="relative">
               <button
-                className="inline-flex items-center gap-2 rounded-full border-none px-6 py-3 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-85 active:opacity-75"
+                onClick={openModal}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-full border-none px-6 py-3 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-85 active:opacity-75"
                 style={{
                   fontFamily: "var(--font-body)",
                   background: "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",
@@ -407,7 +411,8 @@ export function Features() {
 
             <div className="relative">
               <button
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium
+                onClick={openModal}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium
                            transition-[border-color,background-color] duration-200
                            hover:bg-[rgba(31,111,95,0.07)] hover:border-[rgba(31,111,95,0.45)]
                            active:opacity-75"

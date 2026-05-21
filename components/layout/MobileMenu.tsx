@@ -4,6 +4,9 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { X, ArrowRight } from "lucide-react";
 import type { NavItem } from "@/config/nav";
+import { useWaitlist } from "../waitlist/WaitlistContext";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -13,6 +16,8 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const { openModal } = useWaitlist();
+  const { track } = useAnalytics();
 
   // Focus first link when opened
   useEffect(() => {
@@ -154,9 +159,12 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
             For Professionals
           </Link>
 
-          <Link
-            href="/waitlist"
-            onClick={onClose}
+          <div
+            onClick={() => {
+            openModal();
+            track(ANALYTICS_EVENTS.NAV_CTA_CLICKED);
+            onClose();
+            }}
             style={{
               display: "block",
               width: "100%",
@@ -173,8 +181,8 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
               boxSizing: "border-box",
             }}
           >
-            Get Started — It's Free
-          </Link>
+            Get Started
+          </div>
         </div>
       </div>
     </>

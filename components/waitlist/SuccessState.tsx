@@ -1,23 +1,30 @@
 // components/waitlist/SuccessState.tsx
 "use client";
 
+import { useState, useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { motion } from "framer-motion";
-import { scaleIn } from "@/lib/motion/variants";
 
 interface SuccessStateProps {
   onClose: () => void;
 }
 
 export function SuccessState({ onClose }: SuccessStateProps) {
+  const [visible, setVisible] = useState(false);
+
+  // Mount first, then flip visible so CSS transition fires — same pattern as WaitlistModal
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   return (
-    <motion.div
-      key="success"
-      variants={scaleIn}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
+    <div
       className="flex flex-col items-center text-center py-6"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "scale(1) translateY(0)" : "scale(0.97) translateY(6px)",
+        transition: "opacity 0.28s cubic-bezier(0.16,1,0.3,1), transform 0.28s cubic-bezier(0.16,1,0.3,1)",
+      }}
     >
       <div
         className="w-16 h-16 rounded-full flex items-center justify-center mb-5"
@@ -43,7 +50,7 @@ export function SuccessState({ onClose }: SuccessStateProps) {
       </h3>
 
       <p
-        className="max-w-[280px] leading-relaxed"
+        className="max-w-70 leading-relaxed"
         style={{
           fontFamily: "var(--font-body)",
           fontSize: "0.875rem",
@@ -55,7 +62,7 @@ export function SuccessState({ onClose }: SuccessStateProps) {
 
       <button
         onClick={onClose}
-        className="mt-7 rounded-full px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-85"
+        className="mt-7 rounded-full px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-85 active:opacity-75"
         style={{
           fontFamily: "var(--font-body)",
           background: "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",
@@ -64,7 +71,7 @@ export function SuccessState({ onClose }: SuccessStateProps) {
       >
         Done
       </button>
-    </motion.div>
+    </div>
   );
 }
 

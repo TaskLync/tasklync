@@ -29,6 +29,7 @@
 
 import { ArrowRight, CheckCircle2, Zap, Star, CalendarClock, BarChart3, Users, BadgeDollarSign } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useWaitlist } from "../waitlist/WaitlistContext";
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
@@ -90,6 +91,7 @@ const stats = [
 
 export function ForProfessionals() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.05 });
+  const { openModal } = useWaitlist();
 
   // [FP7] Check reduced-motion once, outside render — same pattern as HowItWorks
   const reduced =
@@ -172,7 +174,7 @@ export function ForProfessionals() {
               className="inline-flex items-center gap-2 mb-6"
               style={anim(0)}
             >
-              <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
+              
               <span
                 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#1F6F5F]"
                 style={{ fontFamily: "var(--font-body)" }}
@@ -227,7 +229,8 @@ export function ForProfessionals() {
               style={anim(0.28)}
             >
               <button
-                className="inline-flex items-center gap-2 rounded-full border-none px-7 py-3.5 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-85"
+                onClick={openModal}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-full border-none px-7 py-3.5 text-sm font-semibold text-white transition-opacity duration-200 hover:opacity-85"
                 style={{
                   fontFamily: "var(--font-body)",
                   background: "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",
@@ -275,7 +278,7 @@ export function ForProfessionals() {
             [FP3] Each card: motion.div → plain div, delay via inline style.
           */}
           <div
-            className="grid grid-cols-2 gap-3 sm:gap-4"
+            className="hidden lg:grid grid-cols-2 gap-3 sm:gap-4"
             style={anim(0.2)}
           >
             {benefitCards.map((card, i) => {
@@ -322,44 +325,6 @@ export function ForProfessionals() {
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* ── Stats bar ── */}
-        {/* [FP4] motion.div → plain div with CSS fpFadeUp */}
-        <div
-          className="relative z-10 mx-auto max-w-6xl px-6 sm:px-10 lg:px-16 mt-14"
-          style={anim(0.55)}
-        >
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 rounded-[20px] overflow-hidden border border-[rgba(13,31,28,0.08)]"
-            style={{ background: "#fff", boxShadow: "0 2px 20px rgba(13,31,28,0.05)" }}
-          >
-            {stats.map((s) => (
-              <div
-                key={s.label}
-                className="fp-stat flex flex-col items-center justify-center py-6 px-4"
-              >
-                <p
-                  className="leading-none"
-                  style={{
-                    fontFamily: "var(--font-clash)",
-                    fontSize: "clamp(1.3rem, 2vw, 1.8rem)",
-                    fontWeight: 700,
-                    color: "#1F6F5F",
-                    letterSpacing: "-0.03em",
-                  }}
-                >
-                  {s.value}
-                </p>
-                <p
-                  className="mt-1 text-center text-[12px] font-semibold text-[rgba(13,31,28,0.45)]"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
-                  {s.label}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

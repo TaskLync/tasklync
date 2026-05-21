@@ -1,40 +1,11 @@
 "use client";
 
-/**
- * MOBILE PERFORMANCE PASS
- *
- * [C1] Green card wrapper: motion.div with fadeUp → CSS @keyframes ctaFadeUp.
- *      The whole card was a Framer Motion root — removing it cuts the single
- *      biggest animation instance in this component.
- *
- * [C2] Left column: 5 motion.* elements (eyebrow, headline, subtitle, buttons,
- *      fine print) → plain elements with CSS ctaFadeUp + animation-delay.
- *      Zero JS per frame.
- *
- * [C3] Phone mockup: motion.div → CSS ctaFadeUp. Desktop-only (hidden md:flex)
- *      so no mobile cost either way, but removes a JS instance on desktop.
- *
- * [C4] Google Play button: backdropFilter blur(8px) removed.
- *      Blur forces a separate GPU compositing layer on every frame.
- *      Replaced with a flat rgba background — visually identical on the
- *      known dark-green card background.
- *
- * [C5] Hydration fix — prefers-reduced-motion via useEffect (same pattern
- *      as WaitlistCTA v2 / FAQ). typeof window in render = SSR mismatch.
- *
- * [C6] Removed: framer-motion, fadeUp, EASE_EXPO_OUT, DUR imports.
- *
- * Desktop: visually identical.
- */
-
 import { useState, useEffect } from "react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
 function AppleIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0 }}>
       <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
     </svg>
   );
@@ -42,15 +13,12 @@ function AppleIcon() {
 
 function PlayIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M3.18 23.76c.3.17.64.24.99.2l12.7-11.66-2.9-2.9L3.18 23.76zM20.54 10.23l-2.84-1.64-3.19 2.93 3.19 2.93 2.87-1.66c.82-.47.82-1.09-.03-1.56zM2.01 1.05C1.69 1.4 1.5 1.96 1.5 2.69v18.6c0 .73.19 1.29.53 1.62l.09.08L13.38 12v-.27L2.1.97l-.09.08zM13.97 6.37l-10.8-6.24.09-.08 10.89 9.96-3.19 2.93 2.91-2.67.1-.9z" />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ flexShrink: 0, display: "block" }}>
+      <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.199c.396.228.642.651.642 1.109 0 .458-.246.881-.642 1.109l-2.031 1.173L13.207 12l2.46-2.46 2.031 1.168zM5.864 3.658L16.8 10 14.5 12.3 5.864 3.658z" />
     </svg>
   );
 }
 
-// ─── PhoneMockup ──────────────────────────────────────────────────────────────
-
-// Static — no animations inside, zero cost
 function PhoneMockup() {
   return (
     <div
@@ -63,21 +31,15 @@ function PhoneMockup() {
         boxShadow: "0 32px 80px rgba(13,31,28,0.28), 0 8px 20px rgba(13,31,28,0.18), inset 0 1px 0 rgba(255,255,255,0.08)",
       }}
     >
-      {/* Notch */}
       <div
         className="absolute top-3.5 left-1/2 -translate-x-1/2 rounded-full"
         style={{ width: 72, height: 22, background: "#0a1912" }}
       />
-
-      {/* Screen content */}
       <div className="absolute inset-0 flex flex-col gap-2.5" style={{ padding: "52px 18px 20px" }}>
-
-        {/* Map */}
         <div
           className="relative flex-1 overflow-hidden rounded-2xl"
           style={{ background: "linear-gradient(135deg,#1a3830 0%,#0e2218 100%)" }}
         >
-          {/* Grid lines */}
           <div
             className="absolute inset-0 opacity-[0.15]"
             style={{
@@ -85,7 +47,6 @@ function PhoneMockup() {
               backgroundSize: "24px 24px",
             }}
           />
-          {/* Pin */}
           <div className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2">
             <div
               className="w-7 h-7"
@@ -100,13 +61,10 @@ function PhoneMockup() {
               <div className="w-2 h-2 rounded-full bg-white" />
             </div>
           </div>
-          {/* Route */}
           <svg className="absolute inset-0 w-full h-full opacity-40">
             <path d="M 30 130 Q 60 80 100 95 Q 130 110 110 60" stroke="#6FCF97" strokeWidth="2" fill="none" strokeDasharray="5 4" />
           </svg>
         </div>
-
-        {/* Booking card */}
         <div
           className="flex items-center gap-2.5 rounded-2xl p-[10px_12px]"
           style={{
@@ -128,8 +86,6 @@ function PhoneMockup() {
           </div>
         </div>
       </div>
-
-      {/* Home bar */}
       <div
         className="absolute bottom-2.5 left-1/2 -translate-x-1/2 rounded-full"
         style={{ width: 80, height: 4, background: "rgba(255,255,255,0.2)" }}
@@ -138,12 +94,9 @@ function PhoneMockup() {
   );
 }
 
-// ─── FinalCTA ─────────────────────────────────────────────────────────────────
-
 export function FinalCTA() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
 
-  // [C5] Hydration fix — read matchMedia only after mount
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -168,12 +121,12 @@ export function FinalCTA() {
       `}</style>
 
       <section
-        className="relative overflow-hidden px-4 py-14 md:px-6 md:py-20"
+        className="relative overflow-hidden px-4 py-6 md:px-6 md:py-20"
         style={{
           background: "linear-gradient(155deg,#f0f7f4 0%,#e8f5f0 45%,#f2f9f6 75%,#edf7f3 100%)",
         }}
       >
-        {/* Noise — static */}
+        {/* Noise */}
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.025]"
           style={{
@@ -182,7 +135,7 @@ export function FinalCTA() {
           }}
         />
 
-        {/* Grid — static */}
+        {/* Grid */}
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]"
           style={{
@@ -191,17 +144,17 @@ export function FinalCTA() {
           }}
         />
 
-        {/* [C1] Green card — motion.div removed → CSS ctaFadeUp */}
+        {/* Green card */}
         <div
           ref={ref as React.RefObject<HTMLDivElement>}
-          className="relative z-10 mx-auto max-w-5xl overflow-hidden rounded-[28px] md:rounded-[36px]"
+          className="relative z-10 mx-auto max-w-5xl overflow-hidden rounded-3xl md:rounded-[36px]"
           style={{
             background: "linear-gradient(135deg,#1a4a3a 0%,#1F6F5F 40%,#2FA084 75%,#3ab896 100%)",
             boxShadow: "0 24px 80px rgba(31,111,95,0.35), 0 4px 16px rgba(31,111,95,0.2), inset 0 1px 0 rgba(255,255,255,0.12)",
             ...anim(0),
           }}
         >
-          {/* Card noise — static */}
+          {/* Card noise */}
           <div
             className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
             style={{
@@ -210,7 +163,7 @@ export function FinalCTA() {
             }}
           />
 
-          {/* Blobs — static, no animation */}
+          {/* Blobs */}
           <div
             className="pointer-events-none absolute -top-24 -left-24 h-80 w-80 rounded-full opacity-20"
             style={{ background: "radial-gradient(circle,#6FCF97 0%,transparent 70%)" }}
@@ -221,29 +174,29 @@ export function FinalCTA() {
           />
 
           {/* Card content */}
-          <div className="relative z-10 flex flex-col items-center gap-10 px-6 py-12 md:flex-row md:items-center md:gap-0 md:px-16 md:py-16">
+          <div className="relative z-10 flex flex-col items-center gap-4 px-5 py-7 md:flex-row md:items-center md:gap-0 md:px-16 md:py-16">
 
-            {/* ── LEFT ── */}
+            {/* LEFT */}
             <div className="flex flex-1 flex-col items-center text-center md:items-start md:text-left">
 
-              {/* [C2] Eyebrow */}
+              {/* Eyebrow — hidden on mobile */}
               <p
-                className="mb-4 uppercase tracking-[0.14em] text-[11px] font-semibold text-[rgba(255,255,255,0.55)]"
+                className="hidden md:block mb-4 uppercase tracking-[0.14em] text-[11px] font-semibold text-[rgba(255,255,255,0.55)]"
                 style={{ fontFamily: "var(--font-body)", ...anim(0.1) }}
               >
                 Available on iOS & Android
               </p>
 
-              {/* [C2] Headline */}
+              {/* Headline */}
               <h2
-                className="font-bold leading-[1.03] tracking-[-0.02em] text-white mb-5"
+                className="font-bold leading-[1.05] tracking-[-0.02em] text-white mb-2 md:mb-5"
                 style={{
                   fontFamily: "var(--font-clash)",
-                  fontSize: "clamp(2.2rem, 4.5vw, 4rem)",
+                  fontSize: "clamp(1.65rem, 4.5vw, 4rem)",
                   ...anim(0.18),
                 }}
               >
-                Ready to get<br />
+                Ready to get{" "}
                 <span
                   style={{
                     backgroundImage: "linear-gradient(100deg,#d4f5e6 0%,#a7edcc 50%,#6FCF97 100%)",
@@ -256,32 +209,37 @@ export function FinalCTA() {
                 </span>
               </h2>
 
-              {/* [C2] Subtitle */}
+              {/* Subtitle — short version on mobile, full on desktop */}
               <p
-                className="italic leading-[1.72] text-[rgba(255,255,255,0.60)] mb-8 max-w-100"
+                className="italic leading-[1.6] text-[rgba(255,255,255,0.60)] mb-5 md:mb-8 max-w-xs md:max-w-none"
                 style={{
                   fontFamily: "var(--font-serif-italic)",
-                  fontSize: "clamp(1rem, 1.5vw, 1.15rem)",
+                  fontSize: "clamp(0.85rem, 1.5vw, 1.15rem)",
                   ...anim(0.26),
                 }}
               >
-                Download the TaskLync app and connect with verified professionals
-                in minutes, wherever you are.
+                <span className="md:hidden">Connect with verified professionals in minutes.</span>
+                <span className="hidden md:inline">
+                  Download the TaskLync app and connect with verified professionals
+                  in minutes, wherever you are.
+                </span>
               </p>
 
-              {/* [C2] App store buttons */}
+              {/* App store buttons */}
               <div
-                className="flex flex-wrap items-center gap-3"
+                className="flex items-center gap-2 md:gap-3"
                 style={anim(0.34)}
               >
                 {/* App Store */}
                 <a
                   href="#"
                   aria-label="Download on the App Store"
-                  className="inline-flex items-center gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-bold text-[0.875rem] text-[#0D1F1C] transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
+                  className="inline-flex items-center gap-1.5 md:gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-bold
+                             text-[0.78rem] md:text-[0.875rem] text-[#0D1F1C]
+                             px-4 py-2 md:px-[1.6rem] md:py-[0.85rem]
+                             transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
                   style={{
                     fontFamily: "var(--font-body)",
-                    padding: "0.85rem 1.6rem",
                     background: "#ffffff",
                     boxShadow: "0 4px 20px rgba(13,31,28,0.18), inset 0 1px 0 rgba(255,255,255,0.9)",
                   }}
@@ -295,14 +253,16 @@ export function FinalCTA() {
                   </span>
                 </a>
 
-                {/* [C4] Google Play — backdropFilter blur removed, flat rgba instead */}
+                {/* Google Play */}
                 <a
                   href="#"
                   aria-label="Get it on Google Play"
-                  className="inline-flex items-center gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-semibold text-[0.875rem] text-white transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
+                  className="inline-flex items-center gap-1.5 md:gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-semibold
+                             text-[0.78rem] md:text-[0.875rem] text-white
+                             px-4 py-2 md:px-[1.6rem] md:py-[0.85rem]
+                             transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
                   style={{
                     fontFamily: "var(--font-body)",
-                    padding: "0.85rem 1.6rem",
                     background: "rgba(255,255,255,0.14)",
                     border: "1px solid rgba(255,255,255,0.22)",
                   }}
@@ -317,16 +277,16 @@ export function FinalCTA() {
                 </a>
               </div>
 
-              {/* [C2] Fine print */}
+              {/* Fine print */}
               <p
-                className="mt-4 text-[12px] tracking-[0.01em] text-[rgba(255,255,255,0.38)]"
+                className="mt-3 md:mt-4 text-[11px] md:text-[12px] tracking-[0.01em] text-[rgba(255,255,255,0.38)]"
                 style={{ fontFamily: "var(--font-body)", ...anim(0.42) }}
               >
                 Find and book trusted professionals near you.
               </p>
             </div>
 
-            {/* [C3] Phone mockup — desktop only, CSS ctaFadeUp */}
+            {/* Phone mockup — desktop only */}
             <div
               className="hidden md:flex items-end justify-center"
               style={{ paddingLeft: "3rem", minWidth: 220, ...anim(0.3) }}

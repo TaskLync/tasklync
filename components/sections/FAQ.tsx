@@ -39,7 +39,7 @@ interface FAQItem {
 const homeownerFAQs: FAQItem[] = [
   {
     q: "How quickly can I get a professional to my home?",
-    a: "Most requests are matched within minutes. Based on availability in your area, a professional can arrive the same day or at a scheduled time that suits you. You will see real-time availability before confirming.",
+    a: "Most requests are matched within minutes. Based on availability in your area, a professional can arrive the same day or at a scheduled time that suits you.",
   },
   {
     q: "How do I know the professionals are trustworthy?",
@@ -48,18 +48,6 @@ const homeownerFAQs: FAQItem[] = [
   {
     q: "What happens if something goes wrong with the job?",
     a: "All bookings are covered by the TaskLync Guarantee. If something is not completed as expected, you can raise a dispute within 24 hours. Our team reviews and resolves it fairly with payment protection in place.",
-  },
-  {
-    q: "How does payment work? Do I pay in cash?",
-    a: "You can pay securely in-app or in cash after the job is completed, depending on the professional. In-app payments are held securely until you confirm completion.",
-  },
-  {
-    q: "Can I request the same professional again?",
-    a: "Yes. You can rebook previously hired professionals directly from your booking history and build a preferred list over time.",
-  },
-  {
-    q: "Is there a minimum job value or booking fee?",
-    a: "No. There is no minimum job value or hidden booking fee. You only pay for the service you book.",
   },
   {
     q: "Which cities is TaskLync available in?",
@@ -73,14 +61,6 @@ const professionalFAQs: FAQItem[] = [
     a: "Joining TaskLync is free. There are no upfront fees or subscriptions. We only charge a small commission on completed jobs.",
   },
   {
-    q: "How and when do I get paid?",
-    a: "Payments are released within 24 hours after job completion. You can track all earnings and payouts from your dashboard.",
-  },
-  {
-    q: "Can I choose which jobs I accept?",
-    a: "Yes. You control your availability, service area, and job preferences. You can accept or decline any request.",
-  },
-  {
     q: "What does the verification process involve?",
     a: "We verify your identity, relevant licenses, and skills depending on your service category. Some categories may include additional checks before approval.",
   },
@@ -91,10 +71,6 @@ const professionalFAQs: FAQItem[] = [
   {
     q: "What if a customer raises a dispute?",
     a: "All disputes are reviewed using job records and communication history. We ensure fair outcomes based on evidence and protect professionals from misuse.",
-  },
-  {
-    q: "Can I work in multiple service categories?",
-    a: "Yes. You can add multiple service categories to your profile. Some categories may require separate verification before activation.",
   },
 ];
 
@@ -238,7 +214,6 @@ export default function FAQ() {
                 className="inline-flex items-center gap-2 mb-5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#1F6F5F]"
                 style={{ fontFamily: "var(--font-body)", ...anim(0) }}
               >
-                <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
                 FAQ
               </div>
 

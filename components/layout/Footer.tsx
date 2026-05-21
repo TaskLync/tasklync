@@ -298,20 +298,7 @@ export function Footer() {
                         }}
                       >
                         {label}
-                        {label === "Careers" && (
-                          <span
-                            style={{
-                              fontSize: "9px", fontWeight: 600,
-                              padding: "1px 5px", borderRadius: 99,
-                              background: "rgba(47,160,132,0.18)",
-                              color: "#6FCF97",
-                              letterSpacing: "0.05em",
-                              marginLeft: "0.25rem",
-                            }}
-                          >
-                            HIRING
-                          </span>
-                        )}
+                        
                         {label === "Press Kit" && (
                           <ArrowUpRight size={11} strokeWidth={2} style={{ opacity: 0.4 }} />
                         )}

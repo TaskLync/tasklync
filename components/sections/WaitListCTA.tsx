@@ -24,6 +24,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useWaitlist } from "../waitlist/WaitlistContext";
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
@@ -38,6 +39,7 @@ const perks = [
 
 export default function WaitlistCTA() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.15 });
+  const { openModal } = useWaitlist();
 
   // [W5] Hydration fix — read matchMedia only after mount, never on the server
   const [reduced, setReduced] = useState(false);
@@ -91,7 +93,6 @@ export default function WaitlistCTA() {
               className="inline-flex items-center gap-2 mb-5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#1F6F5F]"
               style={{ fontFamily: "var(--font-body)", ...anim(0) }}
             >
-              <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
               Early Access
             </div>
 
@@ -164,6 +165,7 @@ export default function WaitlistCTA() {
               style={anim(0.62)}
             >
               <button
+                onClick={openModal}
                 className="w-full flex items-center justify-center gap-2 py-4 rounded-full text-white text-[14px] font-semibold cursor-pointer transition-opacity duration-200 hover:opacity-85"
                 style={{
                   fontFamily: "var(--font-body)",

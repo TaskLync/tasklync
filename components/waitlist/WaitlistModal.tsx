@@ -17,12 +17,12 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
   const emailRef            = useRef<HTMLInputElement | null>(null);
 
   // Sync open → visible with a tiny delay so CSS transition fires
+  // NOTE: auto-focus intentionally removed — on mobile, focusing the input
+  // programmatically triggers the keyboard to open immediately, which is
+  // jarring UX. Users tap the field themselves when ready.
   useEffect(() => {
     if (open) {
-      // Mount first, then flip visible so transition runs
       requestAnimationFrame(() => setVisible(true));
-      const t = setTimeout(() => emailRef.current?.focus(), 300);
-      return () => clearTimeout(t);
     } else {
       setVisible(false);
     }
