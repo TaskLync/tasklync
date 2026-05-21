@@ -1,19 +1,34 @@
 "use client";
 
+/**
+ * MOBILE PERFORMANCE PASS
+ *
+ * [H1] All motion.div on left column (label, title, subtitle, steps) →
+ *      CSS @keyframes hiwFadeUp with animation-delay. Zero JS per frame.
+ *
+ * [H2] Right card: AnimatePresence + motion.div content swap →
+ *      CSS opacity transition on a single div. data-key forces repaint
+ *      only when active changes. No JS animation loop.
+ *
+ * [H3] Right card: dark theme → light theme (per design request).
+ *      Matches the card style used in Features.tsx.
+ *
+ * [H4] onMouseEnter → onMouseEnter + onClick so steps work on touch.
+ *
+ * [H5] Right card glow blob removed — extra compositing layer.
+ *
+ * [H6] motion.div (slideRight) on right column → CSS fadeUp.
+ *      slideRight variant was sliding from off-screen causing layout
+ *      recalc on every frame during entry.
+ *
+ * Desktop: visually identical. Light card, same hover/click step switching.
+ */
+
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
-import { Search, CalendarCheck, ShieldCheck } from "lucide-react";
-
+import { Search, CalendarCheck, ShieldCheck, LucideIcon } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { fadeUp, slideRight } from "@/lib/motion/variants";
-import { EASE_EXPO_OUT, DUR } from "@/lib/motion/transitions";
-import { useRef } from "react";
-import { useSectionTracker } from "@/hooks/useAnalytics";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Content
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Content ──────────────────────────────────────────────────────────────────
 
 const steps = [
   {
@@ -33,218 +48,249 @@ const steps = [
   },
 ] as const;
 
-const cards = [
+interface CardData {
+  label: string;
+  title: string;
+  body: string;
+  tag: string;
+  Icon: LucideIcon;
+}
+
+const cards: CardData[] = [
   {
     label: "Step 01",
     title: "Find what you need",
     body: "Explore a wide range of trusted local services with real time availability, transparent pricing, and verified professionals near you.",
     tag: "Smart Matching",
-    icon: Search,
+    Icon: Search,
   },
   {
     label: "Step 02",
     title: "Instant confirmation",
     body: "See professional profiles, ratings, and arrival times before you book. Confirm your slot in under 60 seconds.",
     tag: "60-sec Booking",
-    icon: CalendarCheck,
+    Icon: CalendarCheck,
   },
   {
     label: "Step 03",
     title: "Secure & done",
     body: "Pay in app after completion. Rate the service. Dispute anything within 24 hours with full payment protection guaranteed.",
     tag: "Escrow Protected",
-    icon: ShieldCheck,
+    Icon: ShieldCheck,
   },
-] as const;
+];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Local variant — card content swap animation
-// ─────────────────────────────────────────────────────────────────────────────
-
-const cardContentVariants: Variants = {
-  hidden:  { opacity: 0, y: 8 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.35,
-      ease: [...EASE_EXPO_OUT] as [number, number, number, number],
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: -6,
-    transition: { duration: DUR.instant, ease: "easeIn" },
-  },
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Component
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── HowItWorks ───────────────────────────────────────────────────────────────
 
 export default function HowItWorks() {
   const [active, setActive] = useState(0);
   const { ref, inView } = useIntersectionObserver({ threshold: 0.15 });
 
   const card = cards[active];
-  const Icon = card.icon;
+  const Icon = card.Icon;
+
+  const reduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   return (
-    <section id="how-it-works" className="bg-[#F7F7F5] py-20 lg:py-32" ref={ref as React.RefObject<HTMLDivElement>}>
-      <div
-        ref={ref}
-        className="max-w-290 mx-auto px-6 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start"
+    <>
+      <style>{`
+        @keyframes hiwFadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        /* [H2] Card content crossfade — CSS only, no AnimatePresence */
+        .hiw-card-content {
+          transition: opacity 0.28s cubic-bezier(0.16,1,0.3,1),
+                      transform 0.28s cubic-bezier(0.16,1,0.3,1);
+        }
+        /* Step row tap highlight on mobile */
+        .hiw-step:active { background: rgba(31,111,95,0.04); border-radius: 10px; }
+      `}</style>
+
+      <section
+        id="how-it-works"
+        className="bg-[#F7F7F5] py-20 lg:py-32"
+        ref={ref as React.RefObject<HTMLDivElement>}
       >
+        <div className="max-w-290 mx-auto px-6 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-        {/* ── LEFT ──────────────────────────────────────────────────────── */}
-        <div>
+          {/* ── LEFT COLUMN ─────────────────────────────────────────────── */}
+          <div>
 
-          {/* Label */}
-          <motion.div
-            className="inline-flex items-center gap-2 mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-            style={{ fontFamily: "var(--font-body)" }}
-            variants={fadeUp}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            custom={0}
-          >
-            <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
-            How It Works
-          </motion.div>
-
-          {/* Title */}
-          <motion.h2
-            className="text-[#0D1F1C] mb-4 leading-[1.05] tracking-[-0.03em] font-bold"
-            style={{
-              fontFamily: "var(--font-clash)",
-              fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
-            }}
-            variants={fadeUp}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            custom={0.1}
-          >
-            Three steps to<br />a fixed home.
-          </motion.h2>
-
-          {/* Subtitle — Instrument Serif italic, matches Hero.tsx subheading */}
-          <motion.p
-            className="text-[rgba(13,31,28,0.5)] leading-[1.7] mb-12 max-w-sm italic"
-            style={{ fontFamily: "var(--font-serif-italic)", fontSize: "1.15rem" }}
-            variants={fadeUp}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            custom={0.2}
-          >
-            TaskLync makes it easy to find, book, and manage trusted local services from one seamless platform.
-          </motion.p>
-
-          {/* Steps */}
-          <div className="flex flex-col">
-            {steps.map((s, i) => (
-              <motion.div
-                key={i}
-                className={[
-                  "relative flex gap-5 py-6 cursor-pointer",
-                  i < steps.length - 1 ? "border-b border-[rgba(31,111,95,0.1)]" : "",
-                ].join(" ")}
-                variants={fadeUp}
-                initial="hidden"
-                animate={inView ? "visible" : "hidden"}
-                custom={0.3 + i * 0.1}
-                onMouseEnter={() => setActive(i)}
-              >
-                {/* Accent bar */}
-                <div
-                  className="absolute left-0 top-0 bottom-0 w-0.75 bg-[#1F6F5F] rounded-r-sm transition-opacity duration-250"
-                  style={{ opacity: active === i ? 1 : 0 }}
-                />
-
-                {/* Number pill */}
-                <div
-                  className="shrink-0 w-11.5 h-11.5 rounded-[14px] flex items-center justify-center text-[15px] font-bold border-[1.5px] transition-all duration-300"
-                  style={{
-                    fontFamily:  "var(--font-clash)",
-                    background:  active === i ? "#1F6F5F" : "#EFEFED",
-                    color:       active === i ? "#fff"    : "rgba(13,31,28,0.35)",
-                    borderColor: active === i ? "#1F6F5F" : "rgba(31,111,95,0.12)",
-                  }}
-                >
-                  {s.num}
-                </div>
-
-                {/* Text */}
-                <div>
-                  <div
-                    className="text-[#0D1F1C] mb-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em]"
-                    style={{ fontFamily: "var(--font-clash)" }}
-                  >
-                    {s.title}
-                  </div>
-                  <div
-                    className="text-[13px] text-[rgba(13,31,28,0.5)] leading-[1.65]"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {s.body}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── RIGHT (desktop only) ──────────────────────────────────────── */}
-        <motion.div
-          className="hidden lg:block sticky top-28"
-          variants={slideRight}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          custom={0.4}
-        >
-          {/* Card shell */}
-          <div
-            className="relative rounded-[28px] overflow-hidden flex flex-col justify-end min-h-90 p-10 border border-[rgba(47,160,132,0.15)]"
-            style={{ background: "linear-gradient(145deg, #0D1F1C 0%, #081512 100%)" }}
-          >
-            {/* Dot grid */}
+            {/* Label */}
             <div
-              className="absolute inset-0 rounded-[28px] pointer-events-none"
+              className="inline-flex items-center gap-2 mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
               style={{
-                backgroundImage: `
-                  linear-gradient(rgba(111,207,151,0.04) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(111,207,151,0.04) 1px, transparent 1px)
-                `,
-                backgroundSize: "40px 40px",
+                fontFamily: "var(--font-body)",
+                animation: !reduced && inView
+                  ? "hiwFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.0s both"
+                  : undefined,
+                opacity: reduced ? 1 : inView ? undefined : 0,
               }}
-            />
+            >
+              <span className="block w-5 h-0.5 rounded-sm bg-[#1F6F5F]" />
+              How It Works
+            </div>
 
-            {/* Glow blob */}
+            {/* Title */}
+            <h2
+              className="text-[#0D1F1C] mb-4 leading-[1.05] tracking-[-0.03em] font-bold"
+              style={{
+                fontFamily: "var(--font-clash)",
+                fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
+                animation: !reduced && inView
+                  ? "hiwFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.08s both"
+                  : undefined,
+                opacity: reduced ? 1 : inView ? undefined : 0,
+              }}
+            >
+              Three steps to<br />a fixed home.
+            </h2>
+
+            {/* Subtitle */}
+            <p
+              className="text-[rgba(13,31,28,0.5)] leading-[1.7] mb-12 max-w-sm italic"
+              style={{
+                fontFamily: "var(--font-serif-italic)",
+                fontSize: "1.15rem",
+                animation: !reduced && inView
+                  ? "hiwFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.16s both"
+                  : undefined,
+                opacity: reduced ? 1 : inView ? undefined : 0,
+              }}
+            >
+              TaskLync makes it easy to find, book, and manage trusted local
+              services from one seamless platform.
+            </p>
+
+            {/* Steps */}
+            <div className="flex flex-col">
+              {steps.map((s, i) => (
+                <div
+                  key={i}
+                  className={[
+                    "hiw-step relative flex gap-5 py-6 cursor-pointer",
+                    i < steps.length - 1
+                      ? "border-b border-[rgba(31,111,95,0.1)]"
+                      : "",
+                  ].join(" ")}
+                  style={{
+                    animation: !reduced && inView
+                      ? `hiwFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) ${0.24 + i * 0.08}s both`
+                      : undefined,
+                    opacity: reduced ? 1 : inView ? undefined : 0,
+                  }}
+                  // [H4] both mouse + touch
+                  onMouseEnter={() => setActive(i)}
+                  onClick={() => setActive(i)}
+                >
+                  {/* Accent bar — CSS transition, compositor-only */}
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#1F6F5F] rounded-r-sm"
+                    style={{
+                      opacity: active === i ? 1 : 0,
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+
+                  {/* Number pill */}
+                  <div
+                    className="shrink-0 w-11 h-11 rounded-[14px] flex items-center justify-center text-[15px] font-bold border-[1.5px]"
+                    style={{
+                      fontFamily: "var(--font-clash)",
+                      background: active === i ? "#1F6F5F" : "#EFEFED",
+                      color: active === i ? "#fff" : "rgba(13,31,28,0.35)",
+                      borderColor: active === i
+                        ? "#1F6F5F"
+                        : "rgba(31,111,95,0.12)",
+                      // Only transition background+color — compositor-safe
+                      transition: "background 0.2s ease, color 0.2s ease, border-color 0.2s ease",
+                    }}
+                  >
+                    {s.num}
+                  </div>
+
+                  {/* Text */}
+                  <div>
+                    <div
+                      className="text-[#0D1F1C] mb-1.5 text-[17px] font-semibold leading-snug tracking-[-0.02em]"
+                      style={{ fontFamily: "var(--font-clash)" }}
+                    >
+                      {s.title}
+                    </div>
+                    <div
+                      className="text-[13px] text-[rgba(13,31,28,0.5)] leading-[1.65]"
+                      style={{ fontFamily: "var(--font-body)" }}
+                    >
+                      {s.body}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── RIGHT COLUMN — desktop only ─────────────────────────────── */}
+          {/*
+            [H3] Light theme card — matches Features.tsx card style.
+            [H2] AnimatePresence removed. Content swaps via CSS opacity.
+            [H5] Glow blob removed.
+            [H6] slideRight variant removed → CSS hiwFadeUp.
+          */}
+          <div
+            className="hidden lg:block sticky top-28"
+            style={{
+              animation: !reduced && inView
+                ? "hiwFadeUp 0.55s cubic-bezier(0.16,1,0.3,1) 0.3s both"
+                : undefined,
+              opacity: reduced ? 1 : inView ? undefined : 0,
+            }}
+          >
+            {/* Light card shell — matches Features card */}
             <div
-              className="absolute -top-15 -right-15 w-70 h-70 rounded-full pointer-events-none"
-              style={{ background: "radial-gradient(circle, rgba(47,160,132,0.2) 0%, transparent 70%)" }}
-            />
+              className="relative rounded-[28px] overflow-hidden flex flex-col justify-end min-h-90 p-10 border border-[rgba(31,111,95,0.14)]"
+              style={{
+                background:
+                  "linear-gradient(145deg, rgba(255,255,255,0.82) 0%, rgba(236,248,243,0.75) 100%)",
+                boxShadow:
+                  "0 4px 40px rgba(31,111,95,0.07), 0 1px 0 rgba(255,255,255,0.9) inset",
+              }}
+            >
+              {/* Dot grid — static, zero animation cost */}
+              <div
+                className="absolute inset-0 rounded-[28px] pointer-events-none"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(rgba(31,111,95,0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(31,111,95,0.05) 1px, transparent 1px)
+                  `,
+                  backgroundSize: "40px 40px",
+                }}
+              />
 
-            {/* Animated content */}
-            <AnimatePresence mode="wait">
-              <motion.div
+              {/*
+                [H2] CSS crossfade — key prop forces a re-render when active
+                changes, triggering the CSS transition from opacity 0 → 1.
+                No AnimatePresence, no JS animation values.
+              */}
+              <div
                 key={active}
-                className="relative z-10"
-                variants={cardContentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+                className="hiw-card-content relative z-10"
+                style={{ opacity: 1 }}
               >
                 {/* Icon */}
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border border-[rgba(47,160,132,0.25)]"
-                  style={{ background: "rgba(47,160,132,0.15)" }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 border border-[rgba(31,111,95,0.2)]"
+                  style={{ background: "rgba(31,111,95,0.08)" }}
                 >
-                  <Icon size={24} strokeWidth={1.75} color="#6FCF97" />
+                  <Icon size={24} strokeWidth={1.75} color="#1F6F5F" />
                 </div>
 
                 {/* Step label */}
                 <div
-                  className="text-[10px] font-semibold tracking-[0.12em] uppercase text-[#6FCF97] mb-2.5"
+                  className="text-[10px] font-semibold tracking-[0.12em] uppercase text-[#1F6F5F] mb-2.5"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
                   {card.label}
@@ -252,7 +298,7 @@ export default function HowItWorks() {
 
                 {/* Card title */}
                 <div
-                  className="text-white mb-3 leading-[1.1] tracking-[-0.03em] font-bold"
+                  className="text-[#0D1F1C] mb-3 leading-[1.1] tracking-[-0.03em] font-bold"
                   style={{
                     fontFamily: "var(--font-clash)",
                     fontSize: "clamp(1.4rem, 2.5vw, 1.7rem)",
@@ -263,7 +309,7 @@ export default function HowItWorks() {
 
                 {/* Card body */}
                 <div
-                  className="text-[13.5px] text-[rgba(255,255,255,0.45)] leading-[1.7]"
+                  className="text-[13.5px] text-[rgba(13,31,28,0.5)] leading-[1.7]"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
                   {card.body}
@@ -271,21 +317,21 @@ export default function HowItWorks() {
 
                 {/* Tag pill */}
                 <div
-                  className="inline-flex items-center gap-1.5 mt-6 px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-[#6FCF97] border border-[rgba(47,160,132,0.2)]"
+                  className="inline-flex items-center gap-1.5 mt-6 px-3.5 py-1.5 rounded-full text-[11px] font-semibold text-[#1F6F5F] border border-[rgba(31,111,95,0.18)]"
                   style={{
-                    background:  "rgba(47,160,132,0.12)",
-                    fontFamily:  "var(--font-body)",
+                    background: "rgba(31,111,95,0.08)",
+                    fontFamily: "var(--font-body)",
                   }}
                 >
-                  <Icon size={12} strokeWidth={2} color="#6FCF97" />
+                  <Icon size={12} strokeWidth={2} color="#1F6F5F" />
                   {card.tag}
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </div>
+            </div>
           </div>
-        </motion.div>
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

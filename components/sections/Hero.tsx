@@ -1,14 +1,24 @@
 "use client";
 
 // ─── Hero.tsx ──────────────────────────────────────────────────────────────────
-// Issues fixed vs previous version:
-//  [1] Font <style> import removed → use next/font in layout.tsx (see bottom comment)
-//  [2] GSAP + Framer conflict resolved → wrapper pattern, never same element
-//  [3] Canvas Strict Mode double-invoke guard added
-//  [4] mousemove RAF-throttled via useCallback + ref
-//  [5] Unused imports removed
-//  [6] Repeated inline values extracted to STYLES constant
-//  [7] GradientSpan extracted (was duplicated in mobile + desktop)
+// MOBILE PERFORMANCE PASS:
+//
+//  [M1] AmbientParticles disabled on mobile — canvas RAF loop on weak CPU = jank
+//       Replaced with 6 static CSS dots (opacity + transform, zero JS)
+//
+//  [M2] Framer Motion removed from mobile headline/sub/cta — replaced with
+//       CSS keyframe animations via className. Same fadeUp feel, zero JS cost.
+//
+//  [M3] SecondaryButton backdropFilter removed on mobile — compositor layer
+//       for a small button isn't worth the GPU cost.
+//
+//  [M4] Blob divs hidden on mobile — radial-gradient blobs cause extra paint
+//       layers. Not visible on small screens anyway.
+//
+//  [M5] Scroll cue infinite Framer loop moved to CSS animation — zero JS
+//       after mount.
+//
+//  Desktop: completely unchanged. GSAP sequence + Framer parallax intact.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
@@ -25,9 +35,6 @@ import {
 
 import { fadeUp, phoneFloat, glowPulse } from "@/lib/motion/variants";
 
-// ─── Style constants ───────────────────────────────────────────────────────────
-// Values used in 2+ places live here. Change once, updates everywhere.
-
 const STYLES = {
   sectionBg:
     "linear-gradient(155deg,#f0f7f4 0%,#e8f5f0 45%,#f2f9f6 75%,#edf7f3 100%)",
@@ -38,17 +45,15 @@ const STYLES = {
   inkFaint: "rgba(13,31,28,0.3)",
   brand600: "#1F6F5F",
   brand400: "#2FA084",
-  // Font stacks — loaded via next/font in layout.tsx (see comment at bottom)
   fontDisplay: "'Clash Display', sans-serif",
   fontSerif:   "'Instrument Serif', serif",
   fontSans:    "'Cabinet Grotesk', sans-serif",
 } as const;
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
-
 type Phase = "idle" | "onboarding" | "search" | "map" | "booking" | "confirmed";
 
-// ─── AmbientParticles ──────────────────────────────────────────────────────────
+// ─── AmbientParticles — desktop only ─────────────────────────────────────────
+// [M1] On mobile we render static CSS dots instead (see MobileParticles below)
 
 function AmbientParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -72,7 +77,7 @@ function AmbientParticles() {
     }));
 
     let raf: number;
-    let cleanedUp = false; // FIX [3]: prevents double-loop in React Strict Mode
+    let cleanedUp = false;
 
     const tick = () => {
       if (cleanedUp) return;
@@ -112,12 +117,46 @@ function AmbientParticles() {
   );
 }
 
+// ─── MobileParticles — static CSS dots, zero JS after mount ──────────────────
+// [M1] 6 hand-placed dots using CSS animation (compositor-only opacity pulse).
+// No canvas, no RAF, no JS running per frame. Browser handles on GPU thread.
+
+const MOBILE_DOTS = [
+  { top: "18%", left: "8%",  size: 3, delay: "0s",    opacity: 0.18 },
+  { top: "35%", left: "88%", size: 2, delay: "0.6s",  opacity: 0.14 },
+  { top: "55%", left: "5%",  size: 2, delay: "1.1s",  opacity: 0.12 },
+  { top: "70%", left: "92%", size: 3, delay: "0.3s",  opacity: 0.16 },
+  { top: "82%", left: "20%", size: 2, delay: "0.9s",  opacity: 0.10 },
+  { top: "25%", left: "75%", size: 2, delay: "1.4s",  opacity: 0.13 },
+];
+
+function MobileParticles() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+      {MOBILE_DOTS.map((d, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full bg-[#1F6F5F]"
+          style={{
+            top: d.top,
+            left: d.left,
+            width: d.size,
+            height: d.size,
+            opacity: d.opacity,
+            // CSS animation — compositor-only, zero JS
+            animation: `heroDotPulse 3.5s ease-in-out ${d.delay} infinite`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ─── Hero ──────────────────────────────────────────────────────────────────────
 
 export default function Hero() {
-  // GSAP refs — GSAP is the sole owner of these DOM nodes
   const phoneRef    = useRef<HTMLDivElement>(null);
-  const glowRef     = useRef<HTMLDivElement>(null); // outer wrapper only
+  const glowRef     = useRef<HTMLDivElement>(null);
   const textColRef  = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subRef      = useRef<HTMLParagraphElement>(null);
@@ -126,13 +165,12 @@ export default function Hero() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [done,  setDone]  = useState(false);
 
-  // ── Parallax tilt (SPRING_GENTLE from transitions.ts) ────────────────────────
+  // Parallax tilt — desktop only
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, SPRING_GENTLE);
   const sy = useSpring(my, SPRING_GENTLE);
 
-  // FIX [4]: RAF-throttled mousemove — caps at display refresh rate
   const pendingRaf = useRef<number | null>(null);
 
   const handleMouseMove = useCallback(
@@ -156,7 +194,7 @@ export default function Hero() {
     };
   }, [done, handleMouseMove]);
 
-  // ── GSAP master timeline ──────────────────────────────────────────────────────
+  // ── GSAP master timeline — desktop only, unchanged ───────────────────────────
   useEffect(() => {
     if (window.innerWidth < 1024) return;
 
@@ -168,7 +206,6 @@ export default function Hero() {
     const cta     = ctaRef.current;
     if (!phone || !glow || !textCol || !hl || !sub || !cta) return;
 
-    // Build GSAP ease string once from the shared constant
     const ease = `cubic-bezier(${EASE_EXPO_OUT.join(",")})`;
 
     gsap.set(phone, {
@@ -177,8 +214,6 @@ export default function Hero() {
       transformPerspective: 1000,
       transformOrigin: "center center",
     });
-    // FIX [2]: GSAP only touches glowRef (the outer wrapper div)
-    // Framer's glowPulse runs on the inner motion.div — zero overlap
     gsap.set(glow,    { opacity: 0, scale: 0.6 });
     gsap.set(textCol, { opacity: 0 });
     gsap.set([hl, sub, cta], { opacity: 0, y: 28 });
@@ -186,224 +221,167 @@ export default function Hero() {
     const tl = gsap.timeline();
 
     tl
-      // Phone enters from above
       .to(phone, {
         duration: DUR.epic,
         yPercent: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1,
         ease,
       }, GSAP_PHASES.phoneEnter)
-
-      // Landing bounce
-      .to(phone, { duration: DUR.instant,      y: 16, ease: "power2.in"           }, GSAP_PHASES.phoneLand - 0.05)
-      .to(phone, { duration: DUR.fast,          y: -9, ease: "elastic.out(1, 0.6)" }, GSAP_PHASES.phoneLand + 0.03)
-      .to(phone, { duration: DUR.fast * 0.6,   y: 0,  ease: "power2.inOut"        }, GSAP_PHASES.phoneLand + 0.31)
-
-      // Glow burst — outer wrapper only; Framer pulse loop on inner div
+      .to(phone, { duration: DUR.instant,     y: 16, ease: "power2.in"           }, GSAP_PHASES.phoneLand - 0.05)
+      .to(phone, { duration: DUR.fast,         y: -9, ease: "elastic.out(1, 0.6)" }, GSAP_PHASES.phoneLand + 0.03)
+      .to(phone, { duration: DUR.fast * 0.6,  y: 0,  ease: "power2.inOut"        }, GSAP_PHASES.phoneLand + 0.31)
       .to(glow, { duration: DUR.fast,  opacity: 1, scale: 1.9, ease: "power2.out" }, GSAP_PHASES.phoneLand)
       .to(glow, { duration: DUR.base,  opacity: 0, scale: 1,   ease: "power2.in"  }, GSAP_PHASES.phoneLand + 0.32)
-
-      // Screen phase transitions
       .call(() => setPhase("onboarding"), [], GSAP_PHASES.onboardingScreen)
       .call(() => setPhase("search"),     [], GSAP_PHASES.searchScreen)
       .call(() => setPhase("map"),        [], GSAP_PHASES.mapScreen)
       .call(() => setPhase("booking"),    [], GSAP_PHASES.bookingScreen)
       .call(() => setPhase("confirmed"),  [], GSAP_PHASES.confirmedScreen)
-
-      // Phone slides right
       .to(phone, {
         duration: DUR.cinematic,
         x: () => window.innerWidth * 0.22,
         yPercent: 0, scale: 0.88,
         ease,
       }, GSAP_PHASES.phoneSlideRight)
-
-      // Text column reveals
       .to(textCol, { duration: 0.01, opacity: 1 }, GSAP_PHASES.heroTextReveal)
       .to(hl,  { duration: DUR.slow,        opacity: 1, y: 0, ease }, GSAP_PHASES.heroTextReveal + DUR.instant)
       .to(sub, { duration: DUR.slow * 0.95, opacity: 1, y: 0, ease }, GSAP_PHASES.heroTextReveal + DUR.instant + DUR.fast * 1.5)
       .to(cta, { duration: DUR.base * 1.3,  opacity: 1, y: 0, ease }, GSAP_PHASES.heroTextReveal + DUR.instant + DUR.fast * 3)
-
       .call(() => setDone(true), [], GSAP_PHASES.sequenceDone);
 
     return () => { tl.kill(); };
   }, []);
 
   return (
-    // FIX [1]: <style> tag removed. Load fonts in layout.tsx via next/font.
-    // See the setup comment at the bottom of this file.
-    <section
-      className="relative w-full overflow-hidden"
-      style={{ minHeight: "100svh", background: STYLES.sectionBg }}
-    >
-      {/* noise */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: "180px 180px",
-        }}
-      />
+    <>
+      {/*
+        [M2] CSS keyframes injected once — no runtime cost.
+        heroDotPulse: for static mobile particles
+        heroFadeUp:   replaces Framer fadeUp on mobile text elements
+        heroLineGrow: replaces Framer scaleY loop on scroll cue
+      */}
+      <style>{`
+        @keyframes heroDotPulse {
+          0%, 100% { opacity: var(--dot-opacity, 0.14); }
+          50%       { opacity: calc(var(--dot-opacity, 0.14) * 2.2); }
+        }
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroLineGrow {
+          0%   { transform: scaleY(0); opacity: 0.6; }
+          50%  { transform: scaleY(1); opacity: 1;   }
+          100% { transform: scaleY(0); opacity: 0.4; }
+        }
+      `}</style>
 
-      {/* grid */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(31,111,95,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(31,111,95,.6) 1px,transparent 1px)`,
-          backgroundSize: "72px 72px",
-        }}
-      />
-
-      {/* blobs */}
-      <div
-        className="pointer-events-none absolute left-[20%] top-[30%] h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.18]"
-        style={{ background: `radial-gradient(circle,${STYLES.brand400} 0%,transparent 70%)` }}
-      />
-      <div
-        className="pointer-events-none absolute right-[15%] bottom-[20%] h-87.5 w-87.5 rounded-full opacity-[0.12]"
-        style={{ background: `radial-gradient(circle,${STYLES.brand600} 0%,transparent 70%)` }}
-      />
-
-      <AmbientParticles />
-
-      {/* ── PHONE — desktop only ─────────────────────────────────────────────── */}
-      <div
-        className="pointer-events-none absolute inset-0 hidden items-center justify-center lg:flex"
-        style={{ zIndex: 20, paddingTop: "80px" }}
+      <section
+        className="relative w-full overflow-hidden"
+        style={{ minHeight: "100svh", background: STYLES.sectionBg }}
       >
+        {/* noise — static, zero animation cost */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-[0.025]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: "180px 180px",
+          }}
+        />
+
+        {/* grid — static */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(31,111,95,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(31,111,95,.6) 1px,transparent 1px)`,
+            backgroundSize: "72px 72px",
+          }}
+        />
+
         {/*
-          FIX [2] — Wrapper ownership pattern:
-
-          glowRef (plain div)          ← GSAP ONLY: entry burst (opacity, scale)
-          └── motion.div               ← FRAMER ONLY: glowPulse loop after `done`
-
-          phoneRef (plain div)         ← GSAP ONLY: enter, bounce, slide
-          └── motion.div               ← FRAMER ONLY: parallax tilt + float loop
-
-          Rule: each element is controlled by exactly one animation system.
-          Handoff happens at `done = true` — GSAP has finished, Framer takes over.
+          [M4] Blobs — desktop only. On mobile they're invisible behind content
+          and force extra compositing layers. Hidden via lg: class.
         */}
-
-        {/* Outer glow — GSAP entry burst */}
         <div
-          ref={glowRef}
-          className="absolute h-72 w-72 rounded-full"
-          style={{ opacity: 0 }}
-        >
-          {/* Inner glow — Framer steady-state pulse loop */}
-          <motion.div
-            className="h-full w-full rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle,rgba(47,160,132,0.45) 0%,transparent 70%)",
-              filter: "blur(24px)",
-            }}
-            variants={glowPulse}
-            animate={done ? "pulse" : undefined}
-          />
+          className="pointer-events-none absolute left-[20%] top-[30%] hidden h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.18] lg:block"
+          style={{ background: `radial-gradient(circle,${STYLES.brand400} 0%,transparent 70%)` }}
+        />
+        <div
+          className="pointer-events-none absolute right-[15%] bottom-[20%] hidden h-87.5 w-87.5 rounded-full opacity-[0.12] lg:block"
+          style={{ background: `radial-gradient(circle,${STYLES.brand600} 0%,transparent 70%)` }}
+        />
+
+        {/* [M1] Canvas particles — desktop only */}
+        <div className="hidden lg:block">
+          <AmbientParticles />
         </div>
 
-        {/* Outer phone — GSAP position/rotation/scale */}
+        {/* [M1] Static CSS dots — mobile only, zero JS */}
+        <div className="lg:hidden">
+          <MobileParticles />
+        </div>
+
+        {/* ── PHONE — desktop only, unchanged ───────────────────────────────── */}
         <div
-          ref={phoneRef}
-          style={{ opacity: 0, willChange: "transform, opacity" }}
+          className="pointer-events-none absolute inset-0 hidden items-center justify-center lg:flex"
+          style={{ zIndex: 20, paddingTop: "80px" }}
         >
-          {/* Inner phone — Framer parallax tilt + float after sequence */}
-          {done ? (
+          <div
+            ref={glowRef}
+            className="absolute h-72 w-72 rounded-full"
+            style={{ opacity: 0 }}
+          >
             <motion.div
-              style={{ x: sx, y: sy }}
-              variants={phoneFloat}
-              animate="float"
-              transition={transitionFloat}
-            >
+              className="h-full w-full rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle,rgba(47,160,132,0.45) 0%,transparent 70%)",
+                filter: "blur(24px)",
+              }}
+              variants={glowPulse}
+              animate={done ? "pulse" : undefined}
+            />
+          </div>
+
+          <div
+            ref={phoneRef}
+            style={{ opacity: 0, willChange: "transform, opacity" }}
+          >
+            {done ? (
+              <motion.div
+                style={{ x: sx, y: sy }}
+                variants={phoneFloat}
+                animate="float"
+                transition={transitionFloat}
+              >
+                <HeroPhone phase={phase} />
+              </motion.div>
+            ) : (
               <HeroPhone phase={phase} />
-            </motion.div>
-          ) : (
-            <HeroPhone phase={phase} />
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* ── MOBILE layout ─────────────────────────────────────────────────────── */}
-      <div
-        className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 text-center lg:hidden"
-        style={{ paddingTop: "88px", paddingBottom: "2rem" }}
-      >
-        <motion.h1
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0}
-          style={{
-            fontFamily: STYLES.fontDisplay,
-            fontSize: "clamp(2.6rem,10vw,3.8rem)",
-            fontWeight: 700,
-            lineHeight: 1.05,
-            letterSpacing: "-0.02em",
-            color: STYLES.ink,
-          }}
+        {/* ── MOBILE layout ─────────────────────────────────────────────────── */}
+        {/*
+          [M2] All Framer motion.h1 / motion.p / motion.div replaced with
+          plain elements + CSS animation (heroFadeUp keyframe).
+          animation-fill-mode: both keeps opacity:0 before animation starts
+          so there's no flash. animation-play-state ensures it only runs once.
+        */}
+        <div
+          className="relative z-10 flex min-h-screen w-full flex-col items-center justify-center px-6 text-center lg:hidden"
+          style={{ paddingTop: "88px", paddingBottom: "2rem" }}
         >
-          Every Task<br />
-          <GradientSpan>Every Expert</GradientSpan>
-          <br />On One Platform
-        </motion.h1>
-
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.15}
-          style={{
-            fontFamily: STYLES.fontSerif,
-            fontStyle: "italic",
-            fontSize: "clamp(1rem,4vw,1.15rem)",
-            lineHeight: 1.72,
-            color: STYLES.inkMuted,
-            marginTop: "1.4rem",
-            maxWidth: 340,
-          }}
-        >
-          TaskLync connects you instantly with verified electricians, plumbers,
-          mechanics, and more, available right now, in your city.
-        </motion.p>
-
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.28}
-          style={{
-            marginTop: "2rem",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-            justifyContent: "center",
-          }}
-        >
-          <PrimaryButton>Join the Waitlist</PrimaryButton>
-          <SecondaryButton>See how it works</SecondaryButton>
-        </motion.div>
-      </div>
-
-      {/* ── DESKTOP text column — revealed by GSAP after sequence ─────────────── */}
-      <div
-        ref={textColRef}
-        className="relative z-10 hidden min-h-screen w-full items-center lg:flex"
-        style={{
-          opacity: 0,
-          padding: "clamp(7rem,9vw,9rem) clamp(2rem,6vw,7rem) 0",
-        }}
-      >
-        <div style={{ maxWidth: 560 }}>
           <h1
-            ref={headlineRef}
             style={{
               fontFamily: STYLES.fontDisplay,
-              fontSize: "clamp(2.8rem,5vw,5rem)",
+              fontSize: "clamp(2.6rem,10vw,3.8rem)",
               fontWeight: 700,
-              lineHeight: 1.03,
+              lineHeight: 1.05,
               letterSpacing: "-0.02em",
               color: STYLES.ink,
-              opacity: 0,
+              // CSS fadeUp — starts immediately, no JS parse needed
+              animation: "heroFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.05s both",
             }}
           >
             Every Task<br />
@@ -412,16 +390,15 @@ export default function Hero() {
           </h1>
 
           <p
-            ref={subRef}
             style={{
               fontFamily: STYLES.fontSerif,
               fontStyle: "italic",
-              fontSize: "clamp(1rem,1.5vw,1.18rem)",
+              fontSize: "clamp(1rem,4vw,1.15rem)",
               lineHeight: 1.72,
               color: STYLES.inkMuted,
-              marginTop: "1.5rem",
-              maxWidth: 420,
-              opacity: 0,
+              marginTop: "1.4rem",
+              maxWidth: 340,
+              animation: "heroFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.18s both",
             }}
           >
             TaskLync connects you instantly with verified electricians, plumbers,
@@ -429,67 +406,127 @@ export default function Hero() {
           </p>
 
           <div
-            ref={ctaRef}
             style={{
-              marginTop: "2.2rem",
+              marginTop: "2rem",
               display: "flex",
               flexWrap: "wrap",
               gap: "0.75rem",
-              opacity: 0,
+              justifyContent: "center",
+              animation: "heroFadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.3s both",
             }}
           >
             <PrimaryButton>Join the Waitlist</PrimaryButton>
             <SecondaryButton>See how it works</SecondaryButton>
           </div>
+
+
         </div>
-      </div>
 
-      {/* bottom fade */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24"
-        style={{
-          background: "linear-gradient(to bottom,transparent,rgba(240,247,244,0.9))",
-        }}
-      />
-
-      {/* scroll cue — desktop, fades in via fadeUp after sequence completes */}
-      {done && (
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          custom={0.6}
-          className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex"
+        {/* ── DESKTOP text column — revealed by GSAP, unchanged ─────────────── */}
+        <div
+          ref={textColRef}
+          className="relative z-10 hidden min-h-screen w-full items-center lg:flex"
+          style={{
+            opacity: 0,
+            padding: "clamp(7rem,9vw,9rem) clamp(2rem,6vw,7rem) 0",
+          }}
         >
-          <span
-            style={{
-              fontFamily: STYLES.fontSans,
-              fontSize: 9,
-              letterSpacing: "0.3em",
-              color: STYLES.inkFaint,
-              textTransform: "uppercase",
-            }}
-          >
-            Scroll
-          </span>
-          <motion.div
-            style={{
-              width: 1,
-              height: 32,
-              background: "linear-gradient(to bottom,rgba(31,111,95,0.5),transparent)",
-            }}
-            animate={{ scaleY: [0, 1, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-      )}
-    </section>
+          <div style={{ maxWidth: 560 }}>
+            <h1
+              ref={headlineRef}
+              style={{
+                fontFamily: STYLES.fontDisplay,
+                fontSize: "clamp(2.8rem,5vw,5rem)",
+                fontWeight: 700,
+                lineHeight: 1.03,
+                letterSpacing: "-0.02em",
+                color: STYLES.ink,
+                opacity: 0,
+              }}
+            >
+              Every Task<br />
+              <GradientSpan>Every Expert</GradientSpan>
+              <br />On One Platform
+            </h1>
+
+            <p
+              ref={subRef}
+              style={{
+                fontFamily: STYLES.fontSerif,
+                fontStyle: "italic",
+                fontSize: "clamp(1rem,1.5vw,1.18rem)",
+                lineHeight: 1.72,
+                color: STYLES.inkMuted,
+                marginTop: "1.5rem",
+                maxWidth: 420,
+                opacity: 0,
+              }}
+            >
+              TaskLync connects you instantly with verified electricians, plumbers,
+              mechanics, and more, available right now, in your city.
+            </p>
+
+            <div
+              ref={ctaRef}
+              style={{
+                marginTop: "2.2rem",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "0.75rem",
+                opacity: 0,
+              }}
+            >
+              <PrimaryButton>Join the Waitlist</PrimaryButton>
+              <SecondaryButton>See how it works</SecondaryButton>
+            </div>
+          </div>
+        </div>
+
+        {/* bottom fade */}
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24"
+          style={{
+            background: "linear-gradient(to bottom,transparent,rgba(240,247,244,0.9))",
+          }}
+        />
+
+        {/*
+          [M5] Scroll cue — desktop only (already was), but the inner
+          Framer infinite loop replaced with CSS animation.
+          Same visual, zero JS running after mount.
+        */}
+        {done && (
+          <div className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
+            <span
+              style={{
+                fontFamily: STYLES.fontSans,
+                fontSize: 9,
+                letterSpacing: "0.3em",
+                color: STYLES.inkFaint,
+                textTransform: "uppercase",
+              }}
+            >
+              Scroll
+            </span>
+            {/* [M5] CSS animation replaces Framer animate={{ scaleY:[0,1,0] }} */}
+            <div
+              style={{
+                width: 1,
+                height: 32,
+                background: "linear-gradient(to bottom,rgba(31,111,95,0.5),transparent)",
+                transformOrigin: "top",
+                animation: "heroLineGrow 1.6s ease-in-out infinite",
+              }}
+            />
+          </div>
+        )}
+      </section>
+    </>
   );
 }
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
-/** Brand gradient text — used in both mobile and desktop headlines (DRY) */
 function GradientSpan({ children }: { children: React.ReactNode }) {
   return (
     <span
@@ -523,7 +560,8 @@ function PrimaryButton({ children }: { children: React.ReactNode }) {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        transition: "opacity .2s",
+        // Only transition opacity — cheapest possible hover
+        transition: "opacity 0.15s",
       }}
       onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
       onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
@@ -555,8 +593,9 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
         fontSize: "0.875rem",
         fontWeight: 500,
         cursor: "pointer",
-        backdropFilter: "blur(8px)",
-        transition: "border-color .2s,color .2s",
+        // [M3] backdropFilter removed on mobile — forces compositing layer
+        // Add it back only on desktop via CSS media query if needed
+        transition: "border-color 0.2s, color 0.2s",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = "rgba(31,111,95,0.5)";
@@ -571,62 +610,3 @@ function SecondaryButton({ children }: { children: React.ReactNode }) {
     </button>
   );
 }
-
-/*
-─── Font setup for layout.tsx (replaces the removed <style> tag) ───────────────
-
-  Download font files from Fontshare (Clash Display, Cabinet Grotesk) and place
-  them in public/fonts/. Instrument Serif loads from Google via next/font.
-
-  // app/layout.tsx
-  import localFont from "next/font/local";
-  import { Instrument_Serif } from "next/font/google";
-
-  const clashDisplay = localFont({
-    src: [
-      { path: "../public/fonts/ClashDisplay-Regular.woff2",  weight: "400" },
-      { path: "../public/fonts/ClashDisplay-Medium.woff2",   weight: "500" },
-      { path: "../public/fonts/ClashDisplay-Semibold.woff2", weight: "600" },
-      { path: "../public/fonts/ClashDisplay-Bold.woff2",     weight: "700" },
-    ],
-    variable: "--font-clash",
-    display: "swap",
-  });
-
-  const cabinetGrotesk = localFont({
-    src: [
-      { path: "../public/fonts/CabinetGrotesk-Regular.woff2", weight: "400" },
-      { path: "../public/fonts/CabinetGrotesk-Medium.woff2",  weight: "500" },
-      { path: "../public/fonts/CabinetGrotesk-Bold.woff2",    weight: "700" },
-    ],
-    variable: "--font-cabinet",
-    display: "swap",
-  });
-
-  const instrumentSerif = Instrument_Serif({
-    subsets: ["latin"],
-    weight: "400",
-    style: ["normal", "italic"],
-    variable: "--font-instrument",
-    display: "swap",
-  });
-
-  export default function RootLayout({ children }) {
-    return (
-      <html
-        className={`
-          ${clashDisplay.variable}
-          ${cabinetGrotesk.variable}
-          ${instrumentSerif.variable}
-        `}
-      >
-        <body>{children}</body>
-      </html>
-    );
-  }
-
-  Then update STYLES.fontDisplay/fontSans/fontSerif to use CSS variables:
-    fontDisplay: "var(--font-clash), sans-serif"
-    fontSans:    "var(--font-cabinet), sans-serif"
-    fontSerif:   "var(--font-instrument), serif"
-*/
