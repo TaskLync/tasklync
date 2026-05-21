@@ -148,7 +148,7 @@ export function MobileMenu({ isOpen, onClose, links }: MobileMenuProps) {
               color: "#4a5250",
               textDecoration: "none",
               marginBottom: 12,
-              boxSizing: "border-box",
+              boxSizing: "border-box", 
             }}
           >
             For Professionals
