@@ -3,6 +3,9 @@
 /* ─────────────────────────────────────────
    Design tokens — consumed across the app
 ───────────────────────────────────────── */
+*{
+   scroll-behavior: smooth;
+}
 :root {
   --primary:    #1F6F5F;
   --secondary:  #2FA084;

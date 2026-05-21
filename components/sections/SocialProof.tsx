@@ -24,10 +24,18 @@
  * [S5] inView trigger uses native IntersectionObserver via existing hook,
  *      but only flips a single boolean — no Framer state machine.
  *
+ * [S6] FIX: isMobileDevice() and prefersReducedMotion() previously called
+ *      window.matchMedia() at render time, which returns false on the server
+ *      but may return true on the client — causing a hydration mismatch
+ *      (server renders "0", client renders "7").
+ *      Fixed by reading these values only inside useEffect (post-hydration)
+ *      via the useClientSideFlags() hook. Both sides agree on the first
+ *      render (false / "0"), then React updates after mount — no mismatch.
+ *
  * Desktop: CountUp runs, CSS fade-up animates exactly as before visually.
  */
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { CountUp } from "@/components/motion/CountUp";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
@@ -57,21 +65,32 @@ const STATS: StatItem[] = [
   { type: "static",  display: "Always", label: "Escrow Protected" },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── useClientSideFlags ───────────────────────────────────────────────────────
+// [S6] Reads window.matchMedia only after hydration (inside useEffect).
+//      On the server and on the first client render, both flags are false —
+//      so SSR output and initial client output always match.
+//      After mount, React updates to the real values if needed.
 
-/** Detect touch/mobile — used to skip CountUp RAF loop */
-const isMobileDevice = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+function useClientSideFlags() {
+  const [isMobile, setIsMobile] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
-/** Detect prefers-reduced-motion */
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useEffect(() => {
+    setIsMobile(
+      window.matchMedia("(hover: none) and (pointer: coarse)").matches
+    );
+    setReducedMotion(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
+
+  return { isMobile, reducedMotion };
+}
 
 // ─── StatNumber ───────────────────────────────────────────────────────────────
 // [S2] On mobile: render final value immediately (no CountUp RAF loop).
 //      On desktop: render CountUp as before.
+// [S6] Uses useClientSideFlags() — safe for SSR, no hydration mismatch.
 
 function StatNumber({
   stat,
@@ -80,14 +99,16 @@ function StatNumber({
   stat: StatItem;
   animate: boolean;
 }) {
-  const mobile = isMobileDevice();
+  const { isMobile, reducedMotion } = useClientSideFlags();
 
   if (stat.type === "static") {
     return <>{stat.display}</>;
   }
 
-  // [S2] Mobile or reduced-motion: just show the number, no RAF loop
-  if (mobile || prefersReducedMotion()) {
+  // [S2] Mobile or reduced-motion: just show the number, no RAF loop.
+  // On first render (SSR + initial client), isMobile/reducedMotion are both
+  // false, so this branch is skipped — server and client agree.
+  if (isMobile || reducedMotion) {
     return (
       <>
         {stat.prefix ?? ""}
@@ -114,6 +135,7 @@ function StatNumber({
 // ─── StatCell ─────────────────────────────────────────────────────────────────
 // [S1] No motion.div. CSS animation driven by `inView` boolean + delay index.
 // [S3] No inline border logic — borders handled by CSS grid dividers below.
+// [S6] Uses useClientSideFlags() for reducedMotion — safe for SSR.
 
 function StatCell({
   stat,
@@ -124,19 +146,21 @@ function StatCell({
   index: number;
   inView: boolean;
 }) {
-  const reduced = prefersReducedMotion();
+  const { reducedMotion } = useClientSideFlags();
 
   return (
     <div
       className="sp-cell"
       style={{
-        // [S1] CSS animation — compositor-only, no JS per frame
-        // animation-fill-mode: both keeps opacity:0 before trigger
-        opacity: reduced ? 1 : undefined,
+        // [S1] CSS animation — compositor-only, no JS per frame.
+        // animation-fill-mode: both keeps opacity:0 before trigger.
+        // [S6] reducedMotion is false on SSR, so style is deterministic
+        //      on first render; updates after mount if user prefers it.
+        opacity: reducedMotion ? 1 : undefined,
         animation:
-          !reduced && inView
+          !reducedMotion && inView
             ? `spFadeUp 0.5s cubic-bezier(0.16,1,0.3,1) ${0.05 + index * 0.07}s both`
-            : !reduced
+            : !reducedMotion
             ? "none"
             : undefined,
       }}

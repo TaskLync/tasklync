@@ -8,7 +8,6 @@
 //   const { ref, inView } = useIntersectionObserver({ threshold: 0.2 });
 
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 
 interface UseIntersectionObserverOptions {
