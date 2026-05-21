@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans, Syne, Instrument_Serif } from "next/font/google";
+import {
+  Playfair_Display,
+  DM_Sans,
+  Syne,
+  Instrument_Serif,
+} from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -50,6 +55,18 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} ${syne.variable} ${instrumentSerif.variable}`}
     >
+      <head>
+        {/*
+          Clash Display & Cabinet Grotesk — loaded via fontshare.
+          next/font/google doesn't support fontshare, so we use a
+          <link> tag here. preconnect first to cut DNS + TLS overhead.
+        */}
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700&display=swap"
+        />
+      </head>
       <body className="bg-surface antialiased">
         {children}
       </body>

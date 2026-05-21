@@ -1,18 +1,50 @@
 "use client";
 
+/**
+ * MOBILE PERFORMANCE PASS
+ *
+ * [Ft1] @import font URL removed from inline <style> tag.
+ *       Loading web fonts via a <style> tag inside a Client Component means
+ *       the browser re-issues the font network request on every component
+ *       mount and blocks rendering until it resolves. Fonts must be declared
+ *       once in layout.tsx (or _document) via <link rel="preload"> /
+ *       next/font. The <style> tag is removed entirely here.
+ *       ACTION REQUIRED: add these two font links to your layout.tsx <head>:
+ *
+ *         <link rel="preconnect" href="https://api.fontshare.com" />
+ *         <link
+ *           rel="stylesheet"
+ *           href="https://api.fontshare.com/v2/css?f[]=clash-display@700&f[]=cabinet-grotesk@400,500,700&display=swap"
+ *         />
+ *
+ *       Or better: migrate to next/font/local with the downloaded font files
+ *       so the fonts are bundled at build time (zero network round-trip).
+ *
+ * [Ft2] new Date().getFullYear() hydration fix.
+ *       The server renders the year at build/request time; the client
+ *       re-renders at runtime. If the year differs React sees a text mismatch.
+ *       Fix: suppressHydrationWarning on the containing element — this is the
+ *       canonical Next.js approach for intentionally dynamic text that differs
+ *       between server and client (dates, locale-specific values).
+ *
+ * [Ft3] onMouseEnter/Leave inline style mutations on social icons and nav
+ *       links kept as-is — these only fire on pointer devices (desktop),
+ *       never on touch. No mobile cost. Replacing with CSS classes would
+ *       require adding Tailwind arbitrary-value classes or a <style> block;
+ *       the current pattern is fine for this use case.
+ *
+ * [Ft4] All decorative elements (noise, grid, blobs, glow line) are already
+ *       static — no animation, no JS. No changes needed.
+ *
+ * No Framer Motion was used in this component. No animation removals needed.
+ */
+
 import Link from "next/link";
-import {
-  MapPin,
-  Mail,
-  Phone,
-  ArrowUpRight,
-  Zap,
-  Shield,
-  Star,
-} from "lucide-react";
+import { MapPin, Mail, Phone, ArrowUpRight, Zap, Shield, Star } from "lucide-react";
 import { LogoMark } from "./LogoMark";
 
-// Social icons as inline SVGs — lucide dropped Twitter/Instagram/LinkedIn/YouTube
+// ─── Social icons ─────────────────────────────────────────────────────────────
+
 function TwitterX() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -45,6 +77,8 @@ function YoutubeIcon() {
     </svg>
   );
 }
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
 const NAV_COLUMNS = [
   {
@@ -79,265 +113,247 @@ const NAV_COLUMNS = [
 ];
 
 const SOCIALS = [
-  { Icon: TwitterX,     label: "X (Twitter)", href: "#" },
-  { Icon: InstagramIcon, label: "Instagram",  href: "#" },
-  { Icon: LinkedInIcon,  label: "LinkedIn",   href: "#" },
-  { Icon: YoutubeIcon,   label: "YouTube",    href: "#" },
+  { Icon: TwitterX,      label: "X (Twitter)", href: "#" },
+  { Icon: InstagramIcon, label: "Instagram",   href: "#" },
+  { Icon: LinkedInIcon,  label: "LinkedIn",    href: "#" },
+  { Icon: YoutubeIcon,   label: "YouTube",     href: "#" },
 ];
 
-const TRUST_BADGES = [
-  { Icon: Shield, text: "SOC 2 Compliant" },
-  { Icon: Star,   text: "4.9 App Rating" },
-  { Icon: Zap,    text: "99.9% Uptime"   },
-];
+// ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function Footer() {
   return (
-    <>
-      <style>{`
-        @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=cabinet-grotesk@400,500,700&display=swap');
-      `}</style>
-
-      <footer
+    <footer
+      style={{
+        background: "linear-gradient(160deg,#0f1f1b 0%,#111e1a 50%,#0d1c18 100%)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {/* Noise — static */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.035]"
         style={{
-          // slightly dark — not pitch black, a deep muted green-grey
-          background: "linear-gradient(160deg,#0f1f1b 0%,#111e1a 50%,#0d1c18 100%)",
-          position: "relative",
-          overflow: "hidden",
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: "180px 180px",
         }}
-      >
-        {/* ── noise ── */}
-        <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-[0.035]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            backgroundSize: "180px 180px",
-          }}
-        />
+      />
 
-        {/* ── grid ── */}
-        <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(111,207,151,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(111,207,151,.7) 1px,transparent 1px)`,
-            backgroundSize: "72px 72px",
-          }}
-        />
+      {/* Grid — static */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `linear-gradient(rgba(111,207,151,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(111,207,151,.7) 1px,transparent 1px)`,
+          backgroundSize: "72px 72px",
+        }}
+      />
 
-        {/* ── ambient blobs ── */}
-        <div
-          className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(circle,#2FA084 0%,transparent 70%)" }}
-        />
-        <div
-          className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle,#6FCF97 0%,transparent 70%)" }}
-        />
+      {/* Ambient blobs — static */}
+      <div
+        className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-[0.07]"
+        style={{ background: "radial-gradient(circle,#2FA084 0%,transparent 70%)" }}
+      />
+      <div
+        className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full opacity-[0.05]"
+        style={{ background: "radial-gradient(circle,#6FCF97 0%,transparent 70%)" }}
+      />
 
-        {/* ════════════════════════════════════════════════
-            TOP DIVIDER — thin green glow line
-        ════════════════════════════════════════════════ */}
-        <div
-          style={{
-            height: 1,
-            background: "linear-gradient(90deg,transparent 0%,rgba(47,160,132,0.35) 30%,rgba(111,207,151,0.5) 50%,rgba(47,160,132,0.35) 70%,transparent 100%)",
-          }}
-        />
+      {/* Top glow line — static */}
+      <div
+        style={{
+          height: 1,
+          background: "linear-gradient(90deg,transparent 0%,rgba(47,160,132,0.35) 30%,rgba(111,207,151,0.5) 50%,rgba(47,160,132,0.35) 70%,transparent 100%)",
+        }}
+      />
 
-        {/* ════════════════════════════════════════════════
-            MAIN BODY
-        ════════════════════════════════════════════════ */}
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
+      {/* ── Main body ── */}
+      <div className="relative z-10 mx-auto max-w-6xl px-6 py-14 md:px-10 md:py-16">
 
-          {/* ── TOP ROW: brand + nav columns ── */}
-          <div className="flex flex-col gap-12 md:flex-row md:gap-8 lg:gap-16">
+        {/* Top row: brand + nav */}
+        <div className="flex flex-col gap-12 md:flex-row md:gap-8 lg:gap-16">
 
-            {/* ── Brand column ── */}
-            <div className="flex flex-col gap-5 md:max-w-60">
+          {/* Brand column */}
+          <div className="flex flex-col gap-5 md:max-w-60">
 
-              {/* Logo wordmark */}
-              <Link href="/" aria-label="TaskLync Home" className="flex items-center gap-2 w-fit">
-                {/* LogoMark placeholder — replace with your <LogoMark /> component */}
-                <LogoMark size={38} />
-                <span
-                  style={{
-                    fontFamily: "'Clash Display', sans-serif",
-                    fontSize: "1.5rem",
-                    fontWeight: 700,
-                    letterSpacing: "-0.02em",
-                    color: "#e8f5f0",
-                    lineHeight: 1,
-                  }}
-                >
-                  Task<span style={{ color: "#2FA084" }}>Lync</span>
-                </span>
-              </Link>
-
-              {/* tagline */}
-              <p
+            {/* Logo */}
+            <Link href="/" aria-label="TaskLync Home" className="flex items-center gap-2 w-fit">
+              <LogoMark size={38} />
+              <span
                 style={{
-                  fontFamily: "'Cabinet Grotesk', sans-serif",
-                  fontSize: "13.5px",
-                  lineHeight: 1.7,
-                  color: "rgba(232,245,240,0.42)",
+                  fontFamily: "var(--font-clash)",
+                  fontSize: "1.5rem",
+                  fontWeight: 700,
+                  letterSpacing: "-0.02em",
+                  color: "#e8f5f0",
+                  lineHeight: 1,
                 }}
               >
-                Connecting you instantly with verified local professionals on demand, every time.
-              </p>
+                Task<span style={{ color: "#2FA084" }}>Lync</span>
+              </span>
+            </Link>
 
-              {/* contact info */}
-              <ul style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                {[
-                  { Icon: MapPin, text: "Faislabad, Pakistan" },
-                  { Icon: Mail,   text: "hello@tasklync.com" },
-                  { Icon: Phone,  text: "+49 30 000 0000" },
-                ].map(({ Icon, text }) => (
-                  <li
-                    key={text}
-                    style={{
-                      display: "flex", alignItems: "center", gap: "0.5rem",
-                      fontFamily: "'Cabinet Grotesk', sans-serif",
-                      fontSize: "12.5px",
-                      color: "rgba(232,245,240,0.36)",
-                    }}
-                  >
-                    <Icon size={13} strokeWidth={1.8} style={{ color: "#2FA084", flexShrink: 0 }} />
-                    {text}
-                  </li>
-                ))}
-              </ul>
+            {/* Tagline */}
+            <p
+              style={{
+                fontFamily: "var(--font-cabinet)",
+                fontSize: "13.5px",
+                lineHeight: 1.7,
+                color: "rgba(232,245,240,0.42)",
+              }}
+            >
+              Connecting you instantly with verified local professionals on demand, every time.
+            </p>
 
-              {/* socials */}
-              <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.25rem" }}>
-                {SOCIALS.map(({ Icon, label, href }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    style={{
-                      width: 34, height: 34, borderRadius: 8,
-                      display: "flex", alignItems: "center", justifyContent: "center",
-                      background: "rgba(232,245,240,0.05)",
-                      border: "1px solid rgba(232,245,240,0.08)",
-                      color: "rgba(232,245,240,0.40)",
-                      transition: "background .2s, border-color .2s, color .2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(47,160,132,0.14)";
-                      e.currentTarget.style.borderColor = "rgba(47,160,132,0.35)";
-                      e.currentTarget.style.color = "#2FA084";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "rgba(232,245,240,0.05)";
-                      e.currentTarget.style.borderColor = "rgba(232,245,240,0.08)";
-                      e.currentTarget.style.color = "rgba(232,245,240,0.40)";
-                    }}
-                  >
-                    <Icon />
-                  </a>
-                ))}
-              </div>
-            </div>
+            {/* Contact info */}
+            <ul style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+              {[
+                { Icon: MapPin, text: "Faisalabad, Pakistan" },
+                { Icon: Mail,   text: "hello@tasklync.com"  },
+                { Icon: Phone,  text: "+49 30 000 0000"     },
+              ].map(({ Icon, text }) => (
+                <li
+                  key={text}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "0.5rem",
+                    fontFamily: "var(--font-cabinet)",
+                    fontSize: "12.5px",
+                    color: "rgba(232,245,240,0.36)",
+                  }}
+                >
+                  <Icon size={13} strokeWidth={1.8} style={{ color: "#2FA084", flexShrink: 0 }} />
+                  {text}
+                </li>
+              ))}
+            </ul>
 
-            {/* ── Nav columns ── */}
-            <div className="grid flex-1 grid-cols-2 gap-8 sm:grid-cols-3">
-              {NAV_COLUMNS.map((col) => (
-                <div key={col.label}>
-                  <p
-                    style={{
-                      fontFamily: "'Cabinet Grotesk', sans-serif",
-                      fontSize: "10.5px",
-                      fontWeight: 600,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "#2FA084",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    {col.label}
-                  </p>
-                  <ul style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
-                    {col.links.map(({ label, href }) => (
-                      <li key={label}>
-                        <Link
-                          href={href}
-                          style={{
-                            fontFamily: "'Cabinet Grotesk', sans-serif",
-                            fontSize: "13.5px",
-                            color: "rgba(232,245,240,0.46)",
-                            textDecoration: "none",
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "0.2rem",
-                            transition: "color .18s",
-                          }}
-                          onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLElement).style.color = "#e8f5f0";
-                          }}
-                          onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLElement).style.color = "rgba(232,245,240,0.46)";
-                          }}
-                        >
-                          {label}
-                          {label === "Careers" && (
-                            <span
-                              style={{
-                                fontSize: "9px", fontWeight: 600,
-                                padding: "1px 5px", borderRadius: 99,
-                                background: "rgba(47,160,132,0.18)",
-                                color: "#6FCF97",
-                                letterSpacing: "0.05em",
-                                marginLeft: "0.25rem",
-                              }}
-                            >
-                              HIRING
-                            </span>
-                          )}
-                          {label === "Press Kit" && (
-                            <ArrowUpRight size={11} strokeWidth={2} style={{ opacity: 0.4 }} />
-                          )}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+            {/* Socials — [Ft3] onMouseEnter/Leave kept, touch-safe */}
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.25rem" }}>
+              {SOCIALS.map(({ Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  style={{
+                    width: 34, height: 34, borderRadius: 8,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    background: "rgba(232,245,240,0.05)",
+                    border: "1px solid rgba(232,245,240,0.08)",
+                    color: "rgba(232,245,240,0.40)",
+                    transition: "background .2s, border-color .2s, color .2s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(47,160,132,0.14)";
+                    e.currentTarget.style.borderColor = "rgba(47,160,132,0.35)";
+                    e.currentTarget.style.color = "#2FA084";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(232,245,240,0.05)";
+                    e.currentTarget.style.borderColor = "rgba(232,245,240,0.08)";
+                    e.currentTarget.style.color = "rgba(232,245,240,0.40)";
+                  }}
+                >
+                  <Icon />
+                </a>
               ))}
             </div>
-
           </div>
 
-          
-
-          {/* ── BOTTOM ROW ── */}
-          <div
-            className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"
-          >
-            <p
-              style={{
-                fontFamily: "'Cabinet Grotesk', sans-serif",
-                fontSize: "12px",
-                color: "rgba(232,245,240,0.25)",
-                letterSpacing: "0.01em",
-              }}
-            >
-              © {new Date().getFullYear()} TaskLync. All rights reserved.
-            </p>
-
-            <p
-              style={{
-                fontFamily: "'Cabinet Grotesk', sans-serif",
-                fontSize: "12px",
-                color: "rgba(232,245,240,0.20)",
-                letterSpacing: "0.01em",
-              }}
-            >
-              Made with care in Faisalabad.
-            </p>
+          {/* Nav columns */}
+          <div className="grid flex-1 grid-cols-2 gap-8 sm:grid-cols-3">
+            {NAV_COLUMNS.map((col) => (
+              <div key={col.label}>
+                <p
+                  style={{
+                    fontFamily: "var(--font-cabinet)",
+                    fontSize: "10.5px",
+                    fontWeight: 600,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "#2FA084",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  {col.label}
+                </p>
+                <ul style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+                  {col.links.map(({ label, href }) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        style={{
+                          fontFamily: "var(--font-cabinet)",
+                          fontSize: "13.5px",
+                          color: "rgba(232,245,240,0.46)",
+                          textDecoration: "none",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.2rem",
+                          transition: "color .18s",
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.color = "#e8f5f0";
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.color = "rgba(232,245,240,0.46)";
+                        }}
+                      >
+                        {label}
+                        {label === "Careers" && (
+                          <span
+                            style={{
+                              fontSize: "9px", fontWeight: 600,
+                              padding: "1px 5px", borderRadius: 99,
+                              background: "rgba(47,160,132,0.18)",
+                              color: "#6FCF97",
+                              letterSpacing: "0.05em",
+                              marginLeft: "0.25rem",
+                            }}
+                          >
+                            HIRING
+                          </span>
+                        )}
+                        {label === "Press Kit" && (
+                          <ArrowUpRight size={11} strokeWidth={2} style={{ opacity: 0.4 }} />
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
-
         </div>
-      </footer>
-    </>
+
+        {/* Bottom row */}
+        <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+          {/* [Ft2] suppressHydrationWarning — year is intentionally dynamic */}
+          <p
+            suppressHydrationWarning
+            style={{
+              fontFamily: "var(--font-cabinet)",
+              fontSize: "12px",
+              color: "rgba(232,245,240,0.25)",
+              letterSpacing: "0.01em",
+            }}
+          >
+            © {new Date().getFullYear()} TaskLync. All rights reserved.
+          </p>
+
+          <p
+            style={{
+              fontFamily: "var(--font-cabinet)",
+              fontSize: "12px",
+              color: "rgba(232,245,240,0.20)",
+              letterSpacing: "0.01em",
+            }}
+          >
+            Made with care in Faisalabad.
+          </p>
+        </div>
+
+      </div>
+    </footer>
   );
 }
 

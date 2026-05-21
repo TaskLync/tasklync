@@ -1,5 +1,3 @@
-@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap');
-
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────
@@ -16,6 +14,7 @@
   --font-body:         var(--font-sans, 'DM Sans', system-ui, sans-serif);
   --font-clash:        'Clash Display', sans-serif;
   --font-serif-italic: var(--font-italic, 'Instrument Serif', serif);
+  --font-cabinet:      'Cabinet Grotesk', 'DM Sans', system-ui, sans-serif;
 
   /* Nav */
   --nav-height:          72px;
