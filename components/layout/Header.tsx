@@ -13,25 +13,28 @@ import { useWaitlist } from "@/components/waitlist/WaitlistContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
+// Only run magnetic effect on non-touch devices
+const isTouch = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(hover: none)").matches;
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { openModal } = useWaitlist();
-  const { track } = useAnalytics(); 
+  const { track } = useAnalytics();
 
   const pathname = usePathname();
 
-  // Magnetic CTA
+  // Magnetic CTA — only desktop
   const ctaRef = useRef<HTMLAnchorElement>(null);
-
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
-
   const springX = useSpring(mx, { stiffness: 280, damping: 20 });
   const springY = useSpring(my, { stiffness: 280, damping: 20 });
 
-  // Detect scroll
+  // Detect scroll — passive, no layout read on every frame
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -41,7 +44,9 @@ export function Header() {
   // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
   // Close mobile menu on route change
@@ -49,8 +54,9 @@ export function Header() {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Magnetic CTA
+  // Magnetic CTA — skip on touch devices entirely
   const handleCtaMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isTouch()) return;
     const el = ctaRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -67,10 +73,7 @@ export function Header() {
     ? "text-[#4a5250] hover:text-[#111210]"
     : "text-[#1F6F5F]/80 hover:text-[#0D1F1C]";
 
-  const navLinkActiveColor = scrolled
-    ? "text-[#1F6F5F]"
-    : "text-[#1F6F5F]";
-
+  const navLinkActiveColor = "text-[#1F6F5F]";
   const underlineColor = "bg-[#1F6F5F]";
 
   const logoWordColor = scrolled
@@ -86,10 +89,17 @@ export function Header() {
         animate="visible"
         className="fixed left-0 right-0 top-0 z-50 pointer-events-none"
       >
-        {/* Main navbar shell */}
+        {/* Main navbar shell
+            KEY FIX: replaced transition-all (paints everything) with only
+            the properties that actually change: shadow, background, padding.
+            backdrop-blur stays — it's only on desktop-visible nav, not the
+            mobile fullscreen panel anymore.
+        */}
         <div
           className={[
-            "mx-auto transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
+            "mx-auto",
+            // Only transition the props that change, never transition-all
+            "transition-[background-color,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
             scrolled
               ? [
                   "mt-0 rounded-none",
@@ -107,7 +117,9 @@ export function Header() {
           {/* Inner navbar */}
           <div
             className={[
-              "pointer-events-auto flex items-center justify-between gap-6 transition-all duration-500",
+              "pointer-events-auto flex items-center justify-between gap-6",
+              // Only transition padding, not everything
+              "transition-[padding] duration-500",
               scrolled
                 ? "px-6 py-3 lg:px-10 lg:py-3.5"
                 : "px-6 py-5 lg:px-12 lg:py-6",
@@ -196,7 +208,7 @@ export function Header() {
                   href="/for-professionals"
                   className={[
                     "inline-flex items-center gap-1.5 rounded-full px-5 py-2.5",
-                    "border text-[13px] font-medium transition-all duration-300",
+                    "border text-[13px] font-medium transition-[border-color,background-color] duration-300",
                     "font-['DM_Sans']",
                     "border-[#1F6F5F]/25 text-[#1F6F5F]",
                     "hover:border-[#1F6F5F]/55 hover:bg-[#1F6F5F]/6",
@@ -210,7 +222,7 @@ export function Header() {
                 </Link>
               </motion.div>
 
-              {/* Primary CTA — solid green pill with magnetic effect */}
+              {/* Primary CTA — magnetic only on desktop */}
               <motion.div
                 custom={NAV_LINKS.length + 1}
                 variants={navLinkVariants}
@@ -218,9 +230,9 @@ export function Header() {
                 animate="visible"
               >
                 <motion.a
-                  onClick={()=>{
+                  onClick={() => {
                     openModal();
-                    track(ANALYTICS_EVENTS.NAV_CTA_CLICKED)
+                    track(ANALYTICS_EVENTS.NAV_CTA_CLICKED);
                   }}
                   ref={ctaRef}
                   style={{ x: springX, y: springY }}
@@ -230,7 +242,7 @@ export function Header() {
                   className={[
                     "inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5",
                     "font-['DM_Sans'] text-[13px] font-semibold tracking-[0.01em]",
-                    "transition-all duration-300",
+                    "transition-[box-shadow,filter] duration-300",
                     "bg-linear-to-br from-[#1F6F5F] to-[#2FA084] text-white",
                     "shadow-[0_4px_20px_rgba(31,111,95,0.30)]",
                     "hover:shadow-[0_6px_28px_rgba(31,111,95,0.42)] hover:brightness-110",
@@ -240,7 +252,11 @@ export function Header() {
                   <motion.span
                     aria-hidden="true"
                     animate={{ x: [0, 2, 0] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 2,
+                      ease: "easeInOut",
+                    }}
                   >
                     →
                   </motion.span>
@@ -257,12 +273,18 @@ export function Header() {
               onClick={() => setMobileOpen((v) => !v)}
               className={[
                 "flex h-10 w-10 flex-col items-center justify-center gap-1.25 rounded-full",
-                "transition-all duration-300 lg:hidden",
+                // Only transition border/bg, not all properties
+                "transition-[border-color,background-color] duration-200 lg:hidden",
                 scrolled
-                  ? "border border-[#1F6F5F]/15 bg-white/70 text-[#1F6F5F] backdrop-blur-xl"
-                  : "border border-[#1F6F5F]/20 bg-white/50 text-[#1F6F5F] backdrop-blur-xl",
+                  ? "border border-[#1F6F5F]/15 bg-white/70 text-[#1F6F5F]"
+                  : "border border-[#1F6F5F]/20 bg-white/50 text-[#1F6F5F]",
               ].join(" ")}
             >
+              {/* 
+                KEY FIX: Replaced 3× motion.span hamburger with a pure CSS
+                approach. No JS animation overhead on every tap.
+                CSS transform is compositor-only — zero layout, zero paint.
+              */}
               <HamburgerLines open={mobileOpen} />
             </button>
           </div>
@@ -281,27 +303,33 @@ export function Header() {
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 
+/**
+ * Pure CSS hamburger — no Framer Motion, no JS per frame.
+ * Uses CSS custom transforms on <span> elements.
+ * Compositor-only: translate + rotate never trigger layout or paint.
+ */
 function HamburgerLines({ open }: { open: boolean }) {
   return (
-    <>
-      <motion.span
-        aria-hidden="true"
-        className="block h-px w-4.5 origin-center bg-current"
-        animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    <span aria-hidden="true" className="flex flex-col items-center justify-center gap-1.25 w-4.5">
+      <span
+        className="block h-px w-full origin-center bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          transform: open ? "translateY(6px) rotate(45deg)" : "none",
+        }}
       />
-      <motion.span
-        aria-hidden="true"
-        className="block h-px w-4.5 origin-center bg-current"
-        animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.2 }}
+      <span
+        className="block h-px w-full origin-center bg-current transition-[transform,opacity] duration-200"
+        style={{
+          transform: open ? "scaleX(0)" : "scaleX(1)",
+          opacity: open ? 0 : 1,
+        }}
       />
-      <motion.span
-        aria-hidden="true"
-        className="block h-px w-4.5 origin-center bg-current"
-        animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      <span
+        className="block h-px w-full origin-center bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          transform: open ? "translateY(-6px) rotate(-45deg)" : "none",
+        }}
       />
-    </>
+    </span>
   );
 }
