@@ -219,7 +219,7 @@ function NavInner({
             ].join(" ")
           : [
               "mt-0",
-              "bg-white/40 backdrop-blur-md",
+              "bg-white",
               "border-b border-[#1F6F5F]/8",
             ].join(" "),
       ].join(" ")}
