@@ -16,8 +16,8 @@ export async function sendWelcomeEmail({ email, position }: SendWelcomeEmailPara
     },
     body: JSON.stringify({
       sender: {
-        email: siteConfig.email.sender,
-        name:  siteConfig.email.senderName,
+        email: siteConfig.contact.email.sender,
+        name:  siteConfig.contact.email.senderName,
       },
       to: [{ email }],
       subject: welcomeSubject(position),
