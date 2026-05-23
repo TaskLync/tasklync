@@ -150,7 +150,7 @@ export default function SafetyForHomeowners() {
             }}
           >
             <div
-              className="text-[10.5px] font-semibold tracking-[0.1em] uppercase text-[#6FCF97] mb-4"
+              className="text-[10.5px] font-semibold tracking-widest uppercase text-[#6FCF97] mb-4"
               style={{ fontFamily: "var(--font-body)" }}
             >
               Day-of Checklist

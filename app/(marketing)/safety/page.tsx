@@ -2,6 +2,8 @@ import FAQ from "@/components/sections/FAQ";
 import FinalCTA from "@/components/sections/FinalCTA";
 import PageHero from "@/components/sections/PageHero";
 import ProfessionalRequirements from "@/components/sections/safety/Professionalrequirements";
+import SafetyForProfessionals from "@/components/sections/safety/ProSafety";
+import ProfessionalSafety from "@/components/sections/safety/ProSafety";
 import SafetyForHomeowners from "@/components/sections/safety/Safetyforhomeowners";
 import VettingProcess from "@/components/sections/safety/VettingProcess";
 import { generateMetadata } from "@/lib/seo/metadata";
@@ -24,9 +26,10 @@ export default function Page() {
       />
 
       <section className="bg-[#F7F7F5]">
-        <div className="max-w-290 mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="w-full mx-auto px-6 sm:px-10 lg:px-16">
             <VettingProcess/>
             <ProfessionalRequirements/>
+            <SafetyForProfessionals/>
             <SafetyForHomeowners/>
             <FAQ/>
             <FinalCTA/>

@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "home-maintenance",
+    "name": "Home Maintenance",
+    "description": "Seasonal checklists, preventive care guides, and everything homeowners need to maintain their property year-round.",
+    "color": "green"
+  },
+  {
+    "slug": "hiring-professionals",
+    "name": "Hiring Professionals",
+    "description": "How to find, vet, and work with skilled home service professionals.",
+    "color": "teal"
+  },
+  {
+    "slug": "cost-guides",
+    "name": "Cost Guides",
+    "description": "Transparent pricing breakdowns for every home service. No guessing.",
+    "color": "emerald"
+  },
+  {
+    "slug": "safety",
+    "name": "Safety & Trust",
+    "description": "How to protect yourself, verify credentials, and hire safely.",
+    "color": "forest"
+  },
+  {
+    "slug": "diy-vs-professional",
+    "name": "DIY vs. Professional",
+    "description": "When to roll up your sleeves and when to call an expert.",
+    "color": "sage"
+  },
+  {
+    "slug": "local-guides",
+    "name": "Local Service Guides",
+    "description": "City-specific guides for homeowners across the country.",
+    "color": "lime"
+  },
+  {
+    "slug": "professional-growth",
+    "name": "For Professionals",
+    "description": "Business growth, client acquisition, and platform tips for home service professionals.",
+    "color": "olive"
+  }
+]

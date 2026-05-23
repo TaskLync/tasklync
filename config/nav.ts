@@ -9,5 +9,5 @@ export const NAV_LINKS: NavItem[] = [
   { label: "Professionals", href: "/for-professionals", description: "Join as a pro" },
   { label: "How It Works", href: "/how-it-works", description: "See how TaskLync works" },
   { label: "Safety", href: "/safety", description: "Trust & safety standards" },
-  { label: "Pricing", href: "/pricing", description: "Simple, transparent pricing" },
+  { label: "Blog", href: "/blog", description: "Home service guides and expert tips for hiring." },
 ];

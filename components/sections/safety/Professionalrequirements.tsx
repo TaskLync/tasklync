@@ -124,7 +124,7 @@ export default function ProfessionalRequirements() {
                 className="px-5 py-3.5 border-b border-[rgba(13,31,28,0.07)] bg-[#F7F7F5]"
               >
                 <span
-                  className="text-[11px] font-semibold tracking-[0.1em] uppercase text-[rgba(13,31,28,0.45)]"
+                  className="text-[11px] font-semibold tracking-widest uppercase text-[rgba(13,31,28,0.45)]"
                   style={{ fontFamily: "var(--font-body)" }}
                 >
                   {group.category}
@@ -152,7 +152,7 @@ export default function ProfessionalRequirements() {
                           {item.label}
                         </div>
                         <div
-                          className="text-[12px] text-[rgba(13,31,28,0.42)] leading-[1.5]"
+                          className="text-[12px] text-[rgba(13,31,28,0.42)] leading-normal"
                           style={{ fontFamily: "var(--font-body)" }}
                         >
                           {item.note}
