@@ -20,7 +20,6 @@ export function WaitlistForm({
     <div>
       {/* Eyebrow */}
       <div className="inline-flex items-center gap-2 mb-5">
-        <Sparkles size={12} strokeWidth={2} color="#2FA084" />
         <span
           className="text-[11px] font-bold uppercase tracking-[0.12em]"
           style={{ fontFamily: "var(--font-body)", color: "#1F6F5F" }}

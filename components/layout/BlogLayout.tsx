@@ -23,7 +23,7 @@ export function BlogLayout({ children, toc }: Props) {
           }}
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 py-10 lg:py-16">
+        <div className="relative z-10 w-full mx-auto px-6 sm:px-10 lg:px-16 py-10 lg:py-16">
           <div className="lg:grid lg:grid-cols-[1fr_256px] lg:gap-16 items-start">
             {/* Article */}
             <article className="min-w-0">

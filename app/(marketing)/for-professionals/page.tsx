@@ -23,7 +23,7 @@ export default function Page() {
       />
 
       <section className="bg-[#F7F7F5] pt-12">
-        <div className="w-full mx-auto px-6 sm:px-10 lg:px-16">
+        <div className="w-full">
           <ProSteps/>
           <WaitlistCTA/>
           <PlatformBenefits/>

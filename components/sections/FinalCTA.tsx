@@ -226,56 +226,44 @@ export function FinalCTA() {
               </p>
 
               {/* App store buttons */}
-              <div
-                className="flex items-center gap-2 md:gap-3"
-                style={anim(0.34)}
-              >
-                {/* App Store */}
-                <a
-                  href="#"
-                  aria-label="Download on the App Store"
-                  className="inline-flex items-center gap-1.5 md:gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-bold
-                             text-[0.78rem] md:text-[0.875rem] text-[#0D1F1C]
-                             px-4 py-2 md:px-[1.6rem] md:py-[0.85rem]
-                             transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    background: "#ffffff",
-                    boxShadow: "0 4px 20px rgba(13,31,28,0.18), inset 0 1px 0 rgba(255,255,255,0.9)",
-                  }}
-                >
-                  <AppleIcon />
-                  <span>
-                    <span className="block text-[9px] font-medium opacity-50 tracking-[0.06em] leading-none uppercase">
-                      Download on the
-                    </span>
-                    App Store
-                  </span>
-                </a>
+<div
+  className="flex items-center justify-center md:justify-start"
+  style={anim(0.34)}
+>
+  {/* Google Play */}
+  <a
+    href="#"
+    aria-label="Get it on Google Play"
+    className="
+      inline-flex items-center gap-2
+      rounded-2xl
+      whitespace-nowrap no-underline
+      px-4 py-2.5 md:px-5 md:py-3
+      text-black
+      transition-all duration-200
+      hover:-translate-y-0.5 hover:shadow-xl
+      active:translate-y-0
+    "
+    style={{
+      fontFamily: "var(--font-body)",
+      background: "rgba(255,255,255,0.96)",
+      border: "1px solid rgba(255,255,255,0.18)",
+      boxShadow: "0 10px 28px rgba(0,0,0,0.10)",
+    }}
+  >
+    <PlayIcon />
 
-                {/* Google Play */}
-                <a
-                  href="#"
-                  aria-label="Get it on Google Play"
-                  className="inline-flex items-center gap-1.5 md:gap-[0.55rem] rounded-full whitespace-nowrap no-underline font-semibold
-                             text-[0.78rem] md:text-[0.875rem] text-white
-                             px-4 py-2 md:px-[1.6rem] md:py-[0.85rem]
-                             transition-opacity duration-200 hover:opacity-90 hover:-translate-y-px"
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    background: "rgba(255,255,255,0.14)",
-                    border: "1px solid rgba(255,255,255,0.22)",
-                  }}
-                >
-                  <PlayIcon />
-                  <span>
-                    <span className="block text-[9px] font-medium opacity-50 tracking-[0.06em] leading-none uppercase">
-                      Get it on
-                    </span>
-                    Google Play
-                  </span>
-                </a>
-              </div>
+    <span className="flex flex-col leading-none text-left">
+      <span className="text-[9px] md:text-[10px] font-semibold uppercase tracking-[0.12em] text-black/45">
+        Get it on
+      </span>
+
+      <span className="mt-1 text-[0.9rem] md:text-[1rem] font-semibold tracking-[-0.01em]">
+        Google Play
+      </span>
+    </span>
+  </a>
+</div>
 
               {/* Fine print */}
               <p

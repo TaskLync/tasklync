@@ -92,7 +92,7 @@ export default async function BlogPostPage({
           url={`${siteConfig.url}/blog/${post.slug}`}
         />
 
-        <div className="mt-12">
+        <div className="mt-5">
           <InlineCTA
             headline="Ready to find a vetted professional?"
             body="TaskLync connects homeowners with background-checked, reviewed home service professionals. Get early access when we launch."

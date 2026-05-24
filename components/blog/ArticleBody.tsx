@@ -1,4 +1,6 @@
+// Server component — async, no 'use client'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import remarkGfm from 'remark-gfm'
 import Image from 'next/image'
 import type { StaticImageData } from 'next/image'
 import { InlineCTA } from './InlineCTA'
@@ -12,6 +14,12 @@ function slugify(text: string): string {
 
 type ImageSrc = string | StaticImageData
 
+const mdxOptions = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+  },
+}
+
 const mdxComponents = {
   InlineCTA,
   FAQBlock,
@@ -24,12 +32,12 @@ const mdxComponents = {
       className="scroll-mt-24"
       style={{
         fontFamily: 'var(--font-clash)',
-        fontSize: 'clamp(1.35rem, 2vw, 1.65rem)',
+        fontSize: 'clamp(1.15rem, 2vw, 1.15rem)',
         fontWeight: '700',
         letterSpacing: '-0.025em',
         color: '#0D1F1C',
-        marginTop: '3rem',
-        marginBottom: '1rem',
+        marginTop: '1.5rem',
+        marginBottom: '0.6rem',
       }}
       {...props}
     >
@@ -43,12 +51,12 @@ const mdxComponents = {
       className="scroll-mt-24"
       style={{
         fontFamily: 'var(--font-clash)',
-        fontSize: '1.15rem',
+        fontSize: '1rem',
         fontWeight: '600',
         letterSpacing: '-0.02em',
         color: '#0D1F1C',
-        marginTop: '2rem',
-        marginBottom: '0.75rem',
+        marginTop: '1.35rem',
+        marginBottom: '0.5rem',
       }}
       {...props}
     >
@@ -60,11 +68,11 @@ const mdxComponents = {
     <p
       style={{
         fontFamily: 'var(--font-body)',
-        fontSize: '1rem',
+        fontSize: '0.95rem',
         lineHeight: '1.78',
         color: 'rgba(13,31,28,0.72)',
-        marginTop: '1.25em',
-        marginBottom: '1.25em',
+        marginTop: '0.85em',
+        marginBottom: '0.85em',
       }}
       {...props}
     >
@@ -97,8 +105,8 @@ const mdxComponents = {
     <ul
       style={{
         paddingLeft: '1.25rem',
-        marginTop: '1em',
-        marginBottom: '1em',
+        marginTop: '0.6em',
+        marginBottom: '0.6em',
       }}
       {...props}
     >
@@ -110,8 +118,8 @@ const mdxComponents = {
     <ol
       style={{
         paddingLeft: '1.25rem',
-        marginTop: '1em',
-        marginBottom: '1em',
+        marginTop: '0.6em',
+        marginBottom: '0.6em',
       }}
       {...props}
     >
@@ -126,7 +134,7 @@ const mdxComponents = {
         fontSize: '1rem',
         lineHeight: '1.75',
         color: 'rgba(13,31,28,0.72)',
-        marginBottom: '0.35em',
+        marginBottom: '0.25em',
       }}
       {...props}
     >
@@ -139,7 +147,7 @@ const mdxComponents = {
       style={{
         borderLeft: '3px solid #1F6F5F',
         paddingLeft: '1.25rem',
-        margin: '1.75em 0',
+        margin: '1.25em 0',
         fontFamily: 'var(--font-serif-italic)',
         fontSize: '1.05rem',
         color: 'rgba(13,31,28,0.6)',
@@ -176,7 +184,7 @@ const mdxComponents = {
         borderRadius: '12px',
         padding: '1.25rem',
         overflowX: 'auto',
-        margin: '1.5em 0',
+        margin: '1em 0',
         fontSize: '0.875rem',
         fontFamily: 'monospace',
         color: '#0D1F1C',
@@ -245,17 +253,14 @@ const mdxComponents = {
 
   img: ({ src, alt }: React.ComponentProps<'img'>) => {
     let imageSrc: ImageSrc = ''
-
     if (typeof src === 'string') {
       imageSrc = src
-    } else if (src instanceof Blob) {
-      imageSrc = URL.createObjectURL(src)
     } else {
       imageSrc = ''
     }
 
     return (
-      <figure style={{ margin: '2rem 0' }}>
+      <figure style={{ margin: '1.5rem 0' }}>
         <div
           style={{
             position: 'relative',
@@ -267,15 +272,9 @@ const mdxComponents = {
           }}
         >
           {imageSrc && (
-            <Image
-              src={imageSrc}
-              alt={alt ?? ''}
-              fill
-              className="object-cover"
-            />
+            <Image src={imageSrc} alt={alt ?? ''} fill className="object-cover" />
           )}
         </div>
-
         {alt && (
           <figcaption
             style={{
@@ -301,7 +300,11 @@ interface Props {
 export async function ArticleBody({ content }: Props) {
   return (
     <div>
-      <MDXRemote source={content} components={mdxComponents} />
+      <MDXRemote
+        source={content}
+        components={mdxComponents}
+        options={mdxOptions}
+      />
     </div>
   )
 }
