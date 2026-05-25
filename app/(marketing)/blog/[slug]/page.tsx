@@ -85,7 +85,7 @@ export default async function BlogPostPage({
       <BlogLayout toc={toc}>
         <ArticleHeader post={post} />
 
-        <ArticleBody content={post.content} />
+        <ArticleBody content={post.content} faqItems={post.faqItems} />
 
         <ShareButtons
           title={post.title}

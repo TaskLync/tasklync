@@ -7,6 +7,7 @@ import { WaitlistProvider } from "@/components/waitlist/WaitlistProvider";
 import { AnalyticsProvider } from "@/components/layout/AnalyticsProvider";
 
 import CookieProvider from "@/components/cookies/CookieProvider";
+import { ToastProvider } from "@/components/ui/Toast";
 
 export default function MarketingLayout({
   children,
@@ -14,6 +15,7 @@ export default function MarketingLayout({
   children: ReactNode;
 }) {
   return (
+  <ToastProvider>
     <CookieProvider>
       <WaitlistProvider>
         <AnalyticsProvider>
@@ -23,5 +25,6 @@ export default function MarketingLayout({
         </AnalyticsProvider>
       </WaitlistProvider>
     </CookieProvider>
+  </ToastProvider>
   );
 }

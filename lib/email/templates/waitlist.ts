@@ -1,4 +1,4 @@
-// lib/email/templates.ts
+// lib/email/templates/waitlist.ts
 import { siteConfig } from "@/config/site";
 
 export interface EmailTemplateParams {

@@ -190,32 +190,6 @@ export default function PressKit() {
             </div>
           ))}
         </div>
-
-        {/* EXTRA SEPARATED GUIDELINES SECTION */}
-        <div className="border-t border-[rgba(31,111,95,0.08)] p-5">
-          <div className="bg-[#F7F7F5] border border-[rgba(31,111,95,0.12)] rounded-2xl p-10">
-            <p
-              className="text-[rgba(13,31,28,0.62)] text-[13.5px] leading-[1.8]"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              <strong className="text-[#0D1F1C]">
-                Usage guidelines:
-              </strong>{" "}
-              TaskLync media assets may be used for editorial and press
-              coverage without prior approval. Logos and visual assets should
-              not be modified, distorted, recolored, or used in ways that
-              imply endorsement or partnership without written permission.
-              For additional requests or custom media enquiries, contact{" "}
-              <a
-                href="mailto:press@tasklync.pk"
-                className="text-[#1F6F5F] underline underline-offset-2"
-              >
-                press@tasklync.pk
-              </a>
-              .
-            </p>
-          </div>
-        </div>
       </div>
     </section>
   );

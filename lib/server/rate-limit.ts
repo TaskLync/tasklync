@@ -33,3 +33,14 @@ export const analyticsRateLimit = new Ratelimit({
   analytics: false,
   prefix:    'tl_rl_analytics',
 })
+
+/**
+ * Contact endpoint: strict per-IP
+ * 3 submissions per IP per 24 hours across all contact types
+ */
+export const contactRateLimit = new Ratelimit({
+  redis,
+  limiter:   Ratelimit.slidingWindow(3, '24 h'),
+  analytics: true,
+  prefix:    'tl_rl_contact',
+})

@@ -239,7 +239,9 @@ function NavInner({
           aria-label="TaskLync Home"
           className="group flex shrink-0 items-center gap-2.5"
         >
-          <LogoMark size={42} />
+          <div className="relative h-[42px] w-[42px] shrink-0">
+            <LogoMark size={42} />
+          </div>
           <span
             className={[
               "font-['Playfair_Display'] text-[2.2rem] font-medium tracking-tight transition-colors duration-300",

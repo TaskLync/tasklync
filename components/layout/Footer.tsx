@@ -1,44 +1,4 @@
 "use client";
-
-/**
- * MOBILE PERFORMANCE PASS
- *
- * [Ft1] @import font URL removed from inline <style> tag.
- *       Loading web fonts via a <style> tag inside a Client Component means
- *       the browser re-issues the font network request on every component
- *       mount and blocks rendering until it resolves. Fonts must be declared
- *       once in layout.tsx (or _document) via <link rel="preload"> /
- *       next/font. The <style> tag is removed entirely here.
- *       ACTION REQUIRED: add these two font links to your layout.tsx <head>:
- *
- *         <link rel="preconnect" href="https://api.fontshare.com" />
- *         <link
- *           rel="stylesheet"
- *           href="https://api.fontshare.com/v2/css?f[]=clash-display@700&f[]=cabinet-grotesk@400,500,700&display=swap"
- *         />
- *
- *       Or better: migrate to next/font/local with the downloaded font files
- *       so the fonts are bundled at build time (zero network round-trip).
- *
- * [Ft2] new Date().getFullYear() hydration fix.
- *       The server renders the year at build/request time; the client
- *       re-renders at runtime. If the year differs React sees a text mismatch.
- *       Fix: suppressHydrationWarning on the containing element — this is the
- *       canonical Next.js approach for intentionally dynamic text that differs
- *       between server and client (dates, locale-specific values).
- *
- * [Ft3] onMouseEnter/Leave inline style mutations on social icons and nav
- *       links kept as-is — these only fire on pointer devices (desktop),
- *       never on touch. No mobile cost. Replacing with CSS classes would
- *       require adding Tailwind arbitrary-value classes or a <style> block;
- *       the current pattern is fine for this use case.
- *
- * [Ft4] All decorative elements (noise, grid, blobs, glow line) are already
- *       static — no animation, no JS. No changes needed.
- *
- * No Framer Motion was used in this component. No animation removals needed.
- */
-
 import Link from "next/link";
 import { MapPin, Mail, Phone, ArrowUpRight, Zap, Shield, Star } from "lucide-react";
 import { LogoMark } from "./LogoMark";

@@ -98,16 +98,12 @@ export function WaitlistModal({ open, onClose, onSuccess }: WaitlistModalProps) 
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Top accent bar */}
-          <div
-            className="h-0.5 w-full"
-            style={{ background: "linear-gradient(90deg,#1F6F5F 0%,#2FA084 55%,#6FCF97 100%)" }}
-          />
+          
 
           {/* Close button */}
           <button
             onClick={resetAndClose}
-            className="absolute top-5 right-5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150"
+            className="cursor-pointer absolute top-5 right-5 z-20 w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-150"
             style={{ background: "rgba(13,31,28,0.06)", color: "rgba(13,31,28,0.45)" }}
             aria-label="Close"
           >

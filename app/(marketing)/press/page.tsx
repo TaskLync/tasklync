@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import PressHero from "@/components/sections/press/PressHero";
 import PageHero from "@/components/sections/PageHero";
 import PressKit from "@/components/sections/press/PressKit";
+import PressMentions from "@/components/sections/press/PressMentions";
+import CompanyBoilerplate from "@/components/sections/press/CompanyBoilerplate";
+import PressContact from "@/components/sections/press/PressContact";
 
 export const metadata: Metadata = {
   title: "Press — TaskLync",
@@ -19,6 +22,9 @@ export default function PressPage() {
       />
       <PressHero />
       <PressKit/>
+      <PressMentions/>
+      <CompanyBoilerplate/>
+      <PressContact/>
     </main>
   );
 }

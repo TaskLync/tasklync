@@ -14,15 +14,19 @@ function slugify(text: string): string {
 
 type ImageSrc = string | StaticImageData
 
+export interface FAQItem {
+  question: string
+  answer: string
+}
+
 const mdxOptions = {
   mdxOptions: {
     remarkPlugins: [remarkGfm],
   },
 }
 
-const mdxComponents = {
+const baseMdxComponents = {
   InlineCTA,
-  FAQBlock,
   PullQuote,
   CalloutBlock,
 
@@ -295,14 +299,20 @@ const mdxComponents = {
 
 interface Props {
   content: string
+  faqItems?: FAQItem[]
 }
 
-export async function ArticleBody({ content }: Props) {
+export async function ArticleBody({ content, faqItems }: Props) {
+  const components = {
+    ...baseMdxComponents,
+    FAQBlock: () => (faqItems?.length ? <FAQBlock items={faqItems} /> : null),
+  }
+
   return (
     <div>
       <MDXRemote
         source={content}
-        components={mdxComponents}
+        components={components}
         options={mdxOptions}
       />
     </div>

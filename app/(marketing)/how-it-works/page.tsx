@@ -1,0 +1,36 @@
+import FAQ from "@/components/sections/FAQ";
+import FinalCTA from "@/components/sections/FinalCTA";
+import HowItWorks from "@/components/sections/HowItWorks";
+import PageHero from "@/components/sections/PageHero";
+import ProSteps from "@/components/sections/ProSteps";
+import WaitlistCTA from "@/components/sections/WaitListCTA";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "How TaskLync Works — Vetted Home Service Professionals",
+  description:
+    "TaskLync connects homeowners with licensed, background-checked professionals. Learn how the platform works for both homeowners and service professionals.",
+  openGraph: {
+    title: "How TaskLync Works",
+    description:
+      "How TaskLync vets professionals and connects them with homeowners. Step-by-step explanation of the full platform.",
+    url: "https://tasklync.pk/how-it-works",
+  },
+};
+
+export default function HowItWorksPage() {
+  return (
+    <main>
+        <PageHero
+                 breadcrumb="How It Works"
+                 title="How TaskLync works"
+                 subtitle="Get verified, get listed, and start receiving real customer bookings through a trusted, vetted platform built for service professionals."
+        />
+        <HowItWorks/>
+        <ProSteps/>
+        <WaitlistCTA/>
+        <FAQ/>
+        <FinalCTA/>
+    </main>
+  );
+}
