@@ -1,25 +1,4 @@
 "use client";
-
-// ─── Hero.tsx ──────────────────────────────────────────────────────────────────
-// MOBILE PERFORMANCE PASS:
-//
-//  [M1] AmbientParticles disabled on mobile — canvas RAF loop on weak CPU = jank
-//       Replaced with 6 static CSS dots (opacity + transform, zero JS)
-//
-//  [M2] Framer Motion removed from mobile headline/sub/cta — replaced with
-//       CSS keyframe animations via className. Same fadeUp feel, zero JS cost.
-//
-//  [M3] SecondaryButton backdropFilter removed on mobile — compositor layer
-//       for a small button isn't worth the GPU cost.
-//
-//  [M4] Blob divs hidden on mobile — radial-gradient blobs cause extra paint
-//       layers. Not visible on small screens anyway.
-//
-//  [M5] Scroll cue infinite Framer loop moved to CSS animation — zero JS
-//       after mount.
-//
-//  Desktop: completely unchanged. GSAP sequence + Framer parallax intact.
-
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import gsap from "gsap";
@@ -37,6 +16,7 @@ import { fadeUp, phoneFloat, glowPulse } from "@/lib/motion/variants";
 import { useWaitlist } from "../waitlist/WaitlistContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { useRouter } from "next/navigation";
 
 const STYLES = {
   sectionBg:
@@ -158,6 +138,7 @@ export default function Hero() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subRef      = useRef<HTMLParagraphElement>(null);
   const ctaRef      = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const { openModal } = useWaitlist();
   const { track } = useAnalytics();
@@ -165,10 +146,14 @@ export default function Hero() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [done,  setDone]  = useState(false);
 
-  // Shared CTA handler — used by both mobile and desktop buttons
+  // Shared CTA handlers
   const handleCtaClick = () => {
     openModal();
     track(ANALYTICS_EVENTS.HERO_CTA_CLICKED);
+  };
+
+  const handleHowItWorksClick = () => {
+    router.push("/how-it-works");
   };
 
   // Parallax tilt — desktop only
@@ -297,7 +282,7 @@ export default function Hero() {
           }}
         />
 
-        {/* [M4] Blobs — desktop only */}
+        {/* Blobs — desktop only */}
         <div
           className="pointer-events-none absolute left-[20%] top-[30%] hidden h-125 w-125 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.18] lg:block"
           style={{ background: `radial-gradient(circle,${STYLES.brand400} 0%,transparent 70%)` }}
@@ -307,12 +292,12 @@ export default function Hero() {
           style={{ background: `radial-gradient(circle,${STYLES.brand600} 0%,transparent 70%)` }}
         />
 
-        {/* [M1] Canvas particles — desktop only */}
+        {/* Canvas particles — desktop only */}
         <div className="hidden lg:block">
           <AmbientParticles />
         </div>
 
-        {/* [M1] Static CSS dots — mobile only */}
+        {/* Static CSS dots — mobile only */}
         <div className="lg:hidden">
           <MobileParticles />
         </div>
@@ -406,7 +391,7 @@ export default function Hero() {
             }}
           >
             <PrimaryButton onClick={handleCtaClick}>Join the Waitlist</PrimaryButton>
-            <SecondaryButton>See how it works</SecondaryButton>
+            <SecondaryButton onClick={handleHowItWorksClick}>See how it works</SecondaryButton>
           </div>
         </div>
 
@@ -465,7 +450,7 @@ export default function Hero() {
               }}
             >
               <PrimaryButton onClick={handleCtaClick}>Join the Waitlist</PrimaryButton>
-              <SecondaryButton>See how it works</SecondaryButton>
+              <SecondaryButton onClick={handleHowItWorksClick}>See how it works</SecondaryButton>
             </div>
           </div>
         </div>
@@ -478,7 +463,7 @@ export default function Hero() {
           }}
         />
 
-        {/* [M5] Scroll cue — desktop only */}
+        {/* Scroll cue — desktop only */}
         {done && (
           <div className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
             <span
@@ -569,9 +554,16 @@ function PrimaryButton({
   );
 }
 
-function SecondaryButton({ children }: { children: React.ReactNode }) {
+function SecondaryButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
   return (
     <button
+      onClick={onClick}
       style={{
         fontFamily: STYLES.fontSans,
         background: "rgba(13,31,28,0.05)",

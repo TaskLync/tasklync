@@ -5,7 +5,7 @@ import { WaitlistContext } from "./WaitlistContext";
 import { WaitlistModal } from "./WaitlistModal";
 
 export function WaitlistProvider({ children }: { children: React.ReactNode }) {
-  const { open, dismiss, openManual, markJoined } = useWaitlistModal();
+  const { open, dismiss, openManual, markJoined, isSignedUp } = useWaitlistModal();
 
   return (
     <WaitlistContext.Provider value={{ openModal: openManual }}>
@@ -14,6 +14,7 @@ export function WaitlistProvider({ children }: { children: React.ReactNode }) {
         open={open}
         onClose={dismiss}
         onSuccess={markJoined}
+        startAtSuccess={isSignedUp}
       />
     </WaitlistContext.Provider>
   );

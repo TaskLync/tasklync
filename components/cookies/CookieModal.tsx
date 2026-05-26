@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useConsentStore } from "@/lib/cookies/store";
 
@@ -18,7 +18,7 @@ const CATEGORIES: CategoryConfig[] = [
     id: "analytics",
     label: "Analytics",
     description:
-      "Help us understand how visitors interact with TaskLync. All data is aggregated and anonymised — we never identify individuals.",
+      "Help us understand how visitors interact with TaskLync. All data is aggregated and anonymised.",
     cookies: "_ga, _gid, _ga_XXXXXX",
     retention: "Up to 2 years",
     required: false,
@@ -52,6 +52,19 @@ export default function CookieModal() {
     marketing: consent.marketing,
     functional: consent.functional,
   });
+
+  // Re-sync local prefs from the cookie-backed store whenever the modal opens.
+  // Without this, prefs snapshots the default (all false) at first render and
+  // never reflects what was actually saved to the cookie.
+  useEffect(() => {
+    if (isModalOpen) {
+      setPrefs({
+        analytics: consent.analytics,
+        marketing: consent.marketing,
+        functional: consent.functional,
+      });
+    }
+  }, [isModalOpen, consent]);
 
   if (!isModalOpen) return null;
 

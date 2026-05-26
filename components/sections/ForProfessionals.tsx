@@ -1,35 +1,9 @@
 "use client";
 
-/**
- * MOBILE PERFORMANCE PASS
- *
- * [FP1] All motion.div on left column (eyebrow, headline, subtitle, CTAs,
- *       trust badges) → CSS @keyframes fpFadeUp with animation-delay.
- *       Zero JS per frame.
- *
- * [FP2] Right card grid wrapper: motion.div with slideLeft (x: 32 → 0) →
- *       CSS fpFadeUp. slideLeft caused layout recalc on every frame during
- *       entry because x translation affects layout flow on some browsers.
- *
- * [FP3] Each benefit card: individual motion.div with staggered JS animation
- *       → plain <div> with CSS animation-delay computed inline. No JS loop.
- *
- * [FP4] Stats bar: motion.div with fadeUp → CSS fpFadeUp.
- *
- * [FP5] icon group-hover:scale-110 kept as CSS-only (already compositor-safe).
- *       Removed Framer Motion involvement — pure Tailwind CSS transition.
- *
- * [FP6] slideLeft / cardVariant / fadeUp Framer variants fully removed.
- *       No framer-motion import.
- *
- * [FP7] prefers-reduced-motion respected — same pattern as HowItWorks.tsx.
- *
- * Desktop: visually identical.
- */
-
 import { ArrowRight, CheckCircle2, Zap, Star, CalendarClock, BarChart3, Users, BadgeDollarSign } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useWaitlist } from "../waitlist/WaitlistContext";
+import { useRouter } from "next/navigation";
 
 // ─── Content ──────────────────────────────────────────────────────────────────
 
@@ -92,6 +66,7 @@ const stats = [
 export function ForProfessionals() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.05 });
   const { openModal } = useWaitlist();
+  const router = useRouter();
 
   // [FP7] Check reduced-motion once, outside render — same pattern as HowItWorks
   const reduced =
@@ -241,7 +216,8 @@ export function ForProfessionals() {
               </button>
 
               <button
-                className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors duration-200 hover:border-[#1F6F5F] hover:text-[#1F6F5F]"
+                onClick={() => router.push("/how-it-works")}
+                className="cursor-pointer inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-medium transition-colors duration-200 hover:border-[#1F6F5F] hover:text-[#1F6F5F]"
                 style={{
                   fontFamily: "var(--font-body)",
                   background: "transparent",

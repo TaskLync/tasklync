@@ -1,26 +1,5 @@
 "use client";
 
-/**
- * MOBILE PERFORMANCE PASS — v2
- *
- * [W1] Label, title, subtitle, perks → CSS @keyframes wlFadeUp. Zero JS per frame.
- *
- * [W2] 4 perk rows: staggered CSS animation-delay, no JS loop.
- *
- * [W3] Desktop card: slideRight removed → CSS wlFadeUp (Y-only, compositor-safe).
- *
- * [W4] Mobile: single "Get Early Access" button matching desktop card style.
- *      Two-button layout removed — one green gradient button only.
- *
- * [W5] HYDRATION FIX: prefers-reduced-motion moved into useEffect so the
- *      check never runs on the server. typeof window in render body causes
- *      server→client mismatch (server: false, client: true/false → tree diff).
- *      Pattern: useState(false) + useEffect sets real value after mount.
- *      All animation styles are derived from `reduced` and `inView`, both
- *      falsy on the server, so the server always renders opacity:0 (hidden)
- *      and the client animates in — no mismatch.
- */
-
 import { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
@@ -210,10 +189,9 @@ export default function WaitlistCTA() {
 
                 {/* Pill */}
                 <div
-                  className="inline-flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full border border-[rgba(111,207,151,0.2)] text-[#6FCF97] text-[10px] font-bold tracking-widest uppercase"
-                  style={{ background: "rgba(111,207,151,0.1)", fontFamily: "var(--font-body)" }}
+                    className="inline-flex items-center gap-1.5 mb-6 px-3 py-1.5 rounded-full border border-[rgba(111,207,151,0.2)] text-[#6FCF97] text-[10px] font-bold tracking-widest uppercase"
+                    style={{ background: "rgba(111,207,151,0.1)", fontFamily: "var(--font-body)" }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#6FCF97] animate-pulse" />
                   Rolling Out Soon
                 </div>
 
@@ -242,6 +220,7 @@ export default function WaitlistCTA() {
 
                 {/* Button */}
                 <button
+                  onClick={openModal}
                   className="w-full flex items-center justify-center gap-2 py-3.5 rounded-full border-none text-white text-[14px] font-semibold cursor-pointer transition-opacity duration-200 hover:opacity-85"
                   style={{
                     fontFamily: "var(--font-body)",

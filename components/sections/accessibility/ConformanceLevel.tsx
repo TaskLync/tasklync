@@ -24,7 +24,7 @@ const criteria = [
 export default function ConformanceLevel() {
   return (
     <section className="bg-[#F7F7F5] py-20 px-6 sm:px-10 lg:px-16 border-b border-[rgba(31,111,95,0.1)]">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-12">
           <div>
             <span
@@ -44,7 +44,7 @@ export default function ConformanceLevel() {
             </h2>
           </div>
 
-          <div className="sm:flex-shrink-0 bg-[rgba(31,111,95,0.06)] border border-[rgba(31,111,95,0.2)] rounded-xl px-6 py-4 text-center">
+          <div className="sm:shrink-0 bg-[rgba(31,111,95,0.06)] border border-[rgba(31,111,95,0.2)] rounded-xl px-6 py-4 text-center">
             <div
               className="text-[#1F6F5F] font-bold text-[1.6rem] tracking-[-0.03em]"
               style={{ fontFamily: "var(--font-clash)" }}

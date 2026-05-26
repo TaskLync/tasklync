@@ -3,6 +3,7 @@
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { UserCheck, Eye, PhoneCall, Lock, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const tips = [
   {
@@ -42,6 +43,7 @@ const quickChecks = [
 
 export default function SafetyForHomeowners() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
+  const router = useRouter();
 
   return (
     <section
@@ -181,7 +183,7 @@ export default function SafetyForHomeowners() {
             </div>
             <div className="mt-6 pt-5 border-t border-[rgba(255,255,255,0.07)]">
               <Link
-                href="/blog/homeowner-safety-guide"
+                href="/blog/homeowner-day-of-checklist"
                 className="flex items-center gap-1.5 text-[#6FCF97] text-[12px] font-semibold group"
                 style={{ fontFamily: "var(--font-body)" }}
               >

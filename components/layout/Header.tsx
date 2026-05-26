@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring, MotionValue } from "framer-motion";
 import type { AnalyticsEventName } from "@/lib/analytics/events";
+import Image from "next/image";
+import logo from "@/public/images/logo/tasklync-logo-final-final-removebg-preview.png";
 
 import { NAV_LINKS } from "@/config/nav";
 import { navbarVariants, navLinkVariants } from "@/lib/motion/variants";
-import { LogoMark } from "./LogoMark";
 import { MobileMenu } from "./MobileMenu";
 import { useWaitlist } from "@/components/waitlist/WaitlistContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -239,9 +240,16 @@ function NavInner({
           aria-label="TaskLync Home"
           className="group flex shrink-0 items-center gap-2.5"
         >
-          <div className="relative h-[42px] w-[42px] shrink-0">
-            <LogoMark size={42} />
-          </div>
+          <div className="relative h-10.5 w-auto shrink-0">
+  <Image
+    src={logo}
+    alt="TaskLync Logo"
+    width={55}
+    height={55}
+    priority
+    className="h-10.5 w-auto object-contain"
+  />
+</div>
           <span
             className={[
               "font-['Playfair_Display'] text-[2.2rem] font-medium tracking-tight transition-colors duration-300",

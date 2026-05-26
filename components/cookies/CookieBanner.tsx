@@ -117,8 +117,6 @@ export default function CookieBanner() {
                 style={{
                   background:
                     "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",
-                  boxShadow:
-                    "0 10px 24px rgba(47,160,132,0.22)",
                   fontFamily: "var(--font-body)",
                 }}
               >

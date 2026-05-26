@@ -1,33 +1,9 @@
 "use client";
 
-/**
- * MOBILE PERFORMANCE PASS
- *
- * [F1] Label, title → CSS @keyframes faqFadeUp. Zero JS per frame.
- *
- * [F2] Subtitle + tab switcher wrapper: motion.div → CSS faqFadeUp.
- *
- * [F3] FAQ list box: motion.div → CSS faqFadeUp.
- *
- * [F4] Bottom CTA: motion.div → CSS faqFadeUp.
- *
- * [F5] EASE_EXPO_OUT import removed — was pulled from framer lib only to
- *      feed into the FAQRow height transition string. Inlined as a plain
- *      cubic-bezier literal. No framer-motion import anywhere.
- *
- * [F6] Hydration fix — prefers-reduced-motion moved to useEffect (same
- *      pattern as WaitlistCTA v2). typeof window in render body causes
- *      server→client tree mismatch.
- *
- * [F7] FAQRow height animation: already CSS-only (scrollHeight → height via
- *      inline transition). No change needed — just kept clean.
- *
- * Desktop: visually identical.
- */
-
 import { useEffect, useRef, useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useRouter } from "next/navigation";
 
 // ─── Types & content ──────────────────────────────────────────────────────────
 
@@ -154,6 +130,7 @@ export default function FAQ() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
   const [tab, setTab]           = useState<"homeowner" | "professional">("homeowner");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const router = useRouter();
 
   // [F6] Hydration fix — read matchMedia only after mount
   const [reduced, setReduced] = useState(false);
@@ -318,6 +295,7 @@ export default function FAQ() {
             </p>
 
             <button
+              onClick={() => router.push("/contact")}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold border cursor-pointer transition-colors duration-200 hover:bg-[rgba(31,111,95,0.06)] hover:border-[#1F6F5F]"
               style={{
                 fontFamily: "var(--font-body)",

@@ -87,30 +87,35 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
 
       {current && (
-        <div
-          role="status"
-          aria-live="polite"
-          onMouseEnter={handleMouseEnter}    // ← pause
-          onMouseLeave={handleMouseLeave}    // ← resume
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 999999,
-            height: "64px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingLeft: "40px",
-            paddingRight: "40px",
-            backgroundColor: current.variant === "success" ? "#1F6F5F" : "#C0392B",
-            transform: visible ? "translateY(0)" : "translateY(-100%)",
-            transition: "transform 0.3s ease-out",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-            cursor: "default",
-          }}
-        >
+        // 1. Add aria-atomic and tabIndex so focus doesn't jump
+<div
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"          
+  tabIndex={-1}               
+  onMouseEnter={handleMouseEnter}
+  onMouseLeave={handleMouseLeave}
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 999999,
+    height: "64px",
+    pointerEvents: visible ? "auto" : "none",   
+    willChange: "transform",                    
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingLeft: "40px",
+    paddingRight: "40px",
+    backgroundColor: current.variant === "success" ? "#1F6F5F" : "#C0392B",
+    transform: visible ? "translateY(0)" : "translateY(-100%)",
+    transition: "transform 0.3s ease-out",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+    cursor: "default",
+  }}
+>
           <span
             style={{
               fontFamily: "var(--font-body)",

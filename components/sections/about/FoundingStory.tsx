@@ -26,13 +26,17 @@ export default function FoundingStory() {
               className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              TaskLync began with two classmates, pursuing their BS in Software Engineering and constantly noticing a simple but persistent problem around them. Finding reliable local professionals was still inconsistent, unstructured, and often based on guesswork rather than trust.
+              TaskLync began with a simple observation. Finding reliable local professionals was still inconsistent, unstructured, and often based more on guesswork than trust.
+
+Across home repairs, maintenance, and everyday services, the experience lacked transparency, accountability, and consistency for both homeowners and skilled professionals. Qualified professionals struggled to stand out, while customers were often left uncertain about who they could actually trust.
+
+That gap became the foundation for TaskLync.
             </p>
             <p
               className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
               style={{ fontFamily: "var(--font-body)" }}
             >
-              As students, we experienced firsthand how difficult it can be to get small but important tasks done without uncertainty. Whether it was home repairs, maintenance, or everyday services, the process lacked transparency and accountability. That shared frustration turned into a discussion, and that discussion eventually became the foundation of TaskLync.
+              We experienced firsthand how difficult it can be to get small but important tasks done without uncertainty. Whether it was home repairs, maintenance, or everyday services, the process lacked transparency and accountability. That shared frustration turned into a discussion, and that discussion eventually became the foundation of TaskLync.
             </p>
             <p
               className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
@@ -75,7 +79,7 @@ export default function FoundingStory() {
                     {n}
                   </span>
                   <span
-                    className="text-[rgba(13,31,28,0.55)] text-[12px] text-right ml-4 max-w-[160px]"
+                    className="text-[rgba(13,31,28,0.55)] text-[12px] text-right ml-4 max-w-40"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
                     {l}

@@ -9,6 +9,7 @@ import {
   ClipboardCheck,
   Activity,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
@@ -51,6 +52,7 @@ const steps = [
 
 export default function VettingProcess() {
   const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
+  const router = useRouter();
 
   return (
     <section
@@ -147,6 +149,7 @@ export default function VettingProcess() {
 
                 {/* Learn more */}
                 <button
+                  onClick={() => router.push("/blog/how-tasklync-vets-professionals")}
                   className="cursor-pointer mt-auto h-11 w-full rounded-xl bg-[#1F6F5F] text-white text-[13px] font-medium transition-all duration-300 hover:opacity-90"
                   style={{ fontFamily: "var(--font-body)" }}
                 >

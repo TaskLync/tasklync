@@ -1,4 +1,4 @@
-import AccessibilityContact from "@/components/sections/accessibility/AccessibilityContact";
+
 import AccessibilityFeedbackForm from "@/components/sections/accessibility/AccessibilityFeedbackForm";
 import AccessibilityStatement from "@/components/sections/accessibility/AccessibilityStatement";
 import ConformanceLevel from "@/components/sections/accessibility/ConformanceLevel";
@@ -24,7 +24,6 @@ export default function AccessibilityPage() {
         <ConformanceLevel/>
         <KnownLimitations/>
         <AccessibilityFeedbackForm/>
-        <AccessibilityContact/>
     </main>
   );
 }

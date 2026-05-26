@@ -15,6 +15,10 @@ import {
   Check,
 } from "lucide-react";
 
+import Image from "next/image";
+import logo from "@/public/images/logo/tasklync-logo-final-final-removebg-preview.png";
+
+
 // ─── Shared motion tokens ──────────────────────────────────────────────────────
 import {
   EASE_EXPO_OUT,
@@ -103,14 +107,23 @@ function OnboardingScreen() {
             width: 64,
             height: 64,
             borderRadius: 18,
-            background: "linear-gradient(135deg,#1F6F5F,#2FA084)",
+            background: "white",
             boxShadow: "0 8px 32px rgba(47,160,132,0.45)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Wrench size={28} color="white" strokeWidth={2} />
+          <div className="relative h-10.5 w-auto shrink-0">
+            <Image
+              src={logo}
+              alt="TaskLync Logo"
+              width={55}
+              height={55}
+              priority
+              className="h-10.5 w-auto object-contain"
+            />
+          </div>
         </div>
       </motion.div>
 

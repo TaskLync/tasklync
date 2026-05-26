@@ -28,29 +28,29 @@ const assets = [
       },
     ],
   },
-  {
-    category: "Founder Photos",
-    items: [
-      {
-        name: "Furqan, Co-Founder",
-        format: "JPG",
-        usage: "High resolution editorial headshot.",
-        file: "/press/headshot-furqan.jpg",
-      },
-      {
-        name: "Uzair, Co-Founder",
-        format: "JPG",
-        usage: "High resolution editorial headshot.",
-        file: "/press/headshot-uzair.jpg",
-      },
-      {
-        name: "Founding Team",
-        format: "JPG",
-        usage: "Official TaskLync founders photo.",
-        file: "/press/headshot-team.jpg",
-      },
-    ],
-  },
+  // {
+  //   category: "Founder Photos",
+  //   items: [
+  //     {
+  //       name: "Furqan, Co-Founder",
+  //       format: "JPG",
+  //       usage: "High resolution editorial headshot.",
+  //       file: "/press/headshot-furqan.jpg",
+  //     },
+  //     {
+  //       name: "Uzair, Co-Founder",
+  //       format: "JPG",
+  //       usage: "High resolution editorial headshot.",
+  //       file: "/press/headshot-uzair.jpg",
+  //     },
+  //     {
+  //       name: "Founding Team",
+  //       format: "JPG",
+  //       usage: "Official TaskLync founders photo.",
+  //       file: "/press/headshot-team.jpg",
+  //     },
+  //   ],
+  // },
   {
     category: "Product Screens",
     items: [
@@ -117,7 +117,7 @@ export default function PressKit() {
 
           <a
             href="/press/tasklync-press-kit.zip"
-            className="inline-flex items-center justify-center h-11 px-5 rounded-xl border border-[rgba(31,111,95,0.18)] text-[#0D1F1C] text-[13px] font-medium hover:bg-[#F7F7F5] transition-colors flex-shrink-0"
+            className="inline-flex items-center justify-center h-11 px-5 rounded-xl border border-[rgba(31,111,95,0.18)] text-[#0D1F1C] text-[13px] font-medium hover:bg-[#F7F7F5] transition-colors shrink-0"
             style={{ fontFamily: "var(--font-body)" }}
           >
             Download Full Kit
@@ -153,7 +153,7 @@ export default function PressKit() {
                       <div className="flex items-start justify-between gap-4 mb-4">
                         <div>
                           <h4
-                            className="text-[#0D1F1C] text-[14px] font-semibold leading-[1.5]"
+                            className="text-[#0D1F1C] text-[14px] font-semibold leading-normal"
                             style={{ fontFamily: "var(--font-clash)" }}
                           >
                             {item.name}
@@ -168,7 +168,7 @@ export default function PressKit() {
                         </div>
 
                         <span
-                          className="flex-shrink-0 inline-flex items-center justify-center h-7 px-2.5 rounded-lg bg-[rgba(31,111,95,0.08)] text-[#1F6F5F] text-[11px] font-semibold uppercase tracking-[0.06em]"
+                          className="shrink-0 inline-flex items-center justify-center h-7 px-2.5 rounded-lg bg-[rgba(31,111,95,0.08)] text-[#1F6F5F] text-[11px] font-semibold uppercase tracking-[0.06em]"
                           style={{ fontFamily: "var(--font-body)" }}
                         >
                           {item.format}

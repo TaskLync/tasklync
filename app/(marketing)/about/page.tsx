@@ -24,7 +24,6 @@ export default function AboutPage() {
               />
         <MissionStatement/>
         <FoundingStory/>
-        <TeamCards/>
         <CompanyValues/>
         <FinalCTA/>
     </main>

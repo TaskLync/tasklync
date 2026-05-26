@@ -1,7 +1,9 @@
 "use client";
 import Link from "next/link";
-import { MapPin, Mail, Phone, ArrowUpRight, Zap, Shield, Star } from "lucide-react";
+import { MapPin, Mail, Phone, ArrowUpRight } from "lucide-react";
 import { LogoMark } from "./LogoMark";
+import { useToast } from "@/components/ui/Toast";
+import { useConsentStore } from "@/lib/cookies/store";
 
 // ─── Social icons ─────────────────────────────────────────────────────────────
 
@@ -45,9 +47,8 @@ const NAV_COLUMNS = [
     label: "Product",
     links: [
       { label: "How It Works",      href: "/how-it-works" },
-      { label: "For Customers",     href: "/for-customers" },
+      { label: "For Customers",     href: "/services" },
       { label: "For Professionals", href: "/for-professionals" },
-      { label: "Pricing",           href: "/pricing" },
       { label: "Download App",      href: "/download" },
     ],
   },
@@ -66,7 +67,7 @@ const NAV_COLUMNS = [
     links: [
       { label: "Privacy Policy",   href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Settings",    href: "/cookies" },
+      { label: "Cookie Settings",  href: "/cookies" },
       { label: "Accessibility",    href: "/accessibility" },
     ],
   },
@@ -79,9 +80,36 @@ const SOCIALS = [
   { Icon: YoutubeIcon,   label: "YouTube",     href: "#" },
 ];
 
+// Shared button style for Download App & Cookie Settings
+const ghostLinkStyle: React.CSSProperties = {
+  fontFamily: "var(--font-cabinet)",
+  fontSize: "13.5px",
+  color: "rgba(232,245,240,0.46)",
+  background: "none",
+  border: "none",
+  padding: 0,
+  cursor: "pointer",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "0.2rem",
+  transition: "color .18s",
+  textAlign: "left",
+};
+
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 export function Footer() {
+  const { show } = useToast();
+  const { openModal } = useConsentStore();
+
+  function handleDownloadApp() {
+    show({
+      message:
+        "TaskLync App isn't available yet. Join the waitlist to get notified the moment we launch in your city.",
+      variant: "success",
+    });
+  }
+
   return (
     <footer
       style={{
@@ -118,11 +146,12 @@ export function Footer() {
         style={{ background: "radial-gradient(circle,#6FCF97 0%,transparent 70%)" }}
       />
 
-      {/* Top glow line — static */}
+      {/* Top glow line */}
       <div
         style={{
           height: 1,
-          background: "linear-gradient(90deg,transparent 0%,rgba(47,160,132,0.35) 30%,rgba(111,207,151,0.5) 50%,rgba(47,160,132,0.35) 70%,transparent 100%)",
+          background:
+            "linear-gradient(90deg,transparent 0%,rgba(47,160,132,0.35) 30%,rgba(111,207,151,0.5) 50%,rgba(47,160,132,0.35) 70%,transparent 100%)",
         }}
       />
 
@@ -168,8 +197,7 @@ export function Footer() {
             <ul style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               {[
                 { Icon: MapPin, text: "Faisalabad, Pakistan" },
-                { Icon: Mail,   text: "hello@tasklync.com"  },
-                { Icon: Phone,  text: "+49 30 000 0000"     },
+                { Icon: Mail,   text: "team@tasklync.pk"  },
               ].map(({ Icon, text }) => (
                 <li
                   key={text}
@@ -186,7 +214,7 @@ export function Footer() {
               ))}
             </ul>
 
-            {/* Socials — [Ft3] onMouseEnter/Leave kept, touch-safe */}
+            {/* Socials */}
             <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.25rem" }}>
               {SOCIALS.map(({ Icon, label, href }) => (
                 <a
@@ -235,36 +263,80 @@ export function Footer() {
                 >
                   {col.label}
                 </p>
+
                 <ul style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
-                  {col.links.map(({ label, href }) => (
-                    <li key={label}>
-                      <Link
-                        href={href}
-                        style={{
-                          fontFamily: "var(--font-cabinet)",
-                          fontSize: "13.5px",
-                          color: "rgba(232,245,240,0.46)",
-                          textDecoration: "none",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "0.2rem",
-                          transition: "color .18s",
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = "#e8f5f0";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = "rgba(232,245,240,0.46)";
-                        }}
-                      >
-                        {label}
-                        
-                        {label === "Press Kit" && (
-                          <ArrowUpRight size={11} strokeWidth={2} style={{ opacity: 0.4 }} />
-                        )}
-                      </Link>
-                    </li>
-                  ))}
+                  {col.links.map(({ label, href }) => {
+
+                    // ── Download App — toast ──────────────────────────────
+                    if (label === "Download App") {
+                      return (
+                        <li key={label}>
+                          <button
+                            onClick={handleDownloadApp}
+                            style={ghostLinkStyle}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = "#e8f5f0";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = "rgba(232,245,240,0.46)";
+                            }}
+                          >
+                            {label}
+                          </button>
+                        </li>
+                      );
+                    }
+
+                    // ── Cookie Settings — open modal ──────────────────────
+                    if (label === "Cookie Settings") {
+                      return (
+                        <li key={label}>
+                          <button
+                            onClick={openModal}
+                            style={ghostLinkStyle}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = "#e8f5f0";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = "rgba(232,245,240,0.46)";
+                            }}
+                          >
+                            {label}
+                          </button>
+                        </li>
+                      );
+                    }
+
+                    // ── All other links — normal Next Link ────────────────
+                    return (
+                      <li key={label}>
+                        <Link
+                          href={href}
+                          style={{
+                            fontFamily: "var(--font-cabinet)",
+                            fontSize: "13.5px",
+                            color: "rgba(232,245,240,0.46)",
+                            textDecoration: "none",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.2rem",
+                            transition: "color .18s",
+                          }}
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLElement).style.color = "#e8f5f0";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLElement).style.color = "rgba(232,245,240,0.46)";
+                          }}
+                        >
+                          {label}
+                          {label === "Press Kit" && (
+                            <ArrowUpRight size={11} strokeWidth={2} style={{ opacity: 0.4 }} />
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
@@ -273,8 +345,6 @@ export function Footer() {
 
         {/* Bottom row */}
         <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-
-          {/* [Ft2] suppressHydrationWarning — year is intentionally dynamic */}
           <p
             suppressHydrationWarning
             style={{
@@ -285,17 +355,6 @@ export function Footer() {
             }}
           >
             © {new Date().getFullYear()} TaskLync. All rights reserved.
-          </p>
-
-          <p
-            style={{
-              fontFamily: "var(--font-cabinet)",
-              fontSize: "12px",
-              color: "rgba(232,245,240,0.20)",
-              letterSpacing: "0.01em",
-            }}
-          >
-            Made with care in Faisalabad.
           </p>
         </div>
 

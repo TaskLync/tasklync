@@ -62,7 +62,7 @@ export function SuccessState({ onClose }: SuccessStateProps) {
 
       <button
         onClick={onClose}
-        className="mt-7 rounded-full px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-85 active:opacity-75"
+        className="cursor-pointer mt-7 rounded-full px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-85 active:opacity-75"
         style={{
           fontFamily: "var(--font-body)",
           background: "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)",

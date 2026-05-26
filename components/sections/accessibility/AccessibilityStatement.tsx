@@ -1,7 +1,7 @@
 export default function AccessibilityStatement() {
   return (
     <section className="bg-[#F7F7F5] pt-20 pb-16 px-6 sm:px-10 lg:px-16 border-b border-[rgba(31,111,95,0.1)]">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <span
           className="inline-block mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
           style={{ fontFamily: "var(--font-body)" }}
