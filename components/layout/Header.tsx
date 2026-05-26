@@ -244,8 +244,8 @@ function NavInner({
   <Image
     src={logo}
     alt="TaskLync Logo"
-    width={55}
-    height={55}
+    width={42}
+    height={42}
     priority
     className="h-10.5 w-auto object-contain"
   />

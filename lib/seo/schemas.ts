@@ -1,47 +1,119 @@
-// lib/seo/schemas.ts
-
 import { siteConfig } from "@/config/site";
-import type { BlogPost } from "@/types/blog";
-/**
- * Wraps multiple schema objects into a single JSON-LD graph
- */
-export function buildSchemaGraph(schemas: any[]) {
+
+/* ----------------------------- GRAPH WRAPPER ---------------------------- */
+export function buildSchemaGraph(schemas: object[]) {
   return {
     "@context": "https://schema.org",
-    "@graph": schemas,
+    "@graph": schemas.filter(Boolean),
   };
 }
 
-/**
- * Article schema for blog posts
- */
-export function buildArticleSchema(post: BlogPost) {
+/* ---------------------------- ORGANIZATION ----------------------------- */
+export function buildOrganizationSchema() {
+  return {
+    "@type": "Organization",
+    "@id": `${siteConfig.url}/#organization`,
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}${siteConfig.branding.logo}`,
+    },
+    sameAs: [
+      siteConfig.social.twitter,
+      siteConfig.social.linkedin,
+      siteConfig.social.instagram,
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      email: siteConfig.contact.email.support,
+      availableLanguage: "English",
+    },
+  };
+}
+
+/* ------------------------------- WEBSITE ------------------------------- */
+export function buildWebsiteSchema() {
+  return {
+    "@type": "WebSite",
+    "@id": `${siteConfig.url}/#website`,
+    url: siteConfig.url,
+    name: siteConfig.name,
+    publisher: {
+      "@id": `${siteConfig.url}/#organization`,
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteConfig.url}/blog?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
+
+/* -------------------------------- ARTICLE ------------------------------ */
+export function buildArticleSchema(post: any) {
   return {
     "@type": "Article",
+    "@id": `${siteConfig.url}/blog/${post.slug}#article`,
     headline: post.title,
     description: post.excerpt,
     image: post.featuredImage
-      ? `${siteConfig.url}${post.featuredImage}`
+      ? {
+          "@type": "ImageObject",
+          url: `${siteConfig.url}${post.featuredImage}`,
+        }
       : undefined,
 
     author: {
       "@type": "Person",
-      name: post.authorData.name,
+      name: post.authorData?.name,
+    },
+
+    publisher: {
+      "@id": `${siteConfig.url}/#organization`,
     },
 
     datePublished: post.publishedAt,
-    dateModified: post.updatedAt || post.publishedAt,
+    dateModified: post.updatedAt ?? post.publishedAt,
 
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteConfig.url}/blog/${post.slug}`,
     },
+
+    wordCount: post.content
+      ? post.content.split(/\s+/).length
+      : undefined,
   };
 }
 
-/**
- * Breadcrumb schema for navigation
- */
+/* --------------------------- LOCAL BUSINESS ---------------------------- */
+export function buildLocalBusinessSchema(city: any, service?: any) {
+  const path = service
+    ? `/${city.slug}/${service.slug}`
+    : `/${city.slug}`;
+
+  return {
+    "@type": "LocalBusiness",
+    "@id": `${siteConfig.url}${path}#local-business`,
+    name: service
+      ? `${siteConfig.name} ${service.name} in ${city.name}`
+      : `${siteConfig.name} ${city.name}`,
+
+    url: `${siteConfig.url}${path}`,
+
+    areaServed: {
+      "@type": "City",
+      name: city.name,
+    },
+  };
+}
+
+/* ------------------------------ BREADCRUMB ----------------------------- */
 export function buildBreadcrumbSchema(
   items: { name: string; url: string }[]
 ) {
@@ -52,6 +124,23 @@ export function buildBreadcrumbSchema(
       position: index + 1,
       name: item.name,
       item: item.url,
+    })),
+  };
+}
+
+/* -------------------------------- FAQ ---------------------------------- */
+export function buildFAQSchema(
+  items: { question: string; answer: string }[]
+) {
+  return {
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
     })),
   };
 }

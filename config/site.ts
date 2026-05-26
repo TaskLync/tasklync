@@ -1,8 +1,12 @@
 // config/site.ts
 
 export const siteConfig = {
-  // Core Brand
+  // =========================
+  // CORE BRAND
+  // =========================
+
   name: "TaskLync",
+
   shortName: "TaskLync",
 
   title:
@@ -17,7 +21,16 @@ export const siteConfig = {
 
   domain: "tasklync.pk",
 
-  // Contact
+  // =========================
+  // SEO / SOCIAL
+  // =========================
+
+  twitter: "@tasklync",
+
+  // =========================
+  // CONTACT
+  // =========================
+
   contact: {
     email: {
       sender:
@@ -40,7 +53,10 @@ export const siteConfig = {
     },
   },
 
-  // Social Links
+  // =========================
+  // SOCIAL LINKS
+  // =========================
+
   social: {
     twitter:
       "https://twitter.com/tasklync",
@@ -54,12 +70,19 @@ export const siteConfig = {
     xHandle: "@tasklync",
   },
 
-  // Branding Assets
+  // =========================
+  // BRANDING
+  // =========================
+
   branding: {
     logo: "/logo.svg",
-    favicon: "/favicon.ico",
-    ogImage: "/images/og/default.png",
-  },
-} as const;
 
-export type SiteConfig = typeof siteConfig;
+    favicon: "/favicon.ico",
+
+    ogImage:
+      "/images/og/default.png",
+  },
+} as const
+
+export type SiteConfig =
+  typeof siteConfig
