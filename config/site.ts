@@ -13,7 +13,7 @@ export const siteConfig = {
     "TaskLync, Trusted Home Services Platform",
 
   description:
-    "Modern infrastructure for trusted home services.",
+  "TaskLync is Pakistan’s modern home services platform connecting you instantly with trusted, verified, and skilled professionals for everyday repairs, maintenance, and home improvement.",
 
   url:
     process.env.NEXT_PUBLIC_SITE_URL ??
