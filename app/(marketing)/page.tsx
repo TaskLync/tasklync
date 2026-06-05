@@ -15,7 +15,7 @@ import {
 import { buildSchemaGraph } from "@/lib/seo/schemas";
 
 export const metadata = generateMetadata({
-  title: "TaskLync | Trusted Home Services Platform",
+  title: "Trusted Home Services Platform",
   description:
     "Connect with trusted, verified home service professionals. TaskLync makes booking home services simple, fast, and reliable.",
   path: "/",

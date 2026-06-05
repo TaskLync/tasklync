@@ -75,7 +75,7 @@ export const siteConfig = {
   // =========================
 
   branding: {
-    logo: "/logo.svg",
+    logo: "/logo.png",
 
     favicon: "/favicon.ico",
 

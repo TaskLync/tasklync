@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import Image from "next/image";
-import logo from "@/public/images/logo/tasklync-logo-final-final-removebg-preview.png";
+import logo from "@/public/images/logo/tasklync-logo-final-v.png";
 
 
 // ─── Shared motion tokens ──────────────────────────────────────────────────────

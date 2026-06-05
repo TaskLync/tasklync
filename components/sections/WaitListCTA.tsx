@@ -153,7 +153,7 @@ export default function WaitlistCTA() {
                   border: "none",
                 }}
               >
-                Get Early Access <ArrowRight size={14} strokeWidth={2} />
+                Join the Waitlist <ArrowRight size={14} strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function WaitlistCTA() {
                     boxShadow: "0 0 28px rgba(47,160,132,0.3), inset 0 1px 0 rgba(255,255,255,0.1)",
                   }}
                 >
-                  Get Early Access <ArrowRight size={14} strokeWidth={2} />
+                  Join the Waitlist <ArrowRight size={14} strokeWidth={2} />
                 </button>
 
                 {/* Note */}

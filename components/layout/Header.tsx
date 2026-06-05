@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring, MotionValue } from "framer-motion";
 import type { AnalyticsEventName } from "@/lib/analytics/events";
 import Image from "next/image";
-import logo from "@/public/images/logo/tasklync-logo-final-final-removebg-preview.png";
+import logo from "@/public/images/logo/tasklync-logo-final-v-removebg-preview.png";
 
 import { NAV_LINKS } from "@/config/nav";
 import { navbarVariants, navLinkVariants } from "@/lib/motion/variants";
@@ -244,8 +244,8 @@ function NavInner({
   <Image
     src={logo}
     alt="TaskLync Logo"
-    width={42}
-    height={42}
+    width={50}
+    height={50}
     priority
     className="h-10.5 w-auto object-contain"
   />

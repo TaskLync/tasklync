@@ -3,7 +3,7 @@ import Link from "next/link";
 // ─── Metadata ────────────────────────────────────────────────────────────────
 // Next.js App Router picks this up automatically for the 404 page
 export const metadata = {
-  title: "404 – Page Not Found | TaskLync",
+  title: "404 – Page Not Found",
   description: "This page doesn't exist. Head back home to find trusted local professionals.",
   robots: { index: false },
 };

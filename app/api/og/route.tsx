@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category");
 
   const geistBold = await fetch(
-    "https://tasklync.com/fonts/Geist-Bold.ttf"
+    "https://tasklync.pk/fonts/Geist-Bold.ttf"
   ).then((res) => res.arrayBuffer());
 
   return new ImageResponse(
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
           }}
         >
           <span style={{ color: "#8B9BBB", fontSize: 16 }}>
-            tasklync.com — Your home, handled.
+            tasklync.pk — Your home, handled.
           </span>
         </div>
       </div>

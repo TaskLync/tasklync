@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { MapPin, Mail, Phone, ArrowUpRight } from "lucide-react";
-import { LogoMark } from "./LogoMark";
 import { useToast } from "@/components/ui/Toast";
 import { useConsentStore } from "@/lib/cookies/store";
 
@@ -166,7 +165,6 @@ export function Footer() {
 
             {/* Logo */}
             <Link href="/" aria-label="TaskLync Home" className="flex items-center gap-2 w-fit">
-              <LogoMark size={38} />
               <span
                 style={{
                   fontFamily: "var(--font-clash)",
