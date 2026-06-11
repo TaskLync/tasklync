@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskLync
 
-## Getting Started
+**Connecting people with trusted local professionals, faster and easier.**
 
-First, run the development server:
+TaskLync is a modern home services platform built to simplify how people discover and connect with reliable professionals for everyday repairs, maintenance, and home improvement.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Our mission is to make local services more accessible, transparent, and trustworthy by combining technology with a seamless user experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Website
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+https://tasklync.pk
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Our Platform
 
-## Learn More
+TaskLync empowers both customers and professionals.
 
-To learn more about Next.js, take a look at the following resources:
+### For Customers
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Discover trusted service professionals
+* Explore a wide range of home services
+* Access a simple and intuitive experience
+* Connect with professionals confidently
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### For Professionals
 
-## Deploy on Vercel
+* Grow your customer reach
+* Build a trusted professional presence
+* Connect with customers looking for services
+* Expand your business opportunities
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technology
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+TaskLync is built using modern web technologies, including:
+
+* Next.js
+* React
+* TypeScript
+* Tailwind CSS
+* Supabase
+* PostgreSQL
+* Vercel
+
+## Our Vision
+
+We are building the future of local services in Pakistan — a trusted digital ecosystem where customers can easily find skilled professionals and service providers can grow their businesses.
+
+## Contact
+
+For inquiries and partnerships:
+
+Email: [team@tasklync.pk](mailto:team@tasklync.pk)
+
+Website: https://tasklync.pk
+
+---
+
+© TaskLync. All rights reserved.
