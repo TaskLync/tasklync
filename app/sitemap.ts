@@ -4,7 +4,7 @@ import { getAllCategories } from "@/lib/content/categories";
 import { siteConfig } from "@/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Ensure no trailing slash issues like https://example.com/
+  // Ensure no trailing slash issues like https://example.pk/
   const baseUrl = siteConfig.url.replace(/\/+$/, "");
   const now = new Date().toISOString();
 
