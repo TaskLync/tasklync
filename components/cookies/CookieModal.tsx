@@ -18,7 +18,7 @@ const CATEGORIES: CategoryConfig[] = [
     id: "analytics",
     label: "Analytics",
     description:
-      "Help us understand how visitors interact with TaskLync. All data is aggregated and anonymised.",
+      "Help us understand how visitors interact with TaskLync. ALl data is aggregated and anonymised.",
     cookies: "_ga, _gid, _ga_XXXXXX",
     retention: "Up to 2 years",
     required: false,
