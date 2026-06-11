@@ -5,6 +5,7 @@ import {
   Syne,
   Instrument_Serif,
 } from "next/font/google";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -37,6 +38,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: "TaskLync — On-Demand Home Services",
     template: "%s | TaskLync",
