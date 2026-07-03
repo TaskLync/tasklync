@@ -16,7 +16,7 @@ export function FAQBlock({ items, title = 'Frequently Asked Questions' }: Props)
       <h3
         className="font-bold tracking-tight mb-5"
         style={{
-          fontFamily: 'var(--font-clash)',
+          fontFamily: 'var(--font-fredoka-one)',
           fontSize: '1.25rem',
           color: '#0D1F1C',
         }}

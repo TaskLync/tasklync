@@ -15,7 +15,7 @@ export function PullQuote({ quote, attribution }: Props) {
       <blockquote
         className="leading-[1.6] italic"
         style={{
-          fontFamily: 'var(--font-serif-italic)',
+          fontFamily: 'var(--font-italic)',
           fontSize: '1.2rem',
           color: '#0D1F1C',
         }}
@@ -25,7 +25,7 @@ export function PullQuote({ quote, attribution }: Props) {
       {attribution && (
         <figcaption
           className="mt-4 text-[12.5px] font-semibold not-italic"
-          style={{ fontFamily: 'var(--font-body)', color: '#1F6F5F' }}
+          style={{ fontFamily: 'var(--font-poppins)', color: '#1F6F5F' }}
         >
           — {attribution}
         </figcaption>

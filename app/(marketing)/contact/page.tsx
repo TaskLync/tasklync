@@ -8,6 +8,7 @@ import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
 } from "@/lib/seo/schemas";
+import { ContactHeroSection } from "@/components/sections/contact/ContactHeroSection";
 
 export const metadata = generateMetadata({
   title: "Contact",
@@ -35,11 +36,7 @@ export default function ContactPage() {
         }}
       />
 
-      <PageHero
-        breadcrumb="Contact"
-        title="Talk to the TaskLync team"
-        subtitle="Whether you have a question, partnership enquiry, support issue, or media request, our team is here to help and will get back to you as quickly as possible."
-      />
+      <ContactHeroSection/>
 
       <ContactHero />
       <ContactTypeSelector />

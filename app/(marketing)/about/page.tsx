@@ -1,3 +1,4 @@
+import AboutHero from "@/components/sections/about/AboutHero";
 import CompanyValues from "@/components/sections/about/CompanyValues";
 import FoundingStory from "@/components/sections/about/FoundingStory";
 import MissionStatement from "@/components/sections/about/MissionStatement";
@@ -38,14 +39,10 @@ export default function AboutPage() {
         }}
       />
 
-      <PageHero
-        breadcrumb="About Us"
-        title="Who We Are and Why We Built This"
-        subtitle="TaskLync was built because finding a reliable, vetted home professional should be trustworthy."
-      />
+      <AboutHero/>
 
-      <MissionStatement />
       <FoundingStory />
+      <MissionStatement />
       <CompanyValues />
       <FinalCTA />
     </main>

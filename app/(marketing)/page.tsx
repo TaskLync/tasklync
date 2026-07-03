@@ -2,7 +2,7 @@ import FAQ from "@/components/sections/FAQ";
 import Features from "@/components/sections/Features";
 import FinalCTA from "@/components/sections/FinalCTA";
 import ForProfessionalsPage from "@/components/sections/ForProfessionals";
-import Hero from "@/components/sections/Hero";
+import { HomeHero } from "@/components/sections/HomeHero";
 import HowItWorks from "@/components/sections/HowItWorks";
 import SocialProof from "@/components/sections/SocialProof";
 import WaitlistCTA from "@/components/sections/WaitListCTA";
@@ -38,7 +38,7 @@ export default function HomePage() {
       />
 
       <main>
-        <Hero />
+        <HomeHero/>
         <SocialProof />
         <HowItWorks />
         <Features />

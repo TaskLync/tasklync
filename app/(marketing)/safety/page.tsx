@@ -4,6 +4,7 @@ import PageHero from "@/components/sections/PageHero";
 import ProfessionalRequirements from "@/components/sections/safety/Professionalrequirements";
 import SafetyForProfessionals from "@/components/sections/safety/ProSafety";
 import SafetyForHomeowners from "@/components/sections/safety/Safetyforhomeowners";
+import SafetyHero from "@/components/sections/safety/SafetyHero";
 import VettingProcess from "@/components/sections/safety/VettingProcess";
 
 import { generateMetadata } from "@/lib/seo/metadata";
@@ -39,11 +40,7 @@ export default function Page() {
         }}
       />
 
-      <PageHero
-        breadcrumb="Safety"
-        title="Your Safety Is the Product."
-        subtitle="From verification to payments and dispute handling, TaskLync is built to keep both customers and professionals safe at every step."
-      />
+      <SafetyHero/>
 
       <section className="bg-[#F7F7F5]">
         <div className="w-full">

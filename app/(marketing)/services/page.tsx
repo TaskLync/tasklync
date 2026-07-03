@@ -3,6 +3,7 @@ import FinalCTA from "@/components/sections/FinalCTA";
 import HowItWorks from "@/components/sections/HowItWorks";
 import PageHero from "@/components/sections/PageHero";
 import ServiceCategoryGrid from "@/components/sections/ServiceCategoryGrid";
+import ServicesHero from "@/components/sections/ServiceHero";
 import WaitlistCTA from "@/components/sections/WaitListCTA";
 
 import { generateMetadata } from "@/lib/seo/metadata";
@@ -35,13 +36,7 @@ export default function Page() {
           __html: JSON.stringify(schema),
         }}
       />
-
-      <PageHero
-        breadcrumb="Services"
-        title="Every Home Service, One Platform."
-        subtitle="From repairs to cleaning, connect with verified professionals ready to get the job done right."
-      />
-
+      <ServicesHero/>
       <section className="bg-[#F7F7F5]">
         <div className="w-full">
           <ServiceCategoryGrid />

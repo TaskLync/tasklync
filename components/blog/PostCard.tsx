@@ -14,7 +14,7 @@ export function PostCard({ post, variant = 'default' }: Props) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex flex-col rounded-2xl overflow-hidden border transition-all duration-300"
+      className="group flex flex-col rounded-2xl overflow-hidden border"
       style={{
         background: '#fff',
         borderColor: 'rgba(31,111,95,0.1)',
@@ -56,31 +56,22 @@ export function PostCard({ post, variant = 'default' }: Props) {
       {/* Body */}
       <div className="flex flex-col flex-1 p-5 gap-3">
         <CategoryBadge category={post.categoryData} />
-
         <h2
-          className={`font-semibold leading-snug tracking-[-0.02em] line-clamp-2 ${
+          className={`font-['Fredoka'] font-semibold leading-snug tracking-[-0.02em] line-clamp-2 ${
             variant === 'compact' ? 'text-[15px]' : 'text-[16.5px]'
           }`}
-          style={{
-            fontFamily: 'var(--font-clash)',
-            color: '#0D1F1C',
-          }}
+          style={{ color: '#0D1F1C' }}
         >
           {post.title}
         </h2>
-
         {variant !== 'compact' && (
           <p
-            className="text-[13.5px] leading-[1.7] line-clamp-2 flex-1"
-            style={{
-              fontFamily: 'var(--font-body)',
-              color: 'rgba(13,31,28,0.5)',
-            }}
+            className="font-['Poppins'] text-[13.5px] leading-[1.7] line-clamp-2 flex-1"
+            style={{ color: 'rgba(13,31,28,0.5)' }}
           >
             {post.excerpt}
           </p>
         )}
-
         <div
           className="mt-auto pt-3"
           style={{ borderTop: '1px solid rgba(31,111,95,0.08)' }}

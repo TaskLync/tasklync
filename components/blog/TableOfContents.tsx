@@ -36,7 +36,7 @@ export function TableOfContents({ items }: Props) {
     <nav aria-label="Table of contents">
       <p
         className="text-[11px] font-bold tracking-[0.12em] uppercase mb-4"
-        style={{ fontFamily: 'var(--font-body)', color: '#1F6F5F' }}
+        style={{ fontFamily: 'var(--font-poppins)', color: '#1F6F5F' }}
       >
         On this page
       </p>
@@ -53,10 +53,9 @@ export function TableOfContents({ items }: Props) {
                 }}
                 className="block text-[13px] py-1 leading-snug transition-colors duration-150"
                 style={{
-                  fontFamily: 'var(--font-body)',
+                  fontFamily: 'var(--font-poppins)',
                   color: isActive ? '#1F6F5F' : 'rgba(13,31,28,0.38)',
                   fontWeight: isActive ? '600' : '400',
-                  // Left indicator dot for active
                   paddingLeft: isActive ? '10px' : '0',
                   borderLeft: isActive
                     ? '2px solid #1F6F5F'

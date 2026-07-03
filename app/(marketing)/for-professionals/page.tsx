@@ -2,6 +2,7 @@ import FAQ from "@/components/sections/FAQ";
 import FinalCTA from "@/components/sections/FinalCTA";
 import PageHero from "@/components/sections/PageHero";
 import PlatformBenefits from "@/components/sections/PlatformBenefits";
+import ProfessionalsHero from "@/components/sections/ProfessionalsHero";
 import ProSteps from "@/components/sections/ProSteps";
 import WaitlistCTA from "@/components/sections/WaitListCTA";
 
@@ -38,11 +39,7 @@ export default function Page() {
         }}
       />
 
-      <PageHero
-        breadcrumb="For Professionals"
-        title="Build your business. We’ll handle the rest."
-        subtitle="Get verified, get discovered, and get booked without cold calls, chasing clients, or waiting for referrals."
-      />
+      <ProfessionalsHero/>
 
       <section className="bg-[#F7F7F5] pt-12">
         <div className="w-full">

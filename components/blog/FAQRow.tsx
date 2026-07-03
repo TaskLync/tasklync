@@ -37,7 +37,7 @@ export function FAQRow({
         <span
           className="text-[15px] font-semibold leading-snug tracking-[-0.01em]"
           style={{
-            fontFamily: 'var(--font-clash)',
+            fontFamily: 'var(--font-fredoka-one)',
             color: isOpen ? '#1F6F5F' : '#0D1F1C',
             transition: 'color 0.2s ease',
           }}
@@ -71,7 +71,7 @@ export function FAQRow({
           <p
             className="text-[14px] leading-[1.75]"
             style={{
-              fontFamily: 'var(--font-body)',
+              fontFamily: 'var(--font-poppins)',
               color: 'rgba(13,31,28,0.55)',
             }}
           >

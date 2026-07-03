@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 
 import PageHero from "@/components/sections/PageHero";
-import PressHero from "@/components/sections/press/PressHero";
 import PressKit from "@/components/sections/press/PressKit";
 import PressMentions from "@/components/sections/press/PressMentions";
 import CompanyBoilerplate from "@/components/sections/press/CompanyBoilerplate";
-import PressContact from "@/components/sections/press/PressContact";
 
 import { generateMetadata } from "@/lib/seo/metadata";
 import {
@@ -13,6 +11,7 @@ import {
   buildBreadcrumbSchema,
   buildOrganizationSchema,
 } from "@/lib/seo/schemas";
+import PressKitHero from "@/components/sections/press/PressKitHero";
 
 export const metadata = generateMetadata({
   title: "TaskLync Press Kit",
@@ -40,17 +39,10 @@ export default function PressPage() {
         }}
       />
 
-      <PageHero
-        breadcrumb="Press"
-        title="News, Updates, and Company Information"
-        subtitle="Find the latest announcements, company updates, brand resources, and media information related to TaskLync as we build a more trusted home services platform."
-      />
-
-      <PressHero />
+      <PressKitHero/>
       <PressKit />
       <PressMentions />
       <CompanyBoilerplate />
-      <PressContact />
     </main>
   );
 }

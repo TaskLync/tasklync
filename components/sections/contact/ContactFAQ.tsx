@@ -8,11 +8,11 @@ const faqs: Record<ContactType, { q: string; a: string }[]> = {
     },
     {
       q: "I signed up but did not receive any confirmation email.",
-      a: "Please check your spam or promotions folder first. If it is not there, your submission may not have completed successfully. You can re-join the waitlist at tasklync.pk/waitlist and you will receive a confirmation shortly after submission.",
+      a: "Please check your spam or promotions folder first. If it is not there, your submission may not have completed successfully. You can re join the waitlist at tasklync.pk/#waitlist and you will receive a confirmation shortly after submission.",
     },
     {
       q: "What happens if I have an issue with a booking or service?",
-      a: "Once the platform is live in your area, all booking-related disputes are handled through the TaskLync resolution system. For pre-launch inquiries, select Support in this form and our team will guide you on how the process will work.",
+      a: "Once the platform is live in your area, all booking related disputes are handled through the TaskLync resolution system. For pre-launch inquiries, select Support in this form and our team will guide you on how the process will work.",
     },
   ],
 
@@ -27,7 +27,7 @@ const faqs: Record<ContactType, { q: string; a: string }[]> = {
     },
     {
       q: "Do you offer exclusives or embargoed announcements?",
-      a: "We occasionally coordinate embargoed updates or exclusives on a case-by-case basis depending on timing and publication reach. Please include your request details in your message.",
+      a: "We occasionally coordinate embargoed updates or exclusives on a case by case basis depending on timing and publication reach. Please include your request details in your message.",
     },
   ],
 
@@ -38,7 +38,7 @@ const faqs: Record<ContactType, { q: string; a: string }[]> = {
     },
     {
       q: "How do referral partnerships work?",
-      a: "Partners refer customers who need verified home professionals. TaskLync handles vetting, matching, scheduling, and payment flow. Partnership models may include referral fees, integration support, or co-marketing depending on scale.",
+      a: "Partners refer customers who need verified home professionals. TaskLync handles vetting, matching, scheduling, and payment flow. Partnership models may include referral fees, integration support, or co marketing depending on scale.",
     },
     {
       q: "We are a large organisation. Who should we contact?",
@@ -69,7 +69,7 @@ export default function ContactFAQ({ type }: { type: ContactType }) {
     <div>
       <div
         className="text-[#0D1F1C] font-semibold text-[13px] uppercase tracking-[0.08em] mb-5"
-        style={{ fontFamily: "var(--font-clash)" }}
+        style={{ fontFamily: "'Poppins', sans-serif" }}
       >
         Common questions
       </div>
@@ -82,13 +82,13 @@ export default function ContactFAQ({ type }: { type: ContactType }) {
           >
             <div
               className="text-[#0D1F1C] font-medium text-[13.5px] leading-snug mb-2"
-              style={{ fontFamily: "var(--font-clash)" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               {item.q}
             </div>
             <p
               className="text-[rgba(13,31,28,0.6)] text-[13px] leading-[1.7]"
-              style={{ fontFamily: "var(--font-body)" }}
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               {item.a}
             </p>

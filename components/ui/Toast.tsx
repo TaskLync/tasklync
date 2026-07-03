@@ -86,6 +86,29 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ show }}>
       {children}
 
+      <style>{`
+        .toast-bar {
+          min-height: 64px;
+          padding: 12px 40px;
+        }
+        .toast-message {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+        @media (max-width: 640px) {
+          .toast-bar {
+            min-height: 56px;
+            padding: 10px 16px;
+            gap: 12px;
+          }
+          .toast-message {
+            font-size: 12.5px;
+            padding: 4px 0;
+            line-height: 1.4;
+          }
+        }
+      `}</style>
+
       {current && (
         // 1. Add aria-atomic and tabIndex so focus doesn't jump
 <div
@@ -95,20 +118,18 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   tabIndex={-1}               
   onMouseEnter={handleMouseEnter}
   onMouseLeave={handleMouseLeave}
+  className="toast-bar"
   style={{
     position: "fixed",
     top: 0,
     left: 0,
     right: 0,
     zIndex: 999999,
-    height: "64px",
     pointerEvents: visible ? "auto" : "none",   
     willChange: "transform",                    
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingLeft: "40px",
-    paddingRight: "40px",
     backgroundColor: current.variant === "success" ? "#1F6F5F" : "#C0392B",
     transform: visible ? "translateY(0)" : "translateY(-100%)",
     transition: "transform 0.3s ease-out",
@@ -117,12 +138,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   }}
 >
           <span
+            className="toast-message"
             style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "14px",
+              fontFamily: "'Poppins', var(--font-body), sans-serif",
               fontWeight: 500,
               color: "#ffffff",
               letterSpacing: "0.01em",
+              wordBreak: "break-word",
             }}
           >
             {current.message}

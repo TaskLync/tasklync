@@ -23,14 +23,14 @@ export function InlineCTA({
     >
       <p
         className="text-[11px] font-bold uppercase tracking-[0.12em] mb-2"
-        style={{ fontFamily: 'var(--font-body)', color: '#1F6F5F' }}
+        style={{ fontFamily: 'var(--font-poppins)', color: '#1F6F5F' }}
       >
         TaskLync
       </p>
       <h3
         className="font-bold tracking-tight mb-2"
         style={{
-          fontFamily: 'var(--font-clash)',
+          fontFamily: 'var(--font-fredoka-one)',
           fontSize: '1.25rem',
           color: '#0D1F1C',
         }}
@@ -39,7 +39,7 @@ export function InlineCTA({
       </h3>
       <p
         className="text-[14px] leading-[1.7] mb-5"
-        style={{ fontFamily: 'var(--font-body)', color: 'rgba(13,31,28,0.5)' }}
+        style={{ fontFamily: 'var(--font-poppins)', color: 'rgba(13,31,28,0.5)' }}
       >
         {body}
       </p>
@@ -49,7 +49,7 @@ export function InlineCTA({
         style={{
           background: 'linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)',
           boxShadow: '0 2px 12px rgba(47,160,132,0.28)',
-          fontFamily: 'var(--font-body)',
+          fontFamily: 'var(--font-poppins)',
         }}
       >
         {cta} <ArrowRight className="w-4 h-4" />

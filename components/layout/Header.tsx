@@ -1,158 +1,180 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useMotionValue, useSpring, MotionValue } from "framer-motion";
-import type { AnalyticsEventName } from "@/lib/analytics/events";
 import Image from "next/image";
-import logo from "@/public/images/logo/tasklync-logo-final-v-removebg-preview.png";
+import logo from "@/public/images/logo/tasklync-logo-primary@2x.png";
 
 import { NAV_LINKS } from "@/config/nav";
-import { navbarVariants, navLinkVariants } from "@/lib/motion/variants";
 import { MobileMenu } from "./MobileMenu";
 import { useWaitlist } from "@/components/waitlist/WaitlistContext";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 
-// ─── detect touch / mobile once at module level (no per-render cost) ────────
-const isTouch =
-  typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
-
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { openModal } = useWaitlist();
   const { track } = useAnalytics();
   const pathname = usePathname();
 
-  // ── Magnetic CTA — desktop only ──────────────────────────────────────────
-  // On touch devices we still create the values (hooks must be unconditional)
-  // but we never write to them, so springX/Y stay at 0 with zero overhead.
-  const ctaRef = useRef<HTMLAnchorElement>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  // On touch, skip the spring subscription entirely by keeping stiffness high
-  // so the value never actually interpolates — saves ~0.1 ms/frame on mobile.
-  const springX = useSpring(mx, isTouch ? { stiffness: 1000, damping: 100 } : { stiffness: 280, damping: 20 });
-  const springY = useSpring(my, isTouch ? { stiffness: 1000, damping: 100 } : { stiffness: 280, damping: 20 });
+  // Pages where navbar should always appear solid (no transparent state)
+  const forceSolid = pathname === "/blog" ||
+  pathname.startsWith("/blog/");
 
-  // ── Scroll detection ─────────────────────────────────────────────────────
+  const solid = scrolled || forceSolid;
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 32);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ── Body scroll lock when mobile menu open ───────────────────────────────
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  // ── Close mobile menu on route change ───────────────────────────────────
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // ── Magnetic handlers — no-op on touch ──────────────────────────────────
-  const handleCtaMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isTouch) return;
-    const el = ctaRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    mx.set((e.clientX - (rect.left + rect.width / 2)) * 0.25);
-    my.set((e.clientY - (rect.top + rect.height / 2)) * 0.25);
-  };
-
-  const handleCtaMouseLeave = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
-  // ── Colour tokens ────────────────────────────────────────────────────────
-  const navLinkColor = scrolled
-    ? "text-[#4a5250] hover:text-[#111210]"
-    : "text-[#1F6F5F]/80 hover:text-[#0D1F1C]";
-  const navLinkActiveColor = "text-[#1F6F5F]";
-  const underlineColor = "bg-[#1F6F5F]";
-  const logoWordColor = scrolled
-    ? "text-[#111210] group-hover:text-[#1F6F5F]"
-    : "text-[#0D1F1C] group-hover:text-[#1F6F5F]";
-
   return (
     <>
-      {/*
-        ── HEADER SHELL ──────────────────────────────────────────────────────
-        MOBILE: plain <header> — no Framer Motion, no JS-driven mount
-                animation, no layout thrash. CSS handles the scroll state.
-        DESKTOP: motion.header with navbarVariants entrance animation.
-
-        We achieve this by rendering a different root element per breakpoint
-        via a tiny wrapper trick: the motion.header is hidden on mobile via
-        `lg:block` and a plain <header> is shown via `lg:hidden`.
-        Both share the same inner JSX through a shared component.
-      */}
-
-      {/* ── MOBILE shell (no Framer Motion) ── */}
       <header
         role="banner"
-        className="fixed left-0 right-0 top-0 z-50 pointer-events-none lg:hidden"
+        className={[
+          "fixed left-0 right-0 top-0 z-50 px-6 lg:px-10",
+          "transition-[background-color,border-color,box-shadow] duration-300 ease-out",
+          solid
+            ? "bg-[#FAF9F6]/92 backdrop-blur-[18px] backdrop-saturate-150 border-b border-[#1F6F5F]/10 shadow-[0_1px_28px_rgba(0,0,0,0.07)]"
+            : "bg-transparent border-b border-transparent",
+        ].join(" ")}
       >
-        <NavInner
-          scrolled={scrolled}
-          mobileOpen={mobileOpen}
-          setMobileOpen={setMobileOpen}
-          hoveredIndex={hoveredIndex}
-          setHoveredIndex={setHoveredIndex}
-          ctaRef={ctaRef}
-          springX={springX}
-          springY={springY}
-          handleCtaMouseMove={handleCtaMouseMove}
-          handleCtaMouseLeave={handleCtaMouseLeave}
-          openModal={openModal}
-          track={track}
-          pathname={pathname}
-          navLinkColor={navLinkColor}
-          navLinkActiveColor={navLinkActiveColor}
-          underlineColor={underlineColor}
-          logoWordColor={logoWordColor}
-          isMobile
-        />
+        <div
+          className={[
+            "mx-auto max-w-[1240px] flex items-center justify-between gap-6",
+            "transition-[height] duration-300",
+            solid ? "h-[66px]" : "h-[80px]",
+          ].join(" ")}
+        >
+          {/* ── Logo ── */}
+          <Link
+            href="/"
+            aria-label="TaskLync Home"
+            className="flex shrink-0 items-center gap-3"
+          >
+            <div className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-[11px] bg-[#1F6F5F] overflow-hidden">
+              <Image
+                src={logo}
+                alt=""
+                width={30}
+                height={30}
+                priority
+                className="h-[35px] w-[35px] object-contain brightness-0 invert"
+              />
+            </div>
+            <span
+              className={[
+                "font-['Fredoka'] text-[1.75rem] leading-none tracking-[0.01em]",
+                "transition-colors duration-300",
+                solid ? "text-[#0D1F1C]" : "text-white",
+              ].join(" ")}
+            >
+              Task<span className="text-[#4ECBA5]">Lync</span>
+            </span>
+          </Link>
+
+          {/* ── Desktop Navigation ── */}
+          <nav
+            aria-label="Primary navigation"
+            className="hidden items-center lg:flex"
+          >
+            {NAV_LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={[
+                    "relative px-4 py-2.5 group",
+                    "font-['Poppins'] text-[0.875rem] font-medium tracking-[0.005em]",
+                    "transition-colors duration-200",
+                    solid
+                      ? isActive ? "text-[#1F6F5F]" : "text-[#4a5250] hover:text-[#0D1F1C]"
+                      : isActive ? "text-white" : "text-white/78 hover:text-white",
+                  ].join(" ")}
+                >
+                  {link.label}
+                  <span
+                    className={[
+                      "absolute bottom-1 left-4 right-4 h-px origin-left",
+                      "transition-transform duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)]",
+                      solid ? "bg-[#1F6F5F]" : "bg-white",
+                      isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100",
+                    ].join(" ")}
+                  />
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* ── Desktop Actions ── */}
+          <div className="hidden items-center gap-3 lg:flex">
+            <Link
+              href="/for-professionals"
+              className={[
+                "inline-flex items-center rounded-full px-[1.375rem] py-[0.5625rem]",
+                "font-['Poppins'] text-[0.875rem] font-medium",
+                "border-[1.5px] transition-[border-color,background-color,color] duration-200",
+                solid
+                  ? "border-[#1F6F5F]/28 text-[#1F6F5F] hover:border-[#1F6F5F]/60 hover:bg-[#1F6F5F]/5"
+                  : "border-white/22 text-white/88 hover:border-white/50 hover:bg-white/7 hover:text-white",
+              ].join(" ")}
+            >
+              For Professionals
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => {
+                openModal();
+                track(ANALYTICS_EVENTS.NAV_CTA_CLICKED);
+              }}
+              className={[
+                "cursor-pointer inline-flex items-center rounded-full px-6 py-[0.5625rem]",
+                "font-['Poppins'] text-[0.875rem] font-semibold text-white",
+                "bg-[#1F6F5F]",
+                "transition-[background,box-shadow] duration-200",
+                "hover:bg-[#18594c] hover:shadow-[0_4px_18px_rgba(31,111,95,0.38)]",
+              ].join(" ")}
+            >
+              Get Started
+            </button>
+          </div>
+
+          {/* ── Mobile Hamburger ── */}
+          <button
+            type="button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMobileOpen((v) => !v)}
+            className={[
+              "flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-full lg:hidden",
+              "transition-[border-color,background-color] duration-200",
+              solid
+                ? "border border-[#1F6F5F]/15 bg-white/70 text-[#1F6F5F]"
+                : "border border-white/20 bg-white/10 text-white",
+            ].join(" ")}
+          >
+            <HamburgerLines open={mobileOpen} />
+          </button>
+        </div>
       </header>
 
-      {/* ── DESKTOP shell (Framer Motion entrance) ── */}
-      <motion.header
-        role="banner"
-        variants={navbarVariants}
-        initial="hidden"
-        animate="visible"
-        className="fixed left-0 right-0 top-0 z-50 pointer-events-none hidden lg:block"
-      >
-        <NavInner
-          scrolled={scrolled}
-          mobileOpen={mobileOpen}
-          setMobileOpen={setMobileOpen}
-          hoveredIndex={hoveredIndex}
-          setHoveredIndex={setHoveredIndex}
-          ctaRef={ctaRef}
-          springX={springX}
-          springY={springY}
-          handleCtaMouseMove={handleCtaMouseMove}
-          handleCtaMouseLeave={handleCtaMouseLeave}
-          openModal={openModal}
-          track={track}
-          pathname={pathname}
-          navLinkColor={navLinkColor}
-          navLinkActiveColor={navLinkActiveColor}
-          underlineColor={underlineColor}
-          logoWordColor={logoWordColor}
-          isMobile={false}
-        />
-      </motion.header>
-
-      {/* ── Mobile Menu ── */}
       <MobileMenu
         isOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
@@ -162,249 +184,11 @@ export function Header() {
   );
 }
 
-// ─── Shared inner content ─────────────────────────────────────────────────────
-// Extracted so we don't duplicate JSX. `isMobile` gates Framer Motion usage.
-
-interface NavInnerProps {
-  scrolled: boolean;
-  mobileOpen: boolean;
-  setMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  hoveredIndex: number | null;
-  setHoveredIndex: React.Dispatch<React.SetStateAction<number | null>>;
-  ctaRef: React.RefObject<HTMLAnchorElement | null>;
-  springX: MotionValue<number>;
-  springY: MotionValue<number>;
-  handleCtaMouseMove: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  handleCtaMouseLeave: () => void;
-  openModal: () => void;
-  track: (eventName: AnalyticsEventName, properties?: Record<string, unknown>) => void;
-  pathname: string;
-  navLinkColor: string;
-  navLinkActiveColor: string;
-  underlineColor: string;
-  logoWordColor: string;
-  isMobile: boolean;
-}
-
-function NavInner({
-  scrolled,
-  mobileOpen,
-  setMobileOpen,
-  hoveredIndex,
-  setHoveredIndex,
-  ctaRef,
-  springX,
-  springY,
-  handleCtaMouseMove,
-  handleCtaMouseLeave,
-  openModal,
-  track,
-  pathname,
-  navLinkColor,
-  navLinkActiveColor,
-  underlineColor,
-  logoWordColor,
-  isMobile,
-}: NavInnerProps) {
-  return (
-    <div
-      className={[
-        "mx-auto",
-        "transition-[background-color,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        scrolled
-          ? [
-              "mt-0 rounded-none",
-              "border-b border-[#1F6F5F]/12",
-              "bg-[#EEEEEE]/80 backdrop-blur-[20px] backdrop-saturate-150",
-              "shadow-[0_1px_0_rgba(255,255,255,0.7)_inset,0_4px_32px_rgba(31,111,95,0.06)]",
-            ].join(" ")
-          : [
-              "mt-0",
-              "bg-white",
-              "border-b border-[#1F6F5F]/8",
-            ].join(" "),
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "pointer-events-auto flex items-center justify-between gap-6",
-          "transition-[padding] duration-500",
-          scrolled
-            ? "px-6 py-3 lg:px-10 lg:py-3.5"
-            : "px-6 py-5 lg:px-12 lg:py-6",
-        ].join(" ")}
-      >
-        {/* ── Logo ── */}
-        <Link
-          href="/"
-          aria-label="TaskLync Home"
-          className="group flex shrink-0 items-center gap-2.5"
-        >
-          <div className="relative h-10.5 w-auto shrink-0">
-  <Image
-    src={logo}
-    alt="TaskLync Logo"
-    width={50}
-    height={50}
-    priority
-    className="h-10.5 w-auto object-contain"
-  />
-</div>
-          <span
-            className={[
-              "font-['Playfair_Display'] text-[2.2rem] font-medium tracking-tight transition-colors duration-300",
-              logoWordColor,
-            ].join(" ")}
-            style={{ lineHeight: 1 }}
-          >
-            Task<span className="text-[#1F6F5F]">Lync</span>
-          </span>
-        </Link>
-
-        {/* ── Desktop Navigation ── */}
-        <nav
-          aria-label="Primary navigation"
-          className="hidden items-center gap-1 lg:flex"
-        >
-          {NAV_LINKS.map((link, i) => {
-            const isActive = pathname === link.href;
-            return (
-              // On mobile this nav is hidden (lg:flex), but we still skip
-              // motion.div overhead by only using it on desktop shell.
-              isMobile ? null : (
-                <motion.div
-                  key={link.href}
-                  custom={i}
-                  variants={navLinkVariants}
-                  initial="hidden"
-                  animate="visible"
-                  onHoverStart={() => setHoveredIndex(i)}
-                  onHoverEnd={() => setHoveredIndex(null)}
-                  className="relative"
-                >
-                  <Link
-                    href={link.href}
-                    aria-current={isActive ? "page" : undefined}
-                    className={[
-                      "relative block px-3.5 py-2",
-                      "font-['DM_Sans'] text-[14px] font-medium tracking-[0.005em]",
-                      "transition-colors duration-200",
-                      isActive ? navLinkActiveColor : navLinkColor,
-                    ].join(" ")}
-                  >
-                    {link.label}
-                    <motion.span
-                      aria-hidden="true"
-                      className={["absolute bottom-1 left-3.5 right-3.5 h-px origin-left", underlineColor].join(" ")}
-                      initial={{ scaleX: 0 }}
-                      animate={{
-                        scaleX: isActive || hoveredIndex === i ? 1 : 0,
-                        opacity: isActive ? 1 : 0.7,
-                      }}
-                      transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    />
-                  </Link>
-                </motion.div>
-              )
-            );
-          })}
-        </nav>
-
-        {/* ── Desktop Actions ── */}
-        <div className="hidden items-center gap-3 lg:flex">
-          {isMobile ? null : (
-            <>
-              <motion.div
-                custom={NAV_LINKS.length}
-                variants={navLinkVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <Link
-                  href="/for-professionals"
-                  className={[
-                    "inline-flex items-center gap-1.5 rounded-full px-5 py-2.5",
-                    "border text-[13px] font-medium transition-[border-color,background-color] duration-300",
-                    "font-['DM_Sans']",
-                    "border-[#1F6F5F]/25 text-[#1F6F5F]",
-                    "hover:border-[#1F6F5F]/55 hover:bg-[#1F6F5F]/6",
-                  ].join(" ")}
-                >
-                  For Professionals
-                </Link>
-              </motion.div>
-
-              <motion.div
-                custom={NAV_LINKS.length + 1}
-                variants={navLinkVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <motion.a
-                  onClick={() => {
-                    openModal();
-                    track(ANALYTICS_EVENTS.NAV_CTA_CLICKED);
-                  }}
-                  ref={ctaRef}
-                  style={{ x: springX, y: springY }}
-                  onMouseMove={handleCtaMouseMove}
-                  onMouseLeave={handleCtaMouseLeave}
-                  whileTap={{ scale: 0.96 }}
-                  className={[
-                    "inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5",
-                    "font-['DM_Sans'] text-[13px] font-semibold tracking-[0.01em]",
-                    "transition-[box-shadow,filter] duration-300",
-                    "bg-linear-to-br from-[#1F6F5F] to-[#2FA084] text-white",
-                    "shadow-[0_4px_20px_rgba(31,111,95,0.30)]",
-                    "hover:shadow-[0_6px_28px_rgba(31,111,95,0.42)] hover:brightness-110",
-                  ].join(" ")}
-                >
-                  Get Started
-                  {/*
-                    DESKTOP ONLY: infinite arrow animation.
-                    Not rendered on mobile shell so it never runs on phone.
-                  */}
-                  <motion.span
-                    aria-hidden="true"
-                    animate={{ x: [0, 2, 0] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                  >
-                    →
-                  </motion.span>
-                </motion.a>
-              </motion.div>
-            </>
-          )}
-        </div>
-
-        {/* ── Mobile Hamburger ── */}
-        <button
-          type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-menu"
-          onClick={() => setMobileOpen((v) => !v)}
-          className={[
-            "flex h-10 w-10 flex-col items-center justify-center gap-1.25 rounded-full",
-            "transition-[border-color,background-color] duration-200 lg:hidden",
-            scrolled
-              ? "border border-[#1F6F5F]/15 bg-white/70 text-[#1F6F5F]"
-              : "border border-[#1F6F5F]/20 bg-white/50 text-[#1F6F5F]",
-          ].join(" ")}
-        >
-          <HamburgerLines open={mobileOpen} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Pure-CSS hamburger ───────────────────────────────────────────────────────
 function HamburgerLines({ open }: { open: boolean }) {
   return (
-    <span aria-hidden="true" className="flex flex-col items-center justify-center gap-1.25 w-4.5">
+    <span aria-hidden="true" className="flex w-[18px] flex-col items-center justify-center gap-[5px]">
       <span
-        className="block h-px w-full origin-center bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="block h-px w-full origin-center bg-current transition-transform duration-300"
         style={{ transform: open ? "translateY(6px) rotate(45deg)" : "none" }}
       />
       <span
@@ -412,7 +196,7 @@ function HamburgerLines({ open }: { open: boolean }) {
         style={{ transform: open ? "scaleX(0)" : "scaleX(1)", opacity: open ? 0 : 1 }}
       />
       <span
-        className="block h-px w-full origin-center bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="block h-px w-full origin-center bg-current transition-transform duration-300"
         style={{ transform: open ? "translateY(-6px) rotate(-45deg)" : "none" }}
       />
     </span>

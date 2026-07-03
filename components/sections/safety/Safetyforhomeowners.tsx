@@ -1,16 +1,14 @@
 "use client";
 
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { UserCheck, Eye, PhoneCall, Lock, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const tips = [
   {
     Icon: UserCheck,
     title: "Verify before the door opens",
-    body: "Every professional's profile shows their verified name, photo, trade category, and review history. Match the photo to the person at your door before letting them in. Their ID badge is available in-app.",
-    link: { label: "How to check a professional's credentials", href: "/blog/verify-professional-credentials" },
+    body: "Every professional's profile shows their verified name, photo, trade category, and review history. Match the photo to the person at your door before letting them in. Their ID badge is available in app.",
+    link: { label: "How to check a professional's credentials", href: "/blog/practical-safety-guide-for-homeowners" },
   },
   {
     Icon: Eye,
@@ -21,8 +19,8 @@ const tips = [
   {
     Icon: PhoneCall,
     title: "If something feels wrong, stop the job",
-    body: "You are never obligated to continue. Tap \"End Job\" in the app at any point. You will not be charged for incomplete work. Our team is available 24/7 via the in-app support chat.",
-    link: { label: "What to do if you feel unsafe", href: "/blog/homeowner-safety-guide" },
+    body: "You are never obligated to continue. Tap \"End Job\" in the app at any point. You will not be charged for incomplete work. Our team is available 24/7 via the in app support chat.",
+    link: { label: "What to do if you feel unsafe", href: "/blog/practical-safety-guide-for-homeowners" },
   },
   {
     Icon: Lock,
@@ -32,64 +30,33 @@ const tips = [
   },
 ];
 
-const quickChecks = [
-  "Check the professional's profile photo matches the person at your door",
-  "Confirm the booking reference matches your in-app confirmation",
-  "Agree on the scope of work before any work begins",
-  "Take photos of the area before work starts for large jobs",
-  "Do not share access to other rooms outside the job scope",
-  "Rate the job in the app as soon as it is complete",
-];
-
 export default function SafetyForHomeowners() {
-  const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
-  const router = useRouter();
-
   return (
-    <section
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className="bg-[#F7F7F5] py-18 px-6 sm:px-10 lg:px-16"
-    >
-      <div className="max-w-290 mx-auto">
+    <section className="bg-[#F7F7F5] py-18">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-16">
 
         {/* Header */}
-        <div
-          className="mb-12"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(14px)",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-          }}
-        >
-          <div
-            className="inline-flex items-center gap-2 mb-4 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 mb-4 font-['Poppins'] text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]">
             For Homeowners
           </div>
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2
-              className="text-[#0D1F1C] font-bold leading-[1.05] tracking-[-0.03em]"
-              style={{
-                fontFamily: "var(--font-clash)",
-                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
-              }}
+              className="font-['Fredoka'] text-[#0D1F1C] font-bold leading-[1.05] tracking-[-0.02em]"
+              style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}
             >
               Practical safety guide<br className="hidden lg:block" /> for every booking.
             </h2>
-            <p
-              className="text-[rgba(13,31,28,0.5)] text-[13.5px] leading-[1.65] max-w-xs"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              Our vetting does the heavy lifting. These habits make every job
-              even safer.
+            <p className="font-['Poppins'] text-[rgba(13,31,28,0.5)] text-[15px] leading-[1.65] max-w-xs">
+              Our vetting does the heavy lifting. These habits make every job even safer.
             </p>
           </div>
         </div>
 
+        {/* Main grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          {/* Tips column (spans 2 cols) */}
+          {/* Tips — spans 2 cols */}
           <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {tips.map((tip, i) => {
               const Icon = tip.Icon;
@@ -97,11 +64,6 @@ export default function SafetyForHomeowners() {
                 <div
                   key={i}
                   className="bg-white border border-[rgba(13,31,28,0.08)] rounded-2xl p-6 flex flex-col gap-4"
-                  style={{
-                    opacity: inView ? 1 : 0,
-                    transform: inView ? "translateY(0)" : "translateY(14px)",
-                    transition: `opacity 0.5s ${0.06 * i}s ease, transform 0.5s ${0.06 * i}s ease`,
-                  }}
                 >
                   <div
                     className="w-9 h-9 rounded-xl flex items-center justify-center border border-[rgba(31,111,95,0.15)]"
@@ -110,24 +72,17 @@ export default function SafetyForHomeowners() {
                     <Icon size={16} strokeWidth={1.75} color="#1F6F5F" />
                   </div>
                   <div>
-                    <div
-                      className="text-[#0D1F1C] font-semibold text-[14.5px] leading-snug tracking-[-0.02em] mb-1.5"
-                      style={{ fontFamily: "var(--font-clash)" }}
-                    >
+                    <div className="font-['Fredoka'] text-[#0D1F1C] font-semibold text-[15px] leading-snug tracking-[-0.02em] mb-1.5">
                       {tip.title}
                     </div>
-                    <p
-                      className="text-[12.5px] text-[rgba(13,31,28,0.52)] leading-[1.65]"
-                      style={{ fontFamily: "var(--font-body)" }}
-                    >
+                    <p className="font-['Poppins'] text-[13px] text-[rgba(13,31,28,0.52)] leading-[1.65]">
                       {tip.body}
                     </p>
                   </div>
                   {tip.link && (
                     <Link
                       href={tip.link.href}
-                      className="mt-auto flex items-center gap-1.5 text-[#1F6F5F] text-[12px] font-semibold group"
-                      style={{ fontFamily: "var(--font-body)" }}
+                      className="mt-auto flex items-center gap-1.5 font-['Poppins'] text-[#1F6F5F] text-[12px] font-semibold group"
                     >
                       {tip.link.label}
                       <ArrowUpRight
@@ -142,50 +97,24 @@ export default function SafetyForHomeowners() {
             })}
           </div>
 
-          {/* Quick checklist */}
-          <div
-            className="bg-[#0D1F1C] rounded-2xl p-6 flex flex-col"
-            style={{
-              opacity: inView ? 1 : 0,
-              transform: inView ? "translateY(0)" : "translateY(14px)",
-              transition: "opacity 0.5s 0.24s ease, transform 0.5s 0.24s ease",
-            }}
-          >
-            <div
-              className="text-[10.5px] font-semibold tracking-widest uppercase text-[#6FCF97] mb-4"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              Day-of Checklist
-            </div>
-            <div
-              className="text-white font-bold text-[1.1rem] leading-snug tracking-[-0.02em] mb-5"
-              style={{ fontFamily: "var(--font-clash)" }}
-            >
-              Before letting anyone in
-            </div>
-            <div className="flex flex-col gap-3 flex-1">
-              {quickChecks.map((check, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <span
-                    className="mt-0.5 w-5 h-5 rounded-full border border-[rgba(111,207,151,0.25)] flex items-center justify-center shrink-0 text-[#6FCF97] text-[9px] font-bold"
-                    style={{ background: "rgba(111,207,151,0.08)" }}
-                  >
-                    {i + 1}
-                  </span>
-                  <span
-                    className="text-[12.5px] text-[rgba(255,255,255,0.52)] leading-[1.55]"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {check}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 pt-5 border-t border-[rgba(255,255,255,0.07)]">
+          {/* Right — portrait image */}
+          <div className="relative rounded-2xl overflow-hidden min-h-[420px] lg:min-h-0">
+            <img
+              src="/images/safety/tasklync-homeowner-reading-safety-guide.avif"
+              alt="Homeowner Reading a TaskLync practical guide inside a home in Pakistan"
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              loading="lazy"
+            />
+
+            {/* Subtle top fade */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/20 to-transparent" />
+
+            {/* Bottom vignette + link */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 px-5 pb-5">
               <Link
-                href="/blog/homeowner-day-of-checklist"
-                className="flex items-center gap-1.5 text-[#6FCF97] text-[12px] font-semibold group"
-                style={{ fontFamily: "var(--font-body)" }}
+                href="/blog/practical-safety-guide-for-homeowners"
+                className="pointer-events-auto inline-flex items-center gap-1.5 font-['Poppins'] text-white text-[12px] font-semibold group"
               >
                 Full homeowner safety guide
                 <ArrowUpRight
@@ -196,6 +125,7 @@ export default function SafetyForHomeowners() {
               </Link>
             </div>
           </div>
+
         </div>
       </div>
     </section>

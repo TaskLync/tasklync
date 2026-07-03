@@ -1,95 +1,190 @@
-export default function FoundingStory() {
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export function FoundingStory() {
   return (
-    <section className="bg-white py-20 px-6 sm:px-10 lg:px-16 border-b border-[rgba(31,111,95,0.1)]">
-      <div className="w-full mx-auto">
-        <span
-          className="inline-block mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          How We Started
-        </span>
+    <section className="relative bg-[#F7F7F5] py-20 lg:py-32 overflow-hidden">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
-        <h2
-          className="text-[#0D1F1C] font-bold leading-[1.08] tracking-[-0.03em] mb-12"
-          style={{
-            fontFamily: "var(--font-clash)",
-            fontSize: "clamp(1.8rem, 3vw, 2.6rem)",
-          }}
-        >
-          The founding story
-        </h2>
+          {/* ── LEFT — Stacked tilted images ── */}
+          <div className="relative flex justify-center items-center" style={{ minHeight: "640px" }}>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Narrative */}
-          <div className="lg:col-span-7 space-y-6">
-            <p
-              className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
-              style={{ fontFamily: "var(--font-body)" }}
+            {/* Portrait — whiteboard planning scene (tallest, base layer) */}
+            <div
+              className="relative rounded-2xl overflow-hidden shadow-xl"
+              style={{
+                width: "340px",
+                height: "500px",
+                transform: "rotate(-3deg)",
+                zIndex: 1,
+              }}
             >
-              TaskLync began with a simple observation. Finding reliable local professionals was still inconsistent, unstructured, and often based more on guesswork than trust.
+              <Image
+                src="/images/about/founding-whiteboard-planning.png"
+                alt="Furqan and co-founder planning TaskLync late at night on a whiteboard"
+                fill
+                className="object-cover object-center"
+                sizes="340px"
+              />
+            </div>
 
-Across home repairs, maintenance, and everyday services, the experience lacked transparency, accountability, and consistency for both homeowners and skilled professionals. Qualified professionals struggled to stand out, while customers were often left uncertain about who they could actually trust.
+            {/* Square overlay — person holding phone (top-left corner, just peeking) */}
+            <div
+              className="absolute rounded-xl overflow-hidden shadow-2xl border-[5px] border-white"
+              style={{
+                width: "200px",
+                height: "200px",
+                top: "30px",
+                left: "30px",
+                transform: "rotate(-4deg)",
+                zIndex: 3,
+              }}
+            >
+              <Image
+                src="/images/about/founding-person-calling-professional.png"
+                alt="Person struggling to find and call a home service professional in Pakistan"
+                fill
+                className="object-cover object-center"
+                sizes="200px"
+              />
+            </div>
 
-That gap became the foundation for TaskLync.
-            </p>
-            <p
-              className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
-              style={{ fontFamily: "var(--font-body)" }}
+            {/* Square overlay — broken-down car on road (bottom-left corner, just peeking) */}
+            <div
+              className="absolute rounded-xl overflow-hidden shadow-2xl border-[5px] border-white"
+              style={{
+                width: "200px",
+                height: "200px",
+                bottom: "32px",
+                left: "38px",
+                transform: "rotate(3.5deg)",
+                zIndex: 3,
+              }}
             >
-              We experienced firsthand how difficult it can be to get small but important tasks done without uncertainty. Whether it was home repairs, maintenance, or everyday services, the process lacked transparency and accountability. That shared frustration turned into a discussion, and that discussion eventually became the foundation of TaskLync.
-            </p>
-            <p
-              className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              We started building TaskLync as a way to bring structure, verification, and trust into a space that has traditionally been informal and fragmented. What began as a university idea between two peers quickly evolved into a focused product vision, a vetted marketplace where quality and reliability come first.
-            </p>
-            <p
-              className="text-[#0D1F1C] text-[15.5px] leading-[1.8]"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-             We are still early in our journey, building step by step, learning fast, and improving continuously. But the belief is clear, trust in local services should not be accidental, it should be engineered.
-            </p>
+              <Image
+                src="/images/about/founding-car-bonnet-open-road.avif"
+                alt="Car bonnet open on a Pakistani road in summer heat — showing the problem"
+                fill
+                className="object-cover object-center"
+                sizes="200px"
+              />
+            </div>
+
+            {/* Soft decorative blob behind the cluster */}
+            <div
+              className="absolute rounded-full bg-[#4ECBA5] opacity-[0.07]"
+              style={{
+                width: "380px",
+                height: "380px",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 0,
+                filter: "blur(48px)",
+              }}
+              aria-hidden
+            />
           </div>
 
-          {/* Pull quote + context box */}
-          <div className="lg:col-span-5 space-y-6">
+          {/* ── RIGHT — Copy ── */}
+          <div>
 
-            <div className="border border-[rgba(31,111,95,0.12)] rounded-2xl p-8 space-y-4">
-              <div
-                className="text-[#0D1F1C] font-semibold text-[13px] uppercase tracking-[0.08em]"
-                style={{ fontFamily: "var(--font-clash)" }}
+            {/* Eyebrow */}
+            <span
+              className="inline-block mb-4 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.14em]"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+            >
+              Our Founding Story
+            </span>
+
+            {/* Heading */}
+            <h2
+              className="text-[#0D1F1C] font-bold leading-[1.1] tracking-[-0.025em]"
+              style={{
+                fontFamily: "'Fredoka', sans-serif",
+                fontSize: "clamp(1.85rem, 3.6vw, 2.85rem)",
+              }}
+            >
+              Everyone Knows Someone.{" "}
+              <em className="not-italic text-[#4ECBA5]">Until They Don't.</em>
+            </h2>
+
+            {/* Subheading */}
+            <p
+              className="mt-4 font-semibold text-[rgba(13,31,28,0.45)] text-[0.83rem] tracking-[0.04em] uppercase"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+            >
+              Pakistan, 2026. A simple job. A longer search than it should have been.
+            </p>
+
+
+            {/* Story — first paragraph with pull-quote feel */}
+            <p
+              className="leading-[1.8] text-[rgba(13,31,28,0.52)] mb-4 mt-4"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.9rem",
+                maxWidth: "460px",
+              }}
+            >
+              Imagine 42°C on a Pakistani highway in July. Your car stops. Bonnet open,
+              traffic crawling past. You reach for your phone to call a mechanic
+              and suddenly realize the number you saved two years ago no longer connects.
+              The backup?
+            </p>
+
+            <p
+              className="leading-[1.8] text-[rgba(13,31,28,0.52)] mb-4"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.9rem",
+                maxWidth: "460px",
+              }}
+            >
+              Pakistan has no shortage of skilled people. Every neighbourhood has a car mechanic, 
+              plumber, an electrician, a painter. Everyone has a contact saved from
+              years ago. But when you actually
+              need help when the AC stops working in July, when the kitchen needs
+              fixing before a family gathering, that network suddenly feels thin.
+            </p>
+
+
+            <p
+              className="leading-[1.8] text-[rgba(13,31,28,0.52)]"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.9rem",
+                maxWidth: "460px",
+              }}
+            >
+              Pakistan has always had the professionals. What it never had was a way
+              to find them with confidence to know their name, their rating, their
+              track record, before they ever walk through your door. That missing layer
+              of trust is exactly what we set out to build.
+            </p>
+
+            {/* Learn more */}
+            <div className="mt-8">
+              <Link
+                href="/blog/our-founding-story"
+                className="inline-flex items-center gap-2 text-[#1F6F5F] text-sm font-semibold border-b border-[#1F6F5F] pb-0.5 hover:opacity-70 transition-opacity duration-200"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
-                By the numbers at founding
-              </div>
-              {[
-                ["60", "Homeowner interviews completed"],
-                ["20", "Trade professionals interviewed"],
-                ["3", "Months of research before first line of code"],
-                ["March 2026", "Date of incorporation"],
-              ].map(([n, l]) => (
-                <div
-                  key={l}
-                  className="flex items-baseline justify-between border-t border-[rgba(31,111,95,0.08)] pt-3"
-                >
-                  <span
-                    className="text-[#1F6F5F] font-bold text-[15px]"
-                    style={{ fontFamily: "var(--font-clash)" }}
-                  >
-                    {n}
-                  </span>
-                  <span
-                    className="text-[rgba(13,31,28,0.55)] text-[12px] text-right ml-4 max-w-40"
-                    style={{ fontFamily: "var(--font-body)" }}
-                  >
-                    {l}
-                  </span>
-                </div>
-              ))}
+                Learn more about our story <ArrowRight size={13} strokeWidth={2.5} />
+              </Link>
             </div>
+
           </div>
         </div>
       </div>
     </section>
   );
 }
+
+export default FoundingStory;

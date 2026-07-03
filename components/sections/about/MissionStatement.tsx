@@ -1,54 +1,109 @@
-import missionImage from "../../../public/images/about/mission-home-service.jpg";
+"use client";
 
-export default function MissionStatement() {
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export function MissionStatement() {
   return (
-    <section className="bg-[#F7F7F5] pt-20 pb-16 px-6 sm:px-10 lg:px-16 border-b border-[rgba(31,111,95,0.12)]">
-      <div className="w-full mx-auto">
-        <span
-          className="inline-block mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-          style={{ fontFamily: "var(--font-body)" }}
-        >
-          Our Mission
-        </span>
+    <section
+      id="mission"
+      className="bg-[#F7F7F5] py-16 lg:py-24"
+    >
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-16">
 
-        <h1
-          className="text-[#0D1F1C] font-bold leading-[1.06] tracking-[-0.03em] mb-8"
+        {/* Landscape card */}
+        <div
+          className="bg-white rounded-[20px] overflow-hidden flex flex-col lg:flex-row"
           style={{
-            fontFamily: "var(--font-clash)",
-            fontSize: "clamp(1.8rem, 3vw, 2.6rem)",
+            boxShadow: "0 2px 24px rgba(13,31,28,0.07)",
           }}
         >
-          We are building the infrastructure of trust.
-        </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-10 items-center">
-          {/* Left Content */}
-          <div>
-            <p
-              className="text-[#0D1F1C] text-[16px] leading-[1.75]"
-              style={{ fontFamily: "var(--font-body)" }}
+          {/* ── LEFT: Copy ── */}
+          <div className="flex flex-col justify-center px-8 py-12 lg:px-14 lg:py-16 flex-1">
+
+            {/* Eyebrow */}
+            <span
+              className="inline-block mb-4 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.14em]"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
-              Home services are a multi trillion dollar category where trust is still largely built on word of mouth and luck rather than structured systems. Homeowners are expected to accept risk as part of the process, never fully sure whether the person they hire will show up on time, do the job correctly, or charge fairly. At the same time, skilled and experienced professionals with real credentials are forced to compete in the same space as unverified individuals who simply have a phone number and availability, making it difficult for quality and reliability to stand out. We believe this imbalance is not just inefficient, but something that can and should be fixed through a more transparent and trust-driven system.
+              Our Mission
+            </span>
+
+            {/* Heading */}
+            <h2
+              className="text-[#0D1F1C] font-bold leading-[1.1] tracking-[-0.025em] mb-4"
+              style={{
+                fontFamily: "'Fredoka', sans-serif",
+                fontSize: "clamp(1.75rem, 3vw, 2.55rem)",
+              }}
+            >
+              We&rsquo;re building the{" "}
+              <em className="not-italic text-[#4ECBA5]">
+                infrastructure of trust.
+              </em>
+            </h2>
+
+            {/* Subheading — Poppins body style, same as FoundingStory paragraphs */}
+            <p
+              className="leading-[1.8] text-[rgba(13,31,28,0.52)] mb-4"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.9rem",
+                maxWidth: "460px",
+              }}
+            >
+              Home services run on a trillion dollar handshake and for too
+              long, that handshake has been a gamble. Homeowners cross their
+              fingers. Skilled professionals get buried next to unverified
+              strangers with nothing but a phone number.
+            </p>
+            <p
+              className="leading-[1.8] text-[rgba(13,31,28,0.52)] mb-8"
+              style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "0.9rem",
+                maxWidth: "460px",
+              }}
+            >
+              We believe reliability shouldn&rsquo;t be luck. Quality
+              shouldn&rsquo;t be invisible. And trust shouldn&rsquo;t be rebuilt
+              from scratch every single time. So we built a system that makes it
+              structural, not accidental.
             </p>
 
-            <p
-              className="text-[rgba(13,31,28,0.6)] text-[15px] leading-[1.8] mt-6"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              TaskLync is a vetted marketplace where trust is built into the system from the start. Every professional on the platform goes through a thorough verification process that includes identity confirmation, criminal background screening, license validation, and insurance verification before they are allowed to take their first job. This ensures that only qualified and reliable individuals are matched with customers. Homeowners can book services with confidence knowing they are hiring verified professionals, while professionals are able to compete based on the quality of their work and reputation rather than marketing budgets or visibility tricks.
-            </p>
+            {/* CTA */}
+            <div>
+              <Link
+                href="/blog/our-mission"
+                className="inline-flex items-center gap-2 text-[#1F6F5F] text-sm font-semibold border-b border-[#1F6F5F] pb-0.5 hover:opacity-70 transition-opacity duration-200"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+              >
+                Learn more <ArrowRight size={13} strokeWidth={2.5} />
+              </Link>
+            </div>
+
           </div>
 
-          {/* Right Image */}
-          <div className="relative w-full h-[180px] sm:h-[260px] lg:h-[420px] rounded-2xl overflow-hidden border border-[rgba(31,111,95,0.12)] shadow-sm">
-          <img
-            src="/images/about/mission-home-service.avif"
-            alt="Professional completing verified home service work"
-            className="w-full h-full object-cover"
-           />
+          {/* ── RIGHT: Image ── */}
+          <div className="relative w-full lg:w-[45%] self-stretch min-h-[420px] flex-shrink-0">
+            <Image
+              src="/images/about/mission-person-phone.png"
+              alt="Person relaxed, using phone — representing the ease TaskLync brings to hiring trusted professionals"
+              fill
+              className="object-cover object-center pt-10"
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              priority
+            />
           </div>
+
         </div>
       </div>
     </section>
   );
 }
+
+export default MissionStatement;

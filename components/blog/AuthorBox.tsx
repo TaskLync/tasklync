@@ -5,7 +5,9 @@ interface Props {
   author: Author
 }
 
-// Inline SVG Icons (no external dependency)
+const FREDOKA = "'Fredoka', sans-serif"
+const POPPINS = "'Poppins', sans-serif"
+
 const XIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.9-6.3L6.3 22H3l7.3-8.4L1 2h6.3l4.4 5.7L18.9 2z" />
@@ -46,7 +48,7 @@ export function AuthorBox({ author }: Props) {
         <p
           className="text-[11px] font-bold uppercase tracking-widest mb-1"
           style={{
-            fontFamily: 'var(--font-body)',
+            fontFamily: POPPINS,
             color: 'rgba(13,31,28,0.35)',
           }}
         >
@@ -56,7 +58,7 @@ export function AuthorBox({ author }: Props) {
         <p
           className="font-bold text-[17px] leading-none tracking-[-0.02em]"
           style={{
-            fontFamily: 'var(--font-clash)',
+            fontFamily: FREDOKA,
             color: '#0D1F1C',
           }}
         >
@@ -67,7 +69,7 @@ export function AuthorBox({ author }: Props) {
           <p
             className="text-[12.5px] mt-0.5"
             style={{
-              fontFamily: 'var(--font-body)',
+              fontFamily: POPPINS,
               color: '#1F6F5F',
             }}
           >
@@ -79,7 +81,7 @@ export function AuthorBox({ author }: Props) {
           <p
             className="text-[13.5px] leading-[1.7] mt-3"
             style={{
-              fontFamily: 'var(--font-body)',
+              fontFamily: POPPINS,
               color: 'rgba(13,31,28,0.5)',
             }}
           >
@@ -101,7 +103,6 @@ export function AuthorBox({ author }: Props) {
                 <XIcon className="w-4 h-4" />
               </a>
             )}
-
             {author.linkedin && (
               <a
                 href={author.linkedin}

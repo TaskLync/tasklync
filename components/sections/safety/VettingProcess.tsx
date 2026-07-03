@@ -1,6 +1,5 @@
 "use client";
 
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import {
   Fingerprint,
   ScanFace,
@@ -15,7 +14,7 @@ const steps = [
   {
     num: "01",
     name: "Identity Verification",
-    desc: "Government-issued ID and facial match verification before approval.",
+    desc: "Government issued ID and facial match verification before approval.",
     Icon: Fingerprint,
   },
   {
@@ -51,68 +50,39 @@ const steps = [
 ];
 
 export default function VettingProcess() {
-  const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
   const router = useRouter();
 
   return (
-    <section
-      ref={ref as React.RefObject<HTMLDivElement>}
-      className="bg-[#F7F7F5] py-18 px-6 sm:px-10 lg:px-16"
-    >
-      <div className="max-w-290 mx-auto">
+    <section className="bg-[#F7F7F5] py-18">
+      <div className="mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-16">
+
         {/* Header */}
-        <div
-          className="mb-12"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? "translateY(0)" : "translateY(14px)",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-          }}
-        >
-          <div
-            className="inline-flex items-center gap-2 mb-4 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 mb-4 font-['Poppins'] text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]">
             How We Vet
           </div>
-
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
             <h2
-              className="text-[#0D1F1C] font-bold leading-[1.05] tracking-[-0.03em]"
-              style={{
-                fontFamily: "var(--font-clash)",
-                fontSize: "clamp(1.9rem, 3vw, 2.6rem)",
-              }}
+              className="font-['Fredoka'] text-[#0D1F1C] font-bold leading-[1.05] tracking-[-0.02em]"
+              style={{ fontSize: "clamp(1.9rem, 3vw, 2.6rem)" }}
             >
               Six steps. Zero shortcuts.
             </h2>
-
-            <p
-              className="text-[rgba(13,31,28,0.5)] text-[13.5px] leading-[1.65] max-w-xs"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
+            <p className="font-['Poppins'] text-[rgba(13,31,28,0.5)] text-[15px] leading-[1.65] max-w-xs">
               Every professional completes all six stages. There is no fast
               track. Incomplete applications are rejected automatically.
             </p>
           </div>
         </div>
 
-        {/* Steps */}
+        {/* Steps grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-[rgba(31,111,95,0.1)] rounded-2xl overflow-hidden border border-[rgba(31,111,95,0.1)]">
           {steps.map((step, i) => {
             const Icon = step.Icon;
-
             return (
               <div
                 key={i}
                 className="bg-[#F7F7F5] p-6 flex flex-col min-h-62.5"
-                style={{
-                  opacity: inView ? 1 : 0,
-                  transform: inView ? "translateY(0)" : "translateY(14px)",
-                  transition: `opacity 0.5s ${
-                    0.05 * i
-                  }s ease, transform 0.5s ${0.05 * i}s ease`,
-                }}
               >
                 {/* Top */}
                 <div className="flex items-start justify-between mb-5">
@@ -122,36 +92,25 @@ export default function VettingProcess() {
                   >
                     <Icon size={18} strokeWidth={1.75} color="#1F6F5F" />
                   </div>
-
-                  <span
-                    className="text-[11px] font-bold text-[rgba(13,31,28,0.2)] tracking-[0.08em]"
-                    style={{ fontFamily: "var(--font-clash)" }}
-                  >
+                  <span className="font-['Fredoka'] text-[11px] font-bold text-[rgba(13,31,28,0.2)] tracking-[0.08em]">
                     {step.num}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3
-                  className="text-[#0D1F1C] font-semibold text-[15px] tracking-[-0.02em] leading-snug mb-3"
-                  style={{ fontFamily: "var(--font-clash)" }}
-                >
+                <h3 className="font-['Fredoka'] text-[#0D1F1C] font-semibold text-[15px] tracking-[-0.02em] leading-snug mb-3">
                   {step.name}
                 </h3>
 
                 {/* Description */}
-                <p
-                  className="text-[13px] text-[rgba(13,31,28,0.52)] leading-[1.7] mb-8"
-                  style={{ fontFamily: "var(--font-body)" }}
-                >
+                <p className="font-['Poppins'] text-[13px] text-[rgba(13,31,28,0.52)] leading-[1.7] mb-8">
                   {step.desc}
                 </p>
 
                 {/* Learn more */}
                 <button
                   onClick={() => router.push("/blog/how-tasklync-vets-professionals")}
-                  className="cursor-pointer mt-auto h-11 w-full rounded-xl bg-[#1F6F5F] text-white text-[13px] font-medium transition-all duration-300 hover:opacity-90"
-                  style={{ fontFamily: "var(--font-body)" }}
+                  className="font-['Poppins'] cursor-pointer mt-auto h-11 w-full rounded-xl bg-[#1F6F5F] text-white text-[13px] font-medium hover:opacity-90"
                 >
                   Learn more
                 </button>
@@ -159,6 +118,7 @@ export default function VettingProcess() {
             );
           })}
         </div>
+
       </div>
     </section>
   );

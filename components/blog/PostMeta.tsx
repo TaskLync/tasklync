@@ -17,8 +17,8 @@ function formatDate(iso: string): string {
 export function PostMeta({ publishedAt, readingTime, updatedAt }: Props) {
   return (
     <div
-      className="flex flex-wrap items-center gap-4 text-[13px]"
-      style={{ color: 'rgba(13,31,28,0.4)', fontFamily: 'var(--font-body)' }}
+      className="font-['Poppins'] flex flex-wrap items-center gap-4 text-[13px]"
+      style={{ color: 'rgba(13,31,28,0.4)' }}
     >
       <span className="flex items-center gap-1.5">
         <Calendar className="w-3.5 h-3.5" />

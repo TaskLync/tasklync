@@ -25,17 +25,16 @@ const mdxOptions = {
   },
 }
 
-const baseMdxComponents = {
-  InlineCTA,
-  PullQuote,
-  CalloutBlock,
+const FREDOKA = "'Fredoka', sans-serif"
+const POPPINS = "'Poppins', sans-serif"
 
-  h2: ({ children, ...props }: React.ComponentProps<'h2'>) => (
+function MdxH2({ children, ...props }: React.ComponentProps<'h2'>) {
+  return (
     <h2
       id={slugify(String(children))}
       className="scroll-mt-24"
       style={{
-        fontFamily: 'var(--font-clash)',
+        fontFamily: FREDOKA,
         fontSize: 'clamp(1.15rem, 2vw, 1.15rem)',
         fontWeight: '700',
         letterSpacing: '-0.025em',
@@ -47,14 +46,16 @@ const baseMdxComponents = {
     >
       {children}
     </h2>
-  ),
+  )
+}
 
-  h3: ({ children, ...props }: React.ComponentProps<'h3'>) => (
+function MdxH3({ children, ...props }: React.ComponentProps<'h3'>) {
+  return (
     <h3
       id={slugify(String(children))}
       className="scroll-mt-24"
       style={{
-        fontFamily: 'var(--font-clash)',
+        fontFamily: FREDOKA,
         fontSize: '1rem',
         fontWeight: '600',
         letterSpacing: '-0.02em',
@@ -66,12 +67,14 @@ const baseMdxComponents = {
     >
       {children}
     </h3>
-  ),
+  )
+}
 
-  p: ({ children, ...props }: React.ComponentProps<'p'>) => (
+function MdxP({ children, ...props }: React.ComponentProps<'p'>) {
+  return (
     <p
       style={{
-        fontFamily: 'var(--font-body)',
+        fontFamily: POPPINS,
         fontSize: '0.95rem',
         lineHeight: '1.78',
         color: 'rgba(13,31,28,0.72)',
@@ -82,59 +85,61 @@ const baseMdxComponents = {
     >
       {children}
     </p>
-  ),
+  )
+}
 
-  a: ({ href, children, ...props }: React.ComponentProps<'a'>) => (
+function MdxA({ href, children, ...props }: React.ComponentProps<'a'>) {
+  return (
     <a
-      href={href}
+      href={href ?? '#'}
       style={{
+        fontFamily: POPPINS,
         color: '#1F6F5F',
         textDecoration: 'underline',
         textUnderlineOffset: '3px',
-        fontFamily: 'var(--font-body)',
       }}
       {...props}
     >
       {children}
     </a>
-  ),
+  )
+}
 
-  strong: ({ children, ...props }: React.ComponentProps<'strong'>) => (
+function MdxStrong({ children, ...props }: React.ComponentProps<'strong'>) {
+  return (
     <strong style={{ color: '#0D1F1C', fontWeight: '600' }} {...props}>
       {children}
     </strong>
-  ),
+  )
+}
 
-  ul: ({ children, ...props }: React.ComponentProps<'ul'>) => (
+function MdxUl({ children, ...props }: React.ComponentProps<'ul'>) {
+  return (
     <ul
-      style={{
-        paddingLeft: '1.25rem',
-        marginTop: '0.6em',
-        marginBottom: '0.6em',
-      }}
+      style={{ paddingLeft: '1.25rem', marginTop: '0.6em', marginBottom: '0.6em' }}
       {...props}
     >
       {children}
     </ul>
-  ),
+  )
+}
 
-  ol: ({ children, ...props }: React.ComponentProps<'ol'>) => (
+function MdxOl({ children, ...props }: React.ComponentProps<'ol'>) {
+  return (
     <ol
-      style={{
-        paddingLeft: '1.25rem',
-        marginTop: '0.6em',
-        marginBottom: '0.6em',
-      }}
+      style={{ paddingLeft: '1.25rem', marginTop: '0.6em', marginBottom: '0.6em' }}
       {...props}
     >
       {children}
     </ol>
-  ),
+  )
+}
 
-  li: ({ children, ...props }: React.ComponentProps<'li'>) => (
+function MdxLi({ children, ...props }: React.ComponentProps<'li'>) {
+  return (
     <li
       style={{
-        fontFamily: 'var(--font-body)',
+        fontFamily: POPPINS,
         fontSize: '1rem',
         lineHeight: '1.75',
         color: 'rgba(13,31,28,0.72)',
@@ -144,15 +149,17 @@ const baseMdxComponents = {
     >
       {children}
     </li>
-  ),
+  )
+}
 
-  blockquote: ({ children, ...props }: React.ComponentProps<'blockquote'>) => (
+function MdxBlockquote({ children, ...props }: React.ComponentProps<'blockquote'>) {
+  return (
     <blockquote
       style={{
         borderLeft: '3px solid #1F6F5F',
         paddingLeft: '1.25rem',
         margin: '1.25em 0',
-        fontFamily: 'var(--font-serif-italic)',
+        fontFamily: POPPINS,
         fontSize: '1.05rem',
         color: 'rgba(13,31,28,0.6)',
         fontStyle: 'italic',
@@ -161,9 +168,11 @@ const baseMdxComponents = {
     >
       {children}
     </blockquote>
-  ),
+  )
+}
 
-  code: ({ children, ...props }: React.ComponentProps<'code'>) => (
+function MdxCode({ children, ...props }: React.ComponentProps<'code'>) {
+  return (
     <code
       style={{
         background: 'rgba(31,111,95,0.07)',
@@ -178,9 +187,11 @@ const baseMdxComponents = {
     >
       {children}
     </code>
-  ),
+  )
+}
 
-  pre: ({ children, ...props }: React.ComponentProps<'pre'>) => (
+function MdxPre({ children, ...props }: React.ComponentProps<'pre'>) {
+  return (
     <pre
       style={{
         background: '#F7F7F2',
@@ -197,15 +208,17 @@ const baseMdxComponents = {
     >
       {children}
     </pre>
-  ),
+  )
+}
 
-  table: ({ children, ...props }: React.ComponentProps<'table'>) => (
+function MdxTable({ children, ...props }: React.ComponentProps<'table'>) {
+  return (
     <div style={{ overflowX: 'auto', margin: '1.75em 0' }}>
       <table
         style={{
           width: '100%',
           borderCollapse: 'collapse',
-          fontFamily: 'var(--font-body)',
+          fontFamily: POPPINS,
           fontSize: '0.9375rem',
         }}
         {...props}
@@ -213,25 +226,26 @@ const baseMdxComponents = {
         {children}
       </table>
     </div>
-  ),
+  )
+}
 
-  thead: ({ children, ...props }: React.ComponentProps<'thead'>) => (
-    <thead
-      style={{ borderBottom: '2px solid rgba(31,111,95,0.15)' }}
-      {...props}
-    >
+function MdxThead({ children, ...props }: React.ComponentProps<'thead'>) {
+  return (
+    <thead style={{ borderBottom: '2px solid rgba(31,111,95,0.15)' }} {...props}>
       {children}
     </thead>
-  ),
+  )
+}
 
-  th: ({ children, ...props }: React.ComponentProps<'th'>) => (
+function MdxTh({ children, ...props }: React.ComponentProps<'th'>) {
+  return (
     <th
       style={{
         padding: '0.6rem 1rem',
         textAlign: 'left',
         fontWeight: '600',
         color: '#0D1F1C',
-        fontFamily: 'var(--font-body)',
+        fontFamily: POPPINS,
         fontSize: '0.8125rem',
         textTransform: 'uppercase',
         letterSpacing: '0.06em',
@@ -240,61 +254,59 @@ const baseMdxComponents = {
     >
       {children}
     </th>
-  ),
+  )
+}
 
-  td: ({ children, ...props }: React.ComponentProps<'td'>) => (
+function MdxTd({ children, ...props }: React.ComponentProps<'td'>) {
+  return (
     <td
       style={{
         padding: '0.6rem 1rem',
         color: 'rgba(13,31,28,0.65)',
+        fontFamily: POPPINS,
         borderBottom: '1px solid rgba(31,111,95,0.07)',
       }}
       {...props}
     >
       {children}
     </td>
-  ),
+  )
+}
 
-  img: ({ src, alt }: React.ComponentProps<'img'>) => {
-    let imageSrc: ImageSrc = ''
-    if (typeof src === 'string') {
-      imageSrc = src
-    } else {
-      imageSrc = ''
-    }
+function MdxImg({ src, alt }: React.ComponentProps<'img'>) {
+  const imageSrc: ImageSrc = typeof src === 'string' ? src : ''
 
-    return (
-      <figure style={{ margin: '1.5rem 0' }}>
-        <div
+  return (
+    <figure style={{ margin: '1.5rem 0' }}>
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '16/9',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          background: 'rgba(31,111,95,0.06)',
+        }}
+      >
+        {imageSrc && (
+          <Image src={imageSrc} alt={alt ?? ''} fill className="object-cover" />
+        )}
+      </div>
+      {alt && (
+        <figcaption
           style={{
-            position: 'relative',
-            width: '100%',
-            aspectRatio: '16/9',
-            borderRadius: '16px',
-            overflow: 'hidden',
-            background: 'rgba(31,111,95,0.06)',
+            textAlign: 'center',
+            fontSize: '12px',
+            color: 'rgba(13,31,28,0.35)',
+            marginTop: '0.6rem',
+            fontFamily: POPPINS,
           }}
         >
-          {imageSrc && (
-            <Image src={imageSrc} alt={alt ?? ''} fill className="object-cover" />
-          )}
-        </div>
-        {alt && (
-          <figcaption
-            style={{
-              textAlign: 'center',
-              fontSize: '12px',
-              color: 'rgba(13,31,28,0.35)',
-              marginTop: '0.6rem',
-              fontFamily: 'var(--font-body)',
-            }}
-          >
-            {alt}
-          </figcaption>
-        )}
-      </figure>
-    )
-  },
+          {alt}
+        </figcaption>
+      )}
+    </figure>
+  )
 }
 
 interface Props {
@@ -304,17 +316,31 @@ interface Props {
 
 export async function ArticleBody({ content, faqItems }: Props) {
   const components = {
-    ...baseMdxComponents,
-    FAQBlock: () => (faqItems?.length ? <FAQBlock items={faqItems} /> : null),
+    h2: MdxH2,
+    h3: MdxH3,
+    p: MdxP,
+    a: MdxA,
+    strong: MdxStrong,
+    ul: MdxUl,
+    ol: MdxOl,
+    li: MdxLi,
+    blockquote: MdxBlockquote,
+    code: MdxCode,
+    pre: MdxPre,
+    table: MdxTable,
+    thead: MdxThead,
+    th: MdxTh,
+    td: MdxTd,
+    img: MdxImg,
+    InlineCTA,
+    PullQuote,
+    CalloutBlock,
+    FAQBlock: () => (faqItems && faqItems.length > 0 ? <FAQBlock items={faqItems} /> : null),
   }
 
   return (
     <div>
-      <MDXRemote
-        source={content}
-        components={components}
-        options={mdxOptions}
-      />
+      <MDXRemote source={content} components={components} options={mdxOptions} />
     </div>
   )
 }

@@ -20,38 +20,25 @@ export function WaitlistModal({
   onSuccess,
   startAtSuccess = false,
 }: ExtendedWaitlistModalProps) {
-  const [email, setEmail]     = useState("");
-  const [step, setStep]       = useState<WaitlistStep>(startAtSuccess ? "success" : "idle");
-  const [error, setError]     = useState("");
-  const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false); // tracks if we're on the client
-  const emailRef              = useRef<HTMLInputElement | null>(null);
+  const [email, setEmail] = useState("");
+  const [step, setStep]   = useState<WaitlistStep>(startAtSuccess ? "success" : "idle");
+  const [error, setError] = useState("");
+  const [mounted, setMounted] = useState(false);
+  const emailRef = useRef<HTMLInputElement | null>(null);
 
-  // Wait for client mount before calling createPortal (no SSR mismatch)
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (startAtSuccess) setStep("success");
   }, [startAtSuccess]);
 
-  useEffect(() => {
-    if (open) {
-      requestAnimationFrame(() => setVisible(true));
-    } else {
-      setVisible(false);
-    }
-  }, [open]);
-
   // Lock body scroll while open
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  // Escape to close
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -79,19 +66,14 @@ export function WaitlistModal({
 
   const resetAndClose = () => {
     onClose();
-    setTimeout(() => {
-      if (!startAtSuccess && step !== "success") {
-        setStep("idle");
-        setError("");
-      }
-    }, 300);
+    if (!startAtSuccess && step !== "success") {
+      setStep("idle");
+      setError("");
+    }
   };
 
   if (!open || !mounted) return null;
 
-  // Portal renders directly into document.body — completely outside any
-  // stacking context created by transforms, filters, or will-change on
-  // parent elements. This guarantees it always sits on top of everything.
   return createPortal(
     <>
       {/* Backdrop */}
@@ -103,8 +85,6 @@ export function WaitlistModal({
           inset: 0,
           zIndex: 99998,
           background: "rgba(13,31,28,0.5)",
-          opacity: visible ? 1 : 0,
-          transition: "opacity 0.22s ease",
         }}
       />
 
@@ -135,12 +115,6 @@ export function WaitlistModal({
             background: "#FAFAF6",
             boxShadow:
               "0 0 0 1px rgba(13,31,28,0.07), 0 8px 40px rgba(13,31,28,0.14), 0 2px 8px rgba(13,31,28,0.06)",
-            opacity: visible ? 1 : 0,
-            transform: visible
-              ? "translateY(0) scale(1)"
-              : "translateY(12px) scale(0.98)",
-            transition:
-              "opacity 0.28s cubic-bezier(0.16,1,0.3,1), transform 0.28s cubic-bezier(0.16,1,0.3,1)",
             pointerEvents: "auto",
           }}
         >
@@ -148,22 +122,10 @@ export function WaitlistModal({
           <button
             onClick={resetAndClose}
             aria-label="Close"
+            className="cursor-pointer absolute top-5 right-5 z-20 w-8 h-8 rounded-full flex items-center justify-center border-none transition-colors duration-150 hover:bg-black/10"
             style={{
-              cursor: "pointer",
-              position: "absolute",
-              top: "1.25rem",
-              right: "1.25rem",
-              zIndex: 20,
-              width: "2rem",
-              height: "2rem",
-              borderRadius: "9999px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               background: "rgba(13,31,28,0.06)",
               color: "rgba(13,31,28,0.45)",
-              border: "none",
-              transition: "background 0.15s",
             }}
           >
             <X size={15} strokeWidth={2.2} />

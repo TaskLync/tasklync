@@ -1,5 +1,6 @@
 import FAQ from "@/components/sections/FAQ";
 import FinalCTA from "@/components/sections/FinalCTA";
+import HowItWorksHero from "@/components/sections/HowitWorkHero";
 import HowItWorks from "@/components/sections/HowItWorks";
 import PageHero from "@/components/sections/PageHero";
 import ProSteps from "@/components/sections/ProSteps";
@@ -38,11 +39,7 @@ export default function HowItWorksPage() {
         }}
       />
 
-      <PageHero
-        breadcrumb="How It Works"
-        title="How TaskLync works"
-        subtitle="Get verified, get listed, and start receiving real customer bookings through a trusted, vetted platform built for service professionals."
-      />
+      <HowItWorksHero/>
 
       <HowItWorks />
       <ProSteps />

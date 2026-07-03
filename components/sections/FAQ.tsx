@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Plus, Minus } from "lucide-react";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useRouter } from "next/navigation";
-
-// ─── Types & content ──────────────────────────────────────────────────────────
 
 interface FAQItem {
   q: string;
@@ -50,7 +47,6 @@ const professionalFAQs: FAQItem[] = [
   },
 ];
 
-// [F5] Inlined — was only imported to feed this string
 const EXPO_OUT = "0.16,1,0.3,1";
 
 // ─── FAQRow ───────────────────────────────────────────────────────────────────
@@ -63,7 +59,6 @@ function FAQRow({ item, isOpen, onToggle }: {
   const answerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
 
-  // [F7] CSS-only height animation — already SSR-safe, no changes needed
   useEffect(() => {
     if (answerRef.current) {
       setHeight(isOpen ? answerRef.current.scrollHeight : 0);
@@ -74,26 +69,21 @@ function FAQRow({ item, isOpen, onToggle }: {
     <div className="border-b border-[rgba(31,111,95,0.1)] last:border-0">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between gap-6 py-5 text-left"
-        style={{ background: "none", border: "none", cursor: "pointer" }}
+        className="w-full flex items-center justify-between gap-6 py-5 text-left bg-transparent border-none cursor-pointer"
       >
         <span
-          className="text-[15px] font-semibold leading-snug tracking-[-0.01em] transition-colors duration-200"
-          style={{
-            fontFamily: "var(--font-clash)",
-            color: isOpen ? "#1F6F5F" : "#0D1F1C",
-          }}
+          className={`font-['Fredoka'] text-[16px] font-semibold leading-snug tracking-[-0.01em] transition-colors duration-200 ${
+            isOpen ? "text-[#1F6F5F]" : "text-[#0D1F1C]"
+          }`}
         >
           {item.q}
         </span>
 
         <span
-          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-[background,border-color] duration-200"
           style={{
             background: isOpen ? "#1F6F5F" : "rgba(31,111,95,0.08)",
             border: `1px solid ${isOpen ? "#1F6F5F" : "rgba(31,111,95,0.15)"}`,
-            // Only transition background+border — compositor-safe
-            transition: "background 0.2s ease, border-color 0.2s ease",
           }}
         >
           {isOpen
@@ -103,7 +93,6 @@ function FAQRow({ item, isOpen, onToggle }: {
         </span>
       </button>
 
-      {/* [F7] Height animation — CSS transition on height, no JS loop */}
       <div
         style={{
           height,
@@ -112,10 +101,7 @@ function FAQRow({ item, isOpen, onToggle }: {
         }}
       >
         <div ref={answerRef} className="pb-5 pr-14">
-          <p
-            className="text-[14px] leading-[1.75] text-[rgba(13,31,28,0.55)]"
-            style={{ fontFamily: "var(--font-body)" }}
-          >
+          <p className="font-['Poppins'] text-[14px] leading-[1.75] text-[rgba(13,31,28,0.55)]">
             {item.a}
           </p>
         </div>
@@ -127,20 +113,9 @@ function FAQRow({ item, isOpen, onToggle }: {
 // ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 export default function FAQ() {
-  const { ref, inView } = useIntersectionObserver({ threshold: 0.1 });
-  const [tab, setTab]           = useState<"homeowner" | "professional">("homeowner");
+  const [tab, setTab] = useState<"homeowner" | "professional">("homeowner");
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const router = useRouter();
-
-  // [F6] Hydration fix — read matchMedia only after mount
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
 
   const faqs = tab === "homeowner" ? homeownerFAQs : professionalFAQs;
 
@@ -149,167 +124,120 @@ export default function FAQ() {
     setOpenIndex(0);
   };
 
-  // Helper: animation style gated on inView + reduced
-  const anim = (delay: number): React.CSSProperties =>
-    !reduced && inView
-      ? { animation: `faqFadeUp 0.5s cubic-bezier(${EXPO_OUT}) ${delay}s both` }
-      : { opacity: reduced ? 1 : inView ? undefined : 0 };
-
   return (
-    <>
-      <style>{`
-        @keyframes faqFadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+    <section
+      id="faq"
+      className="relative bg-[#F7F7F5] py-16 lg:py-24 overflow-hidden"
+    >
+      {/* Dot texture */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: "radial-gradient(rgba(13,31,28,0.05) 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
+      />
 
-      <section
-        id="faq"
-        className="relative bg-[#F7F7F2] py-12 lg:py-18 overflow-hidden"
-      >
-        {/* Dot texture — static */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            backgroundImage: "radial-gradient(rgba(13,31,28,0.05) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
+      <div className="relative z-10 mx-auto max-w-[1200px] px-6 sm:px-10 lg:px-16">
 
-        <div
-          ref={ref as React.RefObject<HTMLDivElement>}
-          className="relative z-10 mx-auto max-w-275 px-6 sm:px-10 lg:px-16"
-        >
+        {/* ── Header ──────────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-14">
 
-          {/* ── Header ──────────────────────────────────────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-14">
-
-            <div>
-              {/* [F1] Label */}
-              <div
-                className="inline-flex items-center gap-2 mb-5 text-[11px] font-bold uppercase tracking-[0.12em] text-[#1F6F5F]"
-                style={{ fontFamily: "var(--font-body)", ...anim(0) }}
-              >
-                FAQ
-              </div>
-
-              {/* [F1] Title */}
-              <h2
-                className="leading-[1.05] tracking-[-0.03em] text-[#0D1F1C] font-bold"
-                style={{
-                  fontFamily: "var(--font-clash)",
-                  fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
-                  ...anim(0.1),
-                }}
-              >
-                Everything you<br />
-                <span
-                  style={{
-                    backgroundImage: "linear-gradient(100deg,#1F6F5F 0%,#2FA084 60%,#6FCF97 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  need to know.
-                </span>
-              </h2>
+          <div>
+            <div className="inline-flex items-center gap-2 mb-5 font-['Poppins'] text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1F6F5F]">
+              FAQ
             </div>
 
-            {/* [F2] Subtitle + tab switcher */}
-            <div style={anim(0.2)}>
-              <p
-                className="leading-[1.72] mb-8 italic text-[rgba(13,31,28,0.48)]"
+            <h2
+              className="font-['Fredoka'] font-bold text-[#0D1F1C] leading-[1.05] tracking-[-0.025em]"
+              style={{
+                fontSize: "clamp(2rem, 3.5vw, 2.8rem)",
+              }}
+            >
+              Everything you<br />
+              <span
                 style={{
-                  fontFamily: "var(--font-serif-italic)",
-                  fontSize: "1.15rem",
+                  backgroundImage: "linear-gradient(100deg,#1F6F5F 0%,#2FA084 60%,#6FCF97 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
-                Got questions? We&apos;ve got straight answers. If you don&apos;t find what
-                you&apos;re looking for, our team is one message away.
-              </p>
-
-              {/* Tab switcher */}
-              <div
-                className="inline-flex p-1 rounded-full"
-                style={{
-                  background: "rgba(31,111,95,0.08)",
-                  border: "1px solid rgba(31,111,95,0.12)",
-                }}
-              >
-                {(["homeowner", "professional"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => handleTabChange(t)}
-                    className="px-5 py-2 rounded-full text-[13px] font-semibold cursor-pointer border-none"
-                    style={{
-                      fontFamily: "var(--font-body)",
-                      background: tab === t
-                        ? "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)"
-                        : "transparent",
-                      color: tab === t ? "#fff" : "rgba(13,31,28,0.5)",
-                      boxShadow: tab === t ? "0 2px 12px rgba(47,160,132,0.25)" : "none",
-                      // Only transition color+shadow — compositor-safe
-                      transition: "color 0.2s ease, box-shadow 0.2s ease",
-                    }}
-                  >
-                    {t === "homeowner" ? "For Homeowners" : "For Professionals"}
-                  </button>
-                ))}
-              </div>
-            </div>
+                need to know.
+              </span>
+            </h2>
           </div>
 
-          {/* [F3] FAQ list box */}
-          <div
-            className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.1)]"
-            style={{
-              background: "#fff",
-              boxShadow: "0 4px 32px rgba(13,31,28,0.06)",
-              ...anim(0.3),
-            }}
-          >
-            <div className="px-8 py-2">
-              {faqs.map((item, i) => (
-                <FAQRow
-                  key={`${tab}-${i}`}
-                  item={item}
-                  isOpen={openIndex === i}
-                  onToggle={() => setOpenIndex(openIndex === i ? null : i)}
-                />
+          {/* Subtitle + tab switcher */}
+          <div>
+            <p className="font-['Poppins'] text-[15px] leading-[1.72] mb-8 text-[rgba(13,31,28,0.48)]">
+              Got questions? We&apos;ve got straight answers. If you don&apos;t find what
+              you&apos;re looking for, our team is one message away.
+            </p>
+
+            {/* Tab switcher */}
+            <div
+              className="inline-flex p-1 rounded-full"
+              style={{
+                background: "rgba(31,111,95,0.08)",
+                border: "1px solid rgba(31,111,95,0.12)",
+              }}
+            >
+              {(["homeowner", "professional"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => handleTabChange(t)}
+                  className="px-5 py-2 rounded-full font-['Poppins'] text-[13px] font-semibold cursor-pointer border-none transition-[color,box-shadow] duration-200"
+                  style={{
+                    background: tab === t
+                      ? "linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)"
+                      : "transparent",
+                    color: tab === t ? "#fff" : "rgba(13,31,28,0.5)",
+                    boxShadow: tab === t ? "0 2px 12px rgba(47,160,132,0.25)" : "none",
+                  }}
+                >
+                  {t === "homeowner" ? "Homeowners" : "Professionals"}
+                </button>
               ))}
             </div>
           </div>
-
-          {/* [F4] Bottom CTA */}
-          <div
-            className="mt-10 text-center"
-            style={anim(0.5)}
-          >
-            <p
-              className="text-[14px] mb-3 text-[rgba(13,31,28,0.4)]"
-              style={{ fontFamily: "var(--font-body)" }}
-            >
-              Still have questions?
-            </p>
-
-            <button
-              onClick={() => router.push("/contact")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold border cursor-pointer transition-colors duration-200 hover:bg-[rgba(31,111,95,0.06)] hover:border-[#1F6F5F]"
-              style={{
-                fontFamily: "var(--font-body)",
-                background: "transparent",
-                borderColor: "rgba(31,111,95,0.25)",
-                color: "#1F6F5F",
-              }}
-            >
-              Contact our team →
-            </button>
-          </div>
-
         </div>
-      </section>
-    </>
+
+        {/* FAQ list box */}
+        <div
+          className="rounded-3xl overflow-hidden border border-[rgba(31,111,95,0.1)] bg-white"
+          style={{
+            boxShadow: "0 4px 32px rgba(13,31,28,0.06)",
+          }}
+        >
+          <div className="px-8 py-2">
+            {faqs.map((item, i) => (
+              <FAQRow
+                key={`${tab}-${i}`}
+                item={item}
+                isOpen={openIndex === i}
+                onToggle={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-10 text-center">
+          <p className="font-['Poppins'] text-[14px] mb-3 text-[rgba(13,31,28,0.4)]">
+            Still have questions?
+          </p>
+
+          <button
+            onClick={() => router.push("/contact")}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-['Poppins'] text-[13.5px] font-semibold border cursor-pointer bg-transparent text-[#1F6F5F] transition-colors duration-200 hover:bg-[rgba(31,111,95,0.06)] hover:border-[#1F6F5F]"
+            style={{ borderColor: "rgba(31,111,95,0.25)" }}
+          >
+            Contact our team →
+          </button>
+        </div>
+
+      </div>
+    </section>
   );
 }

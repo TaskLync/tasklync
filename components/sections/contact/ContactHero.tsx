@@ -4,7 +4,7 @@ export default function ContactHero() {
       <div className="max-w-5xl mx-auto">
         <span
           className="inline-block mb-5 text-[#1F6F5F] uppercase text-[11px] font-semibold tracking-[0.12em]"
-          style={{ fontFamily: "var(--font-body)" }}
+          style={{ fontFamily: "'Poppins', sans-serif" }}
         >
           Get In Touch
         </span>
@@ -13,7 +13,7 @@ export default function ContactHero() {
             <h1
               className="text-[#0D1F1C] font-bold leading-[1.06] tracking-[-0.03em]"
               style={{
-                fontFamily: "var(--font-clash)",
+                fontFamily: "'Fredoka', sans-serif",
                 fontSize: "clamp(2rem, 4vw, 3rem)",
               }}
             >
@@ -22,7 +22,7 @@ export default function ContactHero() {
           </div>
           <p
             className="text-[rgba(13,31,28,0.6)] text-[15px] leading-[1.8]"
-            style={{ fontFamily: "var(--font-body)" }}
+            style={{ fontFamily: "'Poppins', sans-serif" }}
           >
             Select the category that matches your enquiry below. Each type
             routes to the right person on our team and carries a specific

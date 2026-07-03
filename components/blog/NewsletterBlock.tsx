@@ -31,9 +31,7 @@ export function NewsletterBlock() {
         background: '#fff',
         borderColor: 'rgba(31,111,95,0.12)',
         boxShadow: '0 4px 32px rgba(13,31,28,0.06)',
-        // Dot texture
-        backgroundImage:
-          'radial-gradient(rgba(13,31,28,0.04) 1px, transparent 1px), linear-gradient(#fff,#fff)',
+        backgroundImage: 'radial-gradient(rgba(13,31,28,0.04) 1px, transparent 1px), linear-gradient(#fff,#fff)',
         backgroundSize: '28px 28px, 100%',
       }}
     >
@@ -41,72 +39,50 @@ export function NewsletterBlock() {
         {submitted ? (
           <div className="flex flex-col items-center gap-3">
             <CheckCircle className="w-10 h-10" style={{ color: '#1F6F5F' }} />
-            <p
-              className="text-xl font-bold tracking-[-0.02em]"
-              style={{ fontFamily: 'var(--font-clash)', color: '#0D1F1C' }}
-            >
+            <p className="font-['Fredoka'] text-xl font-bold tracking-[-0.02em]" style={{ color: '#0D1F1C' }}>
               You&apos;re on the list.
             </p>
-            <p
-              className="text-[14px]"
-              style={{ fontFamily: 'var(--font-body)', color: 'rgba(13,31,28,0.45)' }}
-            >
+            <p className="font-['Poppins'] text-[14px]" style={{ color: 'rgba(13,31,28,0.45)' }}>
               We&apos;ll let you know when TaskLync launches in your area.
             </p>
           </div>
         ) : (
           <>
-            <p
-              className="text-[11px] font-bold uppercase tracking-[0.12em] mb-3"
-              style={{ fontFamily: 'var(--font-body)', color: '#1F6F5F' }}
-            >
+            <p className="font-['Poppins'] text-[11px] font-bold uppercase tracking-[0.12em] mb-3" style={{ color: '#1F6F5F' }}>
               Early Access
             </p>
             <h3
-              className="font-bold tracking-tight mb-3"
-              style={{
-                fontFamily: 'var(--font-clash)',
-                fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)',
-                color: '#0D1F1C',
-              }}
+              className="font-['Fredoka'] font-bold tracking-tight mb-3"
+              style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', color: '#0D1F1C' }}
             >
               Get notified when TaskLync launches.
             </h3>
-            <p
-              className="text-[14px] leading-[1.7] mb-8"
-              style={{ fontFamily: 'var(--font-body)', color: 'rgba(13,31,28,0.48)' }}
-            >
-              Join thousands of homeowners waiting for a smarter way to hire
-              home service pros.
+            <p className="font-['Poppins'] text-[14px] leading-[1.7] mb-8" style={{ color: 'rgba(13,31,28,0.48)' }}>
+              Join thousands of homeowners waiting for a smarter way to hire home service pros.
             </p>
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-            >
+            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
                 required
-                className="flex-1 px-4 py-3 rounded-full text-[14px] outline-none transition-colors duration-200"
+                className="font-['Poppins'] flex-1 px-4 py-3 rounded-full text-[14px] outline-none"
                 style={{
                   background: '#F7F7F2',
                   border: '1px solid rgba(31,111,95,0.18)',
                   color: '#0D1F1C',
-                  fontFamily: 'var(--font-body)',
                 }}
                 onFocus={e => (e.target.style.borderColor = '#1F6F5F')}
                 onBlur={e => (e.target.style.borderColor = 'rgba(31,111,95,0.18)')}
               />
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold text-white whitespace-nowrap transition-opacity duration-200 disabled:opacity-60"
+                className="font-['Poppins'] flex items-center justify-center gap-2 px-6 py-3 rounded-full text-[13.5px] font-semibold text-white whitespace-nowrap disabled:opacity-60"
                 style={{
                   background: 'linear-gradient(135deg,#1F6F5F 0%,#2FA084 100%)',
                   boxShadow: '0 2px 12px rgba(47,160,132,0.28)',
-                  fontFamily: 'var(--font-body)',
                   border: 'none',
                   cursor: 'pointer',
                 }}
@@ -114,7 +90,7 @@ export function NewsletterBlock() {
                 {loading ? 'Joining…' : 'Join Waitlist'}
                 <ArrowRight className="w-4 h-4" />
               </button>
-            </form>
+            </div>
           </>
         )}
       </div>

@@ -20,7 +20,7 @@ export function RelatedPosts({ posts }: Props) {
       <h2
         className="font-bold tracking-tight mb-8"
         style={{
-          fontFamily: 'var(--font-clash)',
+          fontFamily: 'var(--font-fredoka-one)',
           fontSize: '1.5rem',
           color: '#0D1F1C',
         }}

@@ -8,8 +8,6 @@ import { FeaturedPost } from "@/components/blog/FeaturedPost";
 import { CategoryFilter } from "@/components/blog/CategoryFilter";
 import { PostGrid } from "@/components/blog/PostGrid";
 
-import WaitlistCTA from "@/components/sections/WaitListCTA";
-import FAQ from "@/components/sections/FAQ";
 
 import { generateMetadata } from "@/lib/seo/metadata";
 import {
@@ -67,7 +65,7 @@ export default async function BlogIndexPage({
 
   return (
     <main
-      className="pt-27"
+      className=""
       style={{ background: "#F7F7F2", minHeight: "100vh" }}
     >
       {/* Schema */}
@@ -87,9 +85,6 @@ export default async function BlogIndexPage({
       </Suspense>
 
       <PostGrid posts={gridPosts} />
-
-      <WaitlistCTA />
-      <FAQ />
 
       <div className="h-24" />
     </main>

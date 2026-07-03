@@ -4,6 +4,8 @@ import {
   DM_Sans,
   Syne,
   Instrument_Serif,
+  Poppins,
+  Fredoka,
 } from "next/font/google";
 import "./globals.css";
 
@@ -36,12 +38,26 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-fredoka-one",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
-    default: "TaskLync — On-Demand Home Services",
+    default: "TaskLync | On-Demand Home Services",
     template: "%s | TaskLync",
   },
-  description:
+  description :
     "Connect with verified home service professionals in minutes. TaskLync is the intelligent layer between homeowners and the tradespeople they trust.",
 };
 
@@ -53,7 +69,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmSans.variable} ${syne.variable} ${instrumentSerif.variable}`}
+      className={`
+        ${playfair.variable}
+        ${dmSans.variable}
+        ${syne.variable}
+        ${instrumentSerif.variable}
+        ${poppins.variable}
+        ${fredoka.variable}
+      `}
     >
       <head>
         {/*
