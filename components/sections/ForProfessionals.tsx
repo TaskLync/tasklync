@@ -88,7 +88,7 @@ export function ForProfessionals() {
         </div>
 
         {/* ── RIGHT — Portrait image ── */}
-        <div className="hidden lg:block">
+        <div>
           <div
             className="relative rounded-2xl overflow-hidden"
             style={{ aspectRatio: "9/10" }}
