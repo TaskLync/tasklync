@@ -16,13 +16,14 @@ export const siteConfig = {
   "TaskLync is Pakistan’s modern home services platform connecting you instantly with trusted, verified, and skilled professionals for everyday repairs, maintenance, and home improvement.",
 
   url:
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://tasklync.pk",
+    process.env.NEXT_PUBLIC_SITE_URL && !process.env.NEXT_PUBLIC_SITE_URL.includes("localhost")
+      ? process.env.NEXT_PUBLIC_SITE_URL
+      : "https://tasklync.pk",
 
   domain: "tasklync.pk",
 
   // =========================
-  // SEO / SOCIAL
+  // SEO / SOCIAL /Media
   // =========================
 
   twitter: "@tasklync",
